@@ -2,6 +2,21 @@
 
 JISOWMS (JIS 업무 관리 시스템) 변경 이력.
 
+## [2026-02-15] 테스트 커버리지 개선 (test-coverage)
+
+### Testing (test-coverage)
+- **Backend**: 기존 실패 테스트 2개 수정
+  - `app.controller.spec.ts`: PrismaService mock 누락 → 추가
+  - `vacation.service.spec.ts`: n1-query-fix 리팩토링 후 mock 패턴 동기화
+- **Backend**: 신규 테스트 4개 서비스 추가
+  - `dashboard.service.spec.ts` (6 tests) — 커버리지 0% → 93.3%
+  - `metrics.service.spec.ts` (8 tests) — 커버리지 0% → 83.3%
+  - `work-status.service.spec.ts` (8 tests) — 커버리지 0% → 42.6%
+  - `user.service.spec.ts` (8 tests) — 커버리지 0% → 100%
+- **결과**: Tests 43 → 76개, Statement Coverage 10.66% → 21.76%
+
+---
+
 ## [2026-02-15] PDCA 코드 품질 개선 (7개 Feature 완료)
 
 ### Security (security-improvement)
@@ -76,3 +91,4 @@ JISOWMS (JIS 업무 관리 시스템) 변경 이력.
 | owms-sys-security | 100% | 7개 |
 | daily-report-refactor | 100% | 8개 |
 | n1-query-fix | 100% | 5개 |
+| test-coverage | 100% | 6개 |

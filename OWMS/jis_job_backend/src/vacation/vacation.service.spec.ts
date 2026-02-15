@@ -44,14 +44,15 @@ describe('VacationService', () => {
   });
 
   describe('getSummary', () => {
+    // After n1-query-fix: getSummary uses single findUnique with include vacations + vacationAdjustments
     it('should calculate vacation summary with default 15 days when no joinDate', async () => {
       (prisma.user.findUnique as jest.Mock).mockResolvedValue({
         joinDate: null,
         annualLeaveOverride: null,
         carryoverLeave: 0,
+        vacations: [],
+        vacationAdjustments: [],
       });
-      (prisma.vacation.findMany as jest.Mock).mockResolvedValue([]);
-      ((prisma as any).vacationAdjustment.findMany as jest.Mock).mockResolvedValue([]);
 
       const result = await service.getSummary(1);
 
@@ -65,9 +66,9 @@ describe('VacationService', () => {
         joinDate: new Date('2020-01-01'),
         annualLeaveOverride: 20,
         carryoverLeave: 2,
+        vacations: [],
+        vacationAdjustments: [],
       });
-      (prisma.vacation.findMany as jest.Mock).mockResolvedValue([]);
-      ((prisma as any).vacationAdjustment.findMany as jest.Mock).mockResolvedValue([]);
 
       const result = await service.getSummary(1);
 
@@ -80,17 +81,16 @@ describe('VacationService', () => {
         joinDate: null,
         annualLeaveOverride: null,
         carryoverLeave: 0,
+        vacations: [
+          {
+            startDate: new Date('2026-03-02'), // 월
+            endDate: new Date('2026-03-06'), // 금
+            type: 'ANNUAL',
+            status: 'APPROVED',
+          },
+        ],
+        vacationAdjustments: [],
       });
-      // 월~금 5일 연차
-      (prisma.vacation.findMany as jest.Mock).mockResolvedValue([
-        {
-          startDate: new Date('2026-03-02'), // 월
-          endDate: new Date('2026-03-06'), // 금
-          type: 'ANNUAL',
-          status: 'APPROVED',
-        },
-      ]);
-      ((prisma as any).vacationAdjustment.findMany as jest.Mock).mockResolvedValue([]);
 
       const result = await service.getSummary(1);
 
@@ -103,16 +103,16 @@ describe('VacationService', () => {
         joinDate: null,
         annualLeaveOverride: null,
         carryoverLeave: 0,
+        vacations: [
+          {
+            startDate: new Date('2026-03-02'),
+            endDate: new Date('2026-03-02'),
+            type: 'HALF_AM',
+            status: 'APPROVED',
+          },
+        ],
+        vacationAdjustments: [],
       });
-      (prisma.vacation.findMany as jest.Mock).mockResolvedValue([
-        {
-          startDate: new Date('2026-03-02'),
-          endDate: new Date('2026-03-02'),
-          type: 'HALF_AM',
-          status: 'APPROVED',
-        },
-      ]);
-      ((prisma as any).vacationAdjustment.findMany as jest.Mock).mockResolvedValue([]);
 
       const result = await service.getSummary(1);
 
@@ -148,22 +148,21 @@ describe('VacationService', () => {
 
     it('should throw when insufficient remaining days', async () => {
       (prisma.vacation.findFirst as jest.Mock).mockResolvedValue(null);
-      // getSummary mock chain
+      // getSummary uses single findUnique with include
       (prisma.user.findUnique as jest.Mock).mockResolvedValue({
         joinDate: null,
         annualLeaveOverride: null,
         carryoverLeave: 0,
+        vacations: [
+          {
+            startDate: new Date('2026-01-06'),
+            endDate: new Date('2026-01-24'),
+            type: 'ANNUAL',
+            status: 'APPROVED',
+          },
+        ],
+        vacationAdjustments: [],
       });
-      // Already used 14.5 days
-      (prisma.vacation.findMany as jest.Mock).mockResolvedValue([
-        {
-          startDate: new Date('2026-01-06'),
-          endDate: new Date('2026-01-24'),
-          type: 'ANNUAL',
-          status: 'APPROVED',
-        },
-      ]);
-      ((prisma as any).vacationAdjustment.findMany as jest.Mock).mockResolvedValue([]);
 
       await expect(
         service.requestVacation(1, {
@@ -180,9 +179,9 @@ describe('VacationService', () => {
         joinDate: null,
         annualLeaveOverride: null,
         carryoverLeave: 0,
+        vacations: [],
+        vacationAdjustments: [],
       });
-      (prisma.vacation.findMany as jest.Mock).mockResolvedValue([]);
-      ((prisma as any).vacationAdjustment.findMany as jest.Mock).mockResolvedValue([]);
       (prisma.vacation.create as jest.Mock).mockResolvedValue({
         id: 1,
         userId: 1,
