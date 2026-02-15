@@ -1,0 +1,280 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// 부서 (상위 조직)
+model Department {
+  id        Int      @id @default(autoincrement())
+  name      String   @unique
+  orderIndex Int     @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  teams     Team[]
+  users     User[]
+  vehicles  Vehicle[] // 차량 관리 부서 관계 추가
+}
+
+// 팀 (부서 하위 조직)
+model Team {
+  id           Int        @id @default(autoincrement())
+  name         String
+  departmentId Int
+  orderIndex   Int        @default(0)
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+  department   Department @relation(fields: [departmentId], references: [id])
+  users        User[]
+
+  @@unique([name, departmentId])
+}
+
+model User {
+  id           Int        @id @default(autoincrement())
+  userId       String     @unique
+  name         String
+  email        String?    @unique
+  password     String
+  position     String?    // 직위 (CEO, 부사장, 상무이사, 이사, 부장, 차장, 과장, 대리, 사원 등)
+  role         Role       @default(MEMBER)
+  departmentId Int?
+  teamId       Int?
+  joinDate     DateTime?  // 입사일
+  annualLeaveOverride Float? // 연차 총 일수 수동 보정
+  carryoverLeave      Float @default(0) // 이월 연차
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+  jobs         Job[]
+  vacations    Vacation[]
+  vacationAdjustments VacationAdjustment[]
+  dailyStatuses DailyStatus[]
+  weeklyNotes  WeeklyNote[]
+  systemMemos  SystemMemo[]
+  refreshToken String?
+  department   Department? @relation(fields: [departmentId], references: [id])
+  team         Team?       @relation(fields: [teamId], references: [id])
+  
+  // 차량 배차 관계
+  dispatches   Dispatch[]
+
+  // 게시판 관계
+  posts        Post[]
+  comments     Comment[]
+
+  @@index([departmentId])
+  @@index([teamId])
+}
+
+model Project {
+  id          Int      @id @default(autoincrement())
+  projectName String
+  clientName  String?
+  status      String   @default("ACTIVE")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  jobs        Job[]
+}
+
+model Job {
+  id        Int      @id @default(autoincrement())
+  title     String
+  content   String
+  jobDate   DateTime @default(now())
+  jobType   String   @default("NORMAL")
+  userId    Int
+  projectId Int?
+  isIssue   Boolean  @default(false)
+  order     Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  project   Project? @relation(fields: [projectId], references: [id])
+  user      User     @relation(fields: [userId], references: [id])
+
+  @@index([userId, jobDate])
+}
+
+model Vacation {
+  id        Int      @id @default(autoincrement())
+  type      String
+  startDate DateTime
+  endDate   DateTime
+  reason    String?
+  status    String   @default("PENDING")
+  userId    Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  user      User     @relation(fields: [userId], references: [id])
+
+  @@index([userId, status])
+  @@index([startDate, endDate])
+}
+
+model WeeklyNote {
+  id        Int      @id @default(autoincrement())
+  weekStart DateTime
+  content   String   @db.Text
+  userId    Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  user      User     @relation(fields: [userId], references: [id])
+
+  @@unique([weekStart, userId])
+}
+
+model DailyStatus {
+  id          Int      @id @default(autoincrement())
+  date        DateTime
+  workType    String
+  holidayName String?
+  userId      Int
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  user        User     @relation(fields: [userId], references: [id])
+
+  @@unique([date, userId])
+}
+
+model VacationAdjustment {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  year      Int
+  month     Int      // 1-12
+  amount    Float    // 보정된 사용 일수 (실제 연차와 별도로 합산되거나, 총 사용량을 대체)
+  reason    String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  user      User     @relation(fields: [userId], references: [id])
+
+  @@unique([userId, year, month])
+}
+
+// 5단계 권한 체계
+enum Role {
+  CEO         // 대표이사
+  EXECUTIVE   // 임원
+  DEPT_HEAD   // 부서장
+  TEAM_LEADER // 팀장
+  MEMBER      // 팀원
+}
+
+model SystemMemo {
+  id          Int      @id @default(autoincrement())
+  content     String   @db.Text
+  date        DateTime // 해당 메모가 표시될 날짜
+  userId      Int      // 작성자 ID
+  isResolved  Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  user        User     @relation(fields: [userId], references: [id])
+
+  @@index([date])
+  @@index([userId])
+}
+
+// ── 차량 관리 ──
+model Vehicle {
+  id           Int        @id @default(autoincrement())
+  modelName    String     // 모델명 (예: 셀토스, 아반떼)
+  licensePlate String     @unique // 차량번호 (예: 123가4567)
+  color        String?    // 색상
+  year         Int?       // 연식
+  capacity     Int        @default(5) // 승차정원
+  
+  // 옵션 정보
+  hasNavi      Boolean    @default(false) // 내비게이션
+  hasBlackBox  Boolean    @default(false) // 블랙박스
+  hasHiPass    Boolean    @default(false) // 하이패스
+  minAge       Int        @default(21)    // 운전 연령 제한 (예: 21, 26)
+
+  // 계약 정보
+  contractStartDate DateTime?
+  contractEndDate   DateTime?
+  monthlyRent       Int?      // 월 렌트비
+  deductible        Int?      // 자기부담금
+  rentalCompany     String?   // 렌터카 업체명
+  rentalContact     String?   // 업체 연락처
+
+  departmentId Int?       // 관리 부서 (옵션)
+  department   Department? @relation(fields: [departmentId], references: [id])
+
+  dispatches   Dispatch[]
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+}
+
+model Dispatch {
+  id          Int      @id @default(autoincrement())
+  vehicleId   Int
+  userId      Int      // 운전자
+  startDate   DateTime
+  endDate     DateTime
+  destination String?  // 행선지
+  purpose     String?  // 사용 목적
+  passengers  String?  // 동승자 (텍스트)
+  
+  status      DispatchStatus @default(APPROVED) // 기본 승인 (선착순)
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  vehicle     Vehicle  @relation(fields: [vehicleId], references: [id])
+  user        User     @relation(fields: [userId], references: [id])
+
+  @@index([vehicleId, startDate, endDate])
+  @@index([userId])
+}
+
+enum DispatchStatus {
+  PENDING
+  APPROVED
+  REJECTED
+  CANCELLED
+}
+
+// ── 게시판 ──
+model Board {
+  id          Int      @id @default(autoincrement())
+  name        String   @unique // 게시판 이름 (NOTICE, FREE, QNA 등)
+  displayName String   // 표시 이름 (공지사항, 자유게시판 등)
+  description String?
+  posts       Post[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Post {
+  id        Int      @id @default(autoincrement())
+  boardId   Int
+  userId    Int
+  title     String
+  content   String   @db.Text
+  viewCount Int      @default(0)
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  board     Board    @relation(fields: [boardId], references: [id])
+  user      User     @relation(fields: [userId], references: [id])
+  comments  Comment[]
+
+  @@index([boardId])
+}
+
+model Comment {
+  id        Int      @id @default(autoincrement())
+  postId    Int
+  userId    Int
+  content   String   @db.Text
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  post      Post     @relation(fields: [postId], references: [id])
+  user      User     @relation(fields: [userId], references: [id])
+
+  @@index([postId])
+}

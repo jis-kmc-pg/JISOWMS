@@ -1,0 +1,45 @@
+{
+  "$schema": "https://schema.tauri.app/config/2",
+  "productName": "OWMS-SYS",
+  "version": "0.1.0",
+  "identifier": "com.jis.owms-sys",
+  "build": {
+    "beforeDevCommand": "npm run dev",
+    "devUrl": "http://localhost:1420",
+    "beforeBuildCommand": "npm run build",
+    "frontendDist": "../dist"
+  },
+  "app": {
+    "windows": [
+      {
+        "title": "OWMS System Tray",
+        "width": 400,
+        "height": 520,
+        "minWidth": 360,
+        "minHeight": 400,
+        "maxWidth": 500,
+        "maxHeight": 700,
+        "resizable": true,
+        "alwaysOnTop": true,
+        "center": false,
+        "visible": false,
+        "x": 1480,
+        "y": 520
+      }
+    ],
+    "security": {
+      "csp": null
+    }
+  },
+  "bundle": {
+    "active": true,
+    "targets": "all",
+    "icon": [
+      "icons/32x32.png",
+      "icons/128x128.png",
+      "icons/128x128@2x.png",
+      "icons/icon.icns",
+      "icons/icon.ico"
+    ]
+  }
+}
