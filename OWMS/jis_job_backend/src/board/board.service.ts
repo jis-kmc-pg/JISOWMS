@@ -14,6 +14,7 @@ export class BoardService implements OnModuleInit {
             { name: 'free', displayName: '자유게시판' },
             { name: 'qna', displayName: '질의응답' },
             { name: 'issue', displayName: '이슈게시판' },
+            { name: 'suggestion', displayName: '건의게시판' },
         ];
 
         for (const board of boards) {
@@ -23,6 +24,32 @@ export class BoardService implements OnModuleInit {
                 this.logger.log(`Auto-created board: ${board.displayName}`);
             }
         }
+    }
+
+    // --- Dashboard: Recent All Posts (24시간 내 신규 게시글) ---
+    async getRecentAllPosts() {
+        const since = new Date(Date.now() - 24 * 60 * 60 * 1000);
+
+        const posts = await this.prisma.post.findMany({
+            where: {
+                createdAt: { gte: since },
+            },
+            include: {
+                board: { select: { displayName: true } },
+            },
+            orderBy: { createdAt: 'desc' },
+            take: 50,
+        });
+
+        return {
+            hasNew: posts.length > 0,
+            count: posts.length,
+            posts: posts.map((p) => ({
+                title: p.title,
+                boardName: p.board.displayName,
+                createdAt: p.createdAt,
+            })),
+        };
     }
 
     // --- Board ---

@@ -10,6 +10,7 @@ import { LocalStrategy } from './local.strategy';
 
 @Module({
   imports: [
+    ConfigModule,
     PassportModule,
     JwtModule.register({}), // We handle signAsync manually in AuthService now
   ],

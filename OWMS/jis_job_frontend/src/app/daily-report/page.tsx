@@ -278,9 +278,11 @@ export default function DailyReportPage() {
             try {
                 const match = job.title.match(/^(.*?)\s*:\s*([\s\S]*)$/);
                 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                let updateData: any = { projectName: job.title };
+                let updateData: any;
                 if (match) {
                     updateData = { clientName: match[1].trim(), projectName: match[2].trim() };
+                } else {
+                    updateData = { clientName: null, projectName: job.title };
                 }
                 await api.patch(`/reports/projects/${job.projectId}`, updateData);
                 showToastMsg('업무명(프로젝트정보)이 수정되었습니다');
@@ -420,39 +422,42 @@ export default function DailyReportPage() {
 
     // --- Render ---
     return (
-        <div className="w-full max-w-[1920px] mx-auto space-y-8 pb-20 px-8">
+        <div className="w-full max-w-[1920px] mx-auto space-y-4 sm:space-y-8 pb-20 px-3 sm:px-8">
             {/* Header */}
-            <div className="flex items-center justify-between">
-                <div className="flex items-center space-x-4">
-                    <Link href="/" className="p-2.5 hover:bg-stone-100 rounded-full transition-all text-slate-400 hover:text-slate-600">
-                        <ArrowLeft size={24} />
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                <div className="flex items-center space-x-3 sm:space-x-4 min-w-0">
+                    <Link href="/" className="p-2 sm:p-2.5 hover:bg-stone-100 rounded-full transition-all text-slate-400 hover:text-slate-600 shrink-0">
+                        <ArrowLeft size={22} className="sm:hidden" />
+                        <ArrowLeft size={24} className="hidden sm:block" />
                     </Link>
-                    <div>
-                        <h2 className="text-3xl font-bold text-slate-800">일일 업무 보고</h2>
-                        <p className="text-slate-500 mt-1 font-medium">오늘 진행한 업무를 상세히 기록하세요.</p>
+                    <div className="min-w-0">
+                        <h2 className="text-xl sm:text-3xl font-bold text-slate-800 truncate">일일 업무 보고</h2>
+                        <p className="text-slate-500 mt-0.5 sm:mt-1 font-medium text-xs sm:text-base hidden sm:block">오늘 진행한 업무를 상세히 기록하세요.</p>
                     </div>
                 </div>
-                <div className="flex items-center space-x-3">
+                <div className="flex items-center space-x-2 sm:space-x-3 shrink-0">
                     <button
                         onClick={handleDownloadMyWeeklyExcel}
-                        className="flex items-center space-x-2 bg-teal-600 hover:bg-teal-700 text-white px-4 py-2.5 rounded-xl transition-all shadow-lg shadow-teal-200"
+                        className="flex items-center space-x-1.5 sm:space-x-2 bg-teal-600 hover:bg-teal-700 text-white px-3 py-2 sm:px-4 sm:py-2.5 rounded-xl transition-all shadow-lg shadow-teal-200"
                         title="내 주간 업무 엑셀 다운로드"
                     >
-                        <FileSpreadsheet size={18} />
-                        <span className="text-sm font-bold">내 주간 엑셀</span>
+                        <FileSpreadsheet size={16} className="sm:hidden" />
+                        <FileSpreadsheet size={18} className="hidden sm:block" />
+                        <span className="text-xs sm:text-sm font-bold">엑셀</span>
                     </button>
                     <button
                         onClick={handleSave}
-                        className="flex items-center space-x-2 bg-indigo-600 hover:bg-indigo-700 px-6 py-2.5 rounded-xl font-bold text-white transition-all shadow-lg shadow-indigo-500/20 hover:shadow-indigo-500/30 hover:-translate-y-0.5 ml-2"
+                        className="flex items-center space-x-1.5 sm:space-x-2 bg-indigo-600 hover:bg-indigo-700 px-4 py-2 sm:px-6 sm:py-2.5 rounded-xl font-bold text-white transition-all shadow-lg shadow-indigo-500/20 hover:shadow-indigo-500/30 hover:-translate-y-0.5"
                     >
-                        <Save size={18} />
-                        <span>저장</span>
+                        <Save size={16} className="sm:hidden" />
+                        <Save size={18} className="hidden sm:block" />
+                        <span className="text-xs sm:text-base">저장</span>
                     </button>
                 </div>
             </div>
 
             {/* Main Content */}
-            <div id="report-container" className="flex flex-col space-y-10 p-4 sm:p-8 rounded-[2.5rem] bg-white border border-stone-100 shadow-[0_20px_50px_rgba(0,0,0,0.02)]">
+            <div id="report-container" className="flex flex-col space-y-6 sm:space-y-10 p-3 sm:p-8 rounded-2xl sm:rounded-[2.5rem] bg-white border border-stone-100 shadow-[0_20px_50px_rgba(0,0,0,0.02)]">
                 <div className="mb-4">
                     <WeeklyStatusNav
                         statusData={weeklyStatus}
@@ -472,7 +477,7 @@ export default function DailyReportPage() {
                     onHolidayNameChange={setHolidayName}
                 />
 
-                <div className="grid grid-cols-1 lg:grid-cols-3 gap-10 items-start">
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 sm:gap-10 items-start">
                     <div className="lg:col-span-2 space-y-8">
                         <div className="space-y-6" ref={dropdownRef} onDragLeave={handleListDragLeave}>
                             {jobs.map((job, index) => (
@@ -499,12 +504,16 @@ export default function DailyReportPage() {
                             ))}
                             <button
                                 onClick={addJob}
-                                className="w-full py-8 border-2 border-dashed border-stone-200 rounded-2xl text-slate-400 hover:text-indigo-500 hover:border-indigo-300 hover:bg-indigo-50/30 transition-all flex flex-col items-center justify-center space-y-3 group no-print"
+                                className={`w-full py-8 border-2 border-dashed rounded-2xl transition-all flex flex-col items-center justify-center space-y-3 group no-print ${dragOverIndex === jobs.length ? 'border-indigo-500 bg-indigo-50/50 text-indigo-500' : 'border-stone-200 text-slate-400 hover:text-indigo-500 hover:border-indigo-300 hover:bg-indigo-50/30'}`}
+                                onDragOver={(e) => { e.preventDefault(); e.stopPropagation(); handleDragOver(e, jobs.length); }}
+                                onDrop={(e) => handleDrop(e, jobs.length)}
                             >
-                                <div className="p-3 bg-stone-50 rounded-full group-hover:bg-indigo-100 transition-all text-slate-400 group-hover:text-indigo-500">
+                                <div className={`p-3 rounded-full transition-all ${dragOverIndex === jobs.length ? 'bg-indigo-100 text-indigo-500' : 'bg-stone-50 text-slate-400 group-hover:bg-indigo-100 group-hover:text-indigo-500'}`}>
                                     <Plus size={24} />
                                 </div>
-                                <span className="text-sm font-bold tracking-widest uppercase">새 업무 추가</span>
+                                <span className="text-sm font-bold tracking-widest uppercase">
+                                    {dragOverIndex === jobs.length ? '여기에 놓기' : '새 업무 추가'}
+                                </span>
                             </button>
                         </div>
                     </div>
@@ -549,6 +558,15 @@ export default function DailyReportPage() {
                     onCancel={() => { setShowDeleteConfirmModal(false); setJobToDeleteIndex(null); }}
                 />
             </div>
+
+            {/* Floating Save Button (FAB) */}
+            <button
+                onClick={handleSave}
+                className="fixed bottom-6 right-6 z-50 w-14 h-14 bg-indigo-600 hover:bg-indigo-700 active:scale-95 text-white rounded-full shadow-2xl shadow-indigo-400/40 flex items-center justify-center transition-all no-print"
+                title="저장"
+            >
+                <Save size={22} />
+            </button>
         </div>
     );
 }

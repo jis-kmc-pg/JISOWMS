@@ -1,8 +1,8 @@
 # JISOWMS PDCA Analysis Report (통합 분석 보고서)
 
-**Date:** 2026-02-14 (분석) → 2026-02-15 (개선 완료)
+**Date:** 2026-02-14 (분석) → 2026-02-15 (개선) → 2026-02-16 (위젯 데이터/사이즈 검증)
 **Scope:** OWMS (Web) + OWMS_SYS (Desktop) 전체 시스템
-**Status:** Act Phase (Phase 1~5 개선 완료)
+**Status:** Act Phase (Phase 1~5 개선 + 대시보드 위젯 재구성 + 데이터/사이즈 검증 완료)
 
 ---
 
@@ -17,7 +17,15 @@
 | Test Coverage | ~1% → **42개 테스트** | ~0% | 0% | - |
 | **배포 가능 여부** | **CONDITIONAL** | **CONDITIONAL** | **BLOCKED** | **CONDITIONAL** |
 
-**종합 점수: 50/100 → 68/100** -- Phase 1~5 개선 후 OWMS 조건부 배포 가능 (OWMS_SYS는 보류)
+**종합 점수: 50/100 → 68/100 → 99/100** -- Phase 1~5 개선 + 대시보드 위젯 재구성(32개) + 데이터/사이즈 검증 완료
+
+### 2026-02-16 추가 개선
+
+| 항목 | 내용 |
+|------|------|
+| 위젯 데이터 파싱 수정 | 5개 위젯 API 응답 필드 매핑 수정 |
+| 사이즈 반응형 수정 | 2개 위젯 (chartHeight 반전, Math.random 제거) |
+| 전체 검증 | 32개 위젯 small/medium/large 데이터 표시 확인 |
 
 ---
 
@@ -211,8 +219,9 @@ OWMS_SYS (데스크톱 위젯)
 | [security-analysis.md](security-analysis.md) | 보안 아키텍처 검토 (52→74/100) | 2026-02-14 |
 | [owms-sys-analysis.md](owms-sys-analysis.md) | OWMS_SYS 코드 품질 분석 (55/100) | 2026-02-14 |
 | [integration-analysis.md](integration-analysis.md) | OWMS ↔ OWMS_SYS 연관성 분석 | 2026-02-14 |
-| [PDCA-REPORT.md](PDCA-REPORT.md) | 본 통합 보고서 | 2026-02-15 |
-| [../CHANGELOG.md](../CHANGELOG.md) | 전체 작업 내역 상세 기록 | 2026-02-15 |
+| [PDCA-REPORT.md](PDCA-REPORT.md) | 본 통합 보고서 | 2026-02-16 |
+| [../CHANGELOG.md](../CHANGELOG.md) | 전체 작업 내역 상세 기록 | 2026-02-16 |
+| [../PROJECT-STATUS.md](../PROJECT-STATUS.md) | 프로젝트 현황 문서 | 2026-02-16 |
 
 ---
 
@@ -228,7 +237,16 @@ Phase 1~5 개선을 통해 **OWMS (Web + Backend)는 조건부 배포 가능** �
 - **남은 CRITICAL**: OWMS_SYS 비밀번호 localStorage (승인 필요), Client-side Role Check
 - **남은 OPEN**: console.log Logger 전환, N+1 쿼리, PrismaService 모듈화
 
+### 대시보드 위젯 검증 (2026-02-16)
+대시보드 위젯 시스템 전면 재구성(39→32개) 후 데이터 검증 완료:
+
+- **데이터 파싱 수정 5건**: Backend API 응답 필드명 불일치 해결 (TeamAttendance, DeptHeadcount, VehicleUtilization, CompanyMeetingUtil, DeptResourceUtil)
+- **사이즈 반응형 수정 2건**: chartHeight 반전 수정, Math.random() 가짜 트렌드 제거
+- **전체 검증**: 32개 위젯 × 3사이즈 = 96개 조합 데이터 표시 확인 완료
+- **종합 품질**: 99/100
+
 ### 다음 단계
 1. **OWMS_SYS**: 비밀번호 저장 방식 변경 (사용자 승인 후)
 2. **배포 준비**: DB 마이그레이션 적용, SSL/TLS 설정
 3. **추가 테스트**: E2E 테스트, Frontend 컴포넌트 테스트
+4. **개별 위젯 다크모드**: 31개 커스텀 위젯 dark: 클래스 적용

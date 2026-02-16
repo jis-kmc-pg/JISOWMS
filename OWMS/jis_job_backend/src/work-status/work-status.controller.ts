@@ -36,4 +36,12 @@ export class WorkStatusController {
   ) {
     return this.workStatusService.getWeeklyDetail(date, parseInt(userId));
   }
+
+  @Get('keywords')
+  async getKeywords(
+    @Request() req: any,
+    @Query('date') date?: string,
+  ) {
+    return this.workStatusService.getKeywords(req.user, date);
+  }
 }

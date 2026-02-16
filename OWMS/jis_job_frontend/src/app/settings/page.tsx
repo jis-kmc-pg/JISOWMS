@@ -1,14 +1,15 @@
 'use client';
 
 import { useState } from 'react';
-import { Briefcase, User, Building2, UserCog, Shield } from 'lucide-react';
+import { Briefcase, User, Building2, UserCog, Shield, DoorOpen } from 'lucide-react';
 import JobsSettings from '@/components/settings/JobsSettings';
 import ProfileSettings from '@/components/settings/ProfileSettings';
 import DeptTeamSettings from '@/components/settings/DeptTeamSettings';
 import UserManagement from '@/components/settings/UserManagement';
 import RoleManagement from '@/components/settings/RoleManagement';
+import MeetingRoomSettings from '@/components/settings/MeetingRoomSettings';
 
-type TabId = 'profile' | 'jobs' | 'dept-team' | 'users' | 'roles';
+type TabId = 'profile' | 'jobs' | 'dept-team' | 'users' | 'roles' | 'meeting-room';
 
 export default function SettingsPage() {
     const [activeTab, setActiveTab] = useState<TabId>('profile');
@@ -19,6 +20,7 @@ export default function SettingsPage() {
         { id: 'dept-team' as TabId, label: '부서 · 팀 관리', icon: <Building2 size={18} />, group: '관리' },
         { id: 'users' as TabId, label: '사용자 관리', icon: <UserCog size={18} />, group: '관리' },
         { id: 'roles' as TabId, label: '권한 관리', icon: <Shield size={18} />, group: '관리' },
+        { id: 'meeting-room' as TabId, label: '회의실 관리', icon: <DoorOpen size={18} />, group: '관리' },
     ];
 
     // 그룹별 분리
@@ -84,6 +86,7 @@ export default function SettingsPage() {
                         {activeTab === 'dept-team' && <DeptTeamSettings />}
                         {activeTab === 'users' && <UserManagement />}
                         {activeTab === 'roles' && <RoleManagement />}
+                        {activeTab === 'meeting-room' && <MeetingRoomSettings />}
                     </div>
                 </div>
             </div>

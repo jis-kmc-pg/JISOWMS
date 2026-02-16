@@ -51,7 +51,7 @@ export default function WeeklyStatusPage() {
             const offset = date.getTimezoneOffset() * 60000;
             const dateStr = new Date(date.getTime() - offset).toISOString().split('T')[0];
             const res = await api.get(`/work-status/summary?date=${dateStr}`);
-            if (res.data) setSummaryData(res.data);
+            if (res.data) setSummaryData(Array.isArray(res.data) ? res.data : res.data.teams || []);
         } catch (err) {
             console.error(err);
         } finally {
@@ -181,7 +181,6 @@ export default function WeeklyStatusPage() {
     const handleNextWeek = () => {
         const newDate = new Date(selectedDate);
         newDate.setDate(selectedDate.getDate() + 7);
-        setSelectedDate(newDate);
         setSelectedDate(newDate);
     };
 

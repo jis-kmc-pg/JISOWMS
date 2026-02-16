@@ -8,6 +8,11 @@ import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 export class BoardController {
     constructor(private readonly boardService: BoardService) { }
 
+    @Get('recent-all')
+    getRecentAll() {
+        return this.boardService.getRecentAllPosts();
+    }
+
     @Get()
     findAllBoards() {
         return this.boardService.findAllBoards();
@@ -28,6 +33,6 @@ export class BoardController {
         @Param('name') name: string,
         @Body() createPostDto: CreatePostDto
     ) {
-        return this.boardService.createPost(req.user.userId, name, createPostDto);
+        return this.boardService.createPost(req.user.id, name, createPostDto);
     }
 }

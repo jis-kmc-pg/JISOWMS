@@ -70,6 +70,10 @@ export class VacationService {
       total: finalTotal,
       used,
       remaining: finalTotal - used,
+      // 대시보드 위젯 호환 키
+      totalDays: finalTotal,
+      usedDays: used,
+      remainingDays: finalTotal - used,
     };
   }
 
@@ -160,6 +164,20 @@ export class VacationService {
     });
   }
 
+  // 4-1. [Dashboard Widget] 부서 내 대기 중인 휴가 신청 건수
+  async getDeptPendingCount(deptId: number) {
+    if (!deptId) return { pendingCount: 0 };
+
+    const count = await this.prisma.vacation.count({
+      where: {
+        user: { departmentId: deptId },
+        status: 'PENDING',
+      },
+    });
+
+    return { pendingCount: count };
+  }
+
   // 5. [Admin] Get All Vacations (with user/dept info)
   async getAdminAll(deptId?: number) {
     return this.prisma.vacation.findMany({
@@ -247,14 +265,15 @@ export class VacationService {
   }
 
   // 8. [Admin] Get Stats for all employees
-  async getAdminStats(year?: number, name?: string, deptId?: number) {
+  async getAdminStats(year?: number, name?: string, deptId?: number, teamId?: number) {
     const targetYear = year || new Date().getFullYear();
     const yearStart = new Date(targetYear, 0, 1);
     const yearEnd = new Date(targetYear, 11, 31);
 
     const whereClause: any = {};
-    if (name) whereClause.name = { contains: name }; // Removed mode: 'insensitive' for compatibility relying on DB collation or specific Prisma version features
-    if (deptId) whereClause.departmentId = deptId;
+    if (name) whereClause.name = { contains: name };
+    if (teamId) whereClause.teamId = teamId;
+    else if (deptId) whereClause.departmentId = deptId;
 
     const users = await this.prisma.user.findMany({
       where: whereClause,
@@ -320,6 +339,7 @@ export class VacationService {
       return {
         userId: user.id,
         userName: user.name,
+        name: user.name, // 대시보드 위젯 호환
         deptName: (user as any).department?.name || '-',
         position: user.position || '-',
         joinDate: user.joinDate

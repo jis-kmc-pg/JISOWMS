@@ -1,4 +1,4 @@
-import { Injectable, ConflictException, ForbiddenException, NotFoundException } from '@nestjs/common';
+import { Injectable, ConflictException, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../prisma.service';
 import { CreateDispatchDto } from './dto/create-dispatch.dto';
 
@@ -61,7 +61,7 @@ export class DispatchService {
         });
     }
 
-    async findAll(start?: string, end?: string) {
+    async findAll(start?: string, end?: string, teamId?: number, deptId?: number) {
         // 타임라인 조회용 (기간 필터링)
         const whereClause: any = {
             status: { not: 'CANCELLED' }
@@ -70,10 +70,21 @@ export class DispatchService {
         if (start && end) {
             const s = new Date(start);
             const e = new Date(end);
+            // 날짜만 전달된 경우 해당 일 전체를 포함하도록 +1일
+            if (!end.includes('T')) {
+                e.setDate(e.getDate() + 1);
+            }
             whereClause.AND = [
                 { startDate: { lt: e } },
                 { endDate: { gt: s } }
             ];
+        }
+
+        if (teamId) {
+            whereClause.user = { ...whereClause.user, teamId };
+        }
+        if (deptId) {
+            whereClause.user = { ...whereClause.user, departmentId: deptId };
         }
 
         return this.prisma.dispatch.findMany({
@@ -96,18 +107,9 @@ export class DispatchService {
         });
     }
 
-    async cancel(id: number, userId: number) {
+    async cancel(id: number) {
         const dispatch = await this.prisma.dispatch.findUnique({ where: { id } });
         if (!dispatch) throw new NotFoundException('예약 정보를 찾을 수 없습니다.');
-
-        // 본인이거나 관리자(권한 체크는 Guard에서 처리하거나 여기서 Role 확인)
-        // 여기서는 간단히 본인 여부만 체크하고, 추후 관리자 기능 추가 시 보완
-        // Role 정보가 필요하면 User를 조회하거나 Request User 정보를 활용해야 함.
-        // 일단 본인만 취소 가능하게.
-        if (dispatch.userId !== userId) {
-            // TODO: 관리자 권한 확인 로직 추가 필요
-            throw new ForbiddenException('본인의 예약만 취소할 수 있습니다.');
-        }
 
         return this.prisma.dispatch.update({
             where: { id },

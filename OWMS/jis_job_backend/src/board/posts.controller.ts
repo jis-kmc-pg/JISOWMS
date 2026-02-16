@@ -15,7 +15,7 @@ export class PostsController {
 
     @Delete(':id')
     remove(@Request() req: any, @Param('id') id: string) {
-        return this.boardService.deletePost(+id, req.user.userId);
+        return this.boardService.deletePost(+id, req.user.id);
     }
 
     @Post(':id/comments')
@@ -24,12 +24,12 @@ export class PostsController {
         @Param('id') id: string,
         @Body() createCommentDto: CreateCommentDto
     ) {
-        return this.boardService.createComment(req.user.userId, +id, createCommentDto);
+        return this.boardService.createComment(req.user.id, +id, createCommentDto);
     }
 
     // 댓글 삭제 API 추가 (필요 시)
     @Delete('comments/:id')
     removeComment(@Request() req: any, @Param('id') id: string) {
-        return this.boardService.deleteComment(+id, req.user.userId);
+        return this.boardService.deleteComment(+id, req.user.id);
     }
 }

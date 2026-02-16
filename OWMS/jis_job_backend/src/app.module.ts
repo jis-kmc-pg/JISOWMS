@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { ThrottlerModule, ThrottlerGuard } from '@nestjs/throttler';
-import { APP_GUARD } from '@nestjs/core';
+import { APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { PrismaModule } from './prisma.module';
@@ -17,10 +17,17 @@ import { MetricsModule } from './metrics/metrics.module';
 import { VehicleModule } from './vehicle/vehicle.module';
 import { DispatchModule } from './dispatch/dispatch.module';
 import { BoardModule } from './board/board.module';
+import { MeetingRoomModule } from './meeting-room/meeting-room.module';
+import { TeamStatusModule } from './team-status/team-status.module';
+import { ActivityLogModule } from './activity-log/activity-log.module';
+import { ActivityLogInterceptor } from './activity-log/activity-log.interceptor';
+import { DashboardPreferencesModule } from './dashboard-preferences/dashboard-preferences.module';
+import { GatewayModule } from './gateway/gateway.module';
 
 @Module({
   imports: [
     PrismaModule,
+    GatewayModule,
     ThrottlerModule.forRoot([
       {
         ttl: 60000,
@@ -39,6 +46,10 @@ import { BoardModule } from './board/board.module';
     VehicleModule,
     DispatchModule,
     BoardModule,
+    MeetingRoomModule,
+    TeamStatusModule,
+    ActivityLogModule,
+    DashboardPreferencesModule,
   ],
   controllers: [AppController],
   providers: [
@@ -46,6 +57,10 @@ import { BoardModule } from './board/board.module';
     {
       provide: APP_GUARD,
       useClass: ThrottlerGuard,
+    },
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: ActivityLogInterceptor,
     },
   ],
 })

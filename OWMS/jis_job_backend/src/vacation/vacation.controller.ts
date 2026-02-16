@@ -12,6 +12,7 @@ import { VacationService } from './vacation.service';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { RolesGuard } from '../common/guards/roles.guard';
 import { Roles } from '../common/decorators/roles.decorator';
+import { CreateVacationDto } from './dto/create-vacation.dto';
 
 @Controller('vacations')
 @UseGuards(JwtAuthGuard)
@@ -32,8 +33,7 @@ export class VacationController {
   @Post()
   async requestVacation(
     @Request() req: any,
-    @Body()
-    body: { type: string; startDate: string; endDate: string; reason?: string },
+    @Body() body: CreateVacationDto,
   ) {
     return this.vacationService.requestVacation(req.user.id, body);
   }
@@ -47,6 +47,11 @@ export class VacationController {
       startDate,
       endDate,
     );
+  }
+
+  @Get('dept-pending-count')
+  async getDeptPendingCount(@Request() req: any) {
+    return this.vacationService.getDeptPendingCount(req.user.departmentId);
   }
 
   // --- Administrative Endpoints ---
@@ -89,10 +94,27 @@ export class VacationController {
   @Get('admin/stats')
   async getAdminStats(@Request() req: any) {
     const { year, name, deptId } = req.query;
+    const role = req.user.role;
+
+    // 역할별 데이터 스코핑 강제
+    let finalDeptId = deptId ? parseInt(deptId) : undefined;
+    let finalTeamId: number | undefined = undefined;
+
+    if (role === 'TEAM_LEADER') {
+      // 팀장: 자기 팀원만 조회
+      finalTeamId = req.user.teamId;
+      finalDeptId = undefined; // teamId로 필터링하므로 deptId 불필요
+    } else if (role === 'DEPT_HEAD') {
+      // 부서장: 자기 부서만 조회
+      finalDeptId = req.user.departmentId;
+    }
+    // CEO/EXECUTIVE: 제한 없음
+
     return this.vacationService.getAdminStats(
       year ? parseInt(year) : undefined,
       name,
-      deptId ? parseInt(deptId) : undefined,
+      finalDeptId,
+      finalTeamId,
     );
   }
 

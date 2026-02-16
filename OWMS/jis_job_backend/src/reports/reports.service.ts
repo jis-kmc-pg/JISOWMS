@@ -65,23 +65,23 @@ export class ReportsService {
         };
 
         if (job.projectId && job.title) {
-          // 정규식 개선: 줄바꿈 문자를 포함하기 위해 (.*) 대신 ([\s\S]*) 사용
+          // 콜론이 있으면 거래처:업무명으로 분리, 없으면 전체를 업무명으로 (거래처 초기화)
           const match = job.title.match(/^(.*?)\s*:\s*([\s\S]*)$/);
-          if (match) {
-            const clientName = match[1].trim();
-            const projectName = match[2].trim();
+          const updateData = match
+            ? { clientName: match[1].trim(), projectName: match[2].trim() }
+            : { clientName: null, projectName: job.title };
 
-            try {
-              await this.prisma.project.update({
-                where: { id: job.projectId },
-                data: { clientName, projectName },
-              });
-            } catch (error) {
-              this.logger.error(
-                `Failed to update project info for projectId ${job.projectId}`,
-                error.stack,
-              );
-            }
+
+          try {
+            await this.prisma.project.update({
+              where: { id: job.projectId },
+              data: updateData,
+            });
+          } catch (error) {
+            this.logger.error(
+              `Failed to update project info for projectId ${job.projectId}`,
+              error.stack,
+            );
           }
         }
 
@@ -235,8 +235,8 @@ export class ReportsService {
     });
   }
 
-  async getMyWeeklyStatus(userId: number, dateStr: string) {
-    const baseDate = new Date(dateStr);
+  async getMyWeeklyStatus(userId: number, dateStr?: string) {
+    const baseDate = dateStr ? new Date(dateStr) : new Date();
     const thisMonday = DateUtil.getMonday(baseDate);
 
     // 금주(월-금) + 차주(월-금) = 총 10일치 상태 조회
@@ -337,6 +337,86 @@ export class ReportsService {
       this.logger.error('saveSystemMemo raw execute error', error.stack);
       throw error;
     }
+  }
+
+  // ── 대시보드 위젯 전용 메서드 ──
+
+  /** 위젯: 오늘 업무 건수 */
+  async getJobsCount(userId: number, date?: string) {
+    const targetDate = date ? new Date(date) : new Date();
+    const startOfDay = DateUtil.setStartOfDay(targetDate);
+    const endOfDay = DateUtil.setEndOfDay(targetDate);
+
+    const count = await this.prisma.job.count({
+      where: {
+        userId,
+        jobDate: { gte: startOfDay, lte: endOfDay },
+      },
+    });
+
+    return { count };
+  }
+
+  /** 위젯: 금주 업무 완료율 (입력일/평일 비율) */
+  async getMyCompletionRate(userId: number, dateStr?: string) {
+    const baseDate = dateStr ? new Date(dateStr) : new Date();
+    const monday = DateUtil.getMonday(baseDate);
+
+    // 오늘까지의 평일 수 계산 (월~오늘, 최대 금요일)
+    const today = new Date();
+    const dayOfWeek = today.getDay(); // 0=일 ~ 6=토
+    const weekdaysElapsed = Math.min(
+      dayOfWeek === 0 ? 5 : dayOfWeek >= 6 ? 5 : dayOfWeek,
+      5,
+    );
+
+    if (weekdaysElapsed === 0) {
+      return { completionRate: 0 };
+    }
+
+    // 월~오늘 범위에서 업무가 입력된 날 수
+    const friday = new Date(monday.getTime() + 4 * 86400000);
+    const endOfRange = DateUtil.setEndOfDay(
+      today < friday ? today : friday,
+    );
+
+    const jobs = await this.prisma.job.findMany({
+      where: {
+        userId,
+        jobDate: { gte: monday, lte: endOfRange },
+      },
+      select: { jobDate: true },
+    });
+
+    const uniqueDates = new Set(
+      jobs.map((j) => DateUtil.toKSTString(j.jobDate)),
+    );
+    const completionRate = Math.round(
+      (uniqueDates.size / weekdaysElapsed) * 100,
+    );
+
+    return { completionRate };
+  }
+
+  /** 위젯: 금주 주간 참고사항 작성 여부 */
+  async getWeeklyNoteWritten(userId: number, dateStr?: string) {
+    const baseDate = dateStr ? new Date(dateStr) : new Date();
+    const monday = DateUtil.getMonday(baseDate);
+
+    // 범위를 넓혀서 검색 (+-2일)
+    const searchStart = new Date(monday);
+    searchStart.setDate(searchStart.getDate() - 2);
+    const searchEnd = new Date(monday);
+    searchEnd.setDate(searchEnd.getDate() + 1);
+
+    const note = await this.prisma.weeklyNote.findFirst({
+      where: {
+        userId,
+        weekStart: { gte: searchStart, lte: searchEnd },
+      },
+    });
+
+    return { written: !!note };
   }
 
   async searchPastJobs(userId: number, startDate: string, endDate: string) {

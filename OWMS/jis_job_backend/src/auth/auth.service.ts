@@ -34,6 +34,7 @@ export class AuthService {
       user.userId,
       user.role,
       user.departmentId,
+      user.teamId,
     );
     await this.updateRefreshToken(user.id, tokens.refreshToken);
     return {
@@ -67,6 +68,7 @@ export class AuthService {
       user.userId,
       user.role,
       user.departmentId,
+      user.teamId,
     );
     await this.updateRefreshToken(user.id, tokens.refreshToken);
     return tokens;
@@ -85,14 +87,16 @@ export class AuthService {
     username: string,
     role: string,
     departmentId: number | null,
+    teamId: number | null = null,
   ) {
+    const payload = { sub: userId, userId: username, role, departmentId, teamId };
     const [at, rt] = await Promise.all([
       this.jwtService.signAsync(
-        { sub: userId, userId: username, role, departmentId },
+        payload,
         { secret: this.configService.get<string>('JWT_SECRET'), expiresIn: '15m' },
       ),
       this.jwtService.signAsync(
-        { sub: userId, userId: username, role, departmentId },
+        payload,
         { secret: this.configService.get<string>('JWT_REFRESH_SECRET'), expiresIn: '7d' },
       ),
     ]);

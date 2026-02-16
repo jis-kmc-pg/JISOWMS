@@ -222,6 +222,210 @@ export class MetricsService {
     };
   }
 
+  // --- 위젯용 집계 API ---
+
+  /** 월간 업무 추이 (최근 6개월, 부서/전사) */
+  async getMonthlyTrend(deptId?: number) {
+    const now = new Date();
+    const sixMonthsAgo = new Date(now.getFullYear(), now.getMonth() - 5, 1);
+
+    const where: any = { jobDate: { gte: sixMonthsAgo } };
+    if (deptId) {
+      where.user = { departmentId: deptId };
+    }
+
+    const jobs = await this.prisma.job.findMany({
+      where,
+      select: { jobDate: true },
+    });
+
+    const monthMap = new Map<string, number>();
+    for (let i = 5; i >= 0; i--) {
+      const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
+      const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
+      monthMap.set(key, 0);
+    }
+
+    jobs.forEach((j) => {
+      const key = `${j.jobDate.getFullYear()}-${String(j.jobDate.getMonth() + 1).padStart(2, '0')}`;
+      if (monthMap.has(key)) {
+        monthMap.set(key, (monthMap.get(key) || 0) + 1);
+      }
+    });
+
+    return Array.from(monthMap.entries()).map(([month, count]) => ({ month, count }));
+  }
+
+  /** 배차 통계 (기간별, 부서/전사) */
+  async getDispatchStats(deptId?: number) {
+    const now = new Date();
+    const startOfWeek = DateUtil.getMonday(now);
+    const endOfWeek = DateUtil.setEndOfDay(new Date(startOfWeek.getTime() + 6 * 86400000));
+
+    const where: any = {
+      status: { not: 'CANCELLED' },
+      startDate: { gte: startOfWeek, lte: endOfWeek },
+    };
+    if (deptId) {
+      where.user = { departmentId: deptId };
+    }
+
+    const dispatches = await this.prisma.dispatch.findMany({
+      where,
+      include: { vehicle: { select: { modelName: true, licensePlate: true } } },
+    });
+
+    // 차량별 집계
+    const vehicleMap = new Map<string, number>();
+    dispatches.forEach((d) => {
+      const key = `${d.vehicle.modelName} (${d.vehicle.licensePlate})`;
+      vehicleMap.set(key, (vehicleMap.get(key) || 0) + 1);
+    });
+
+    return {
+      totalDispatches: dispatches.length,
+      byVehicle: Array.from(vehicleMap.entries()).map(([name, count]) => ({ name, count })),
+    };
+  }
+
+  /** 회의실 가동률 */
+  async getRoomStats(deptId?: number) {
+    const now = new Date();
+    const startOfWeek = DateUtil.getMonday(now);
+    const endOfWeek = DateUtil.setEndOfDay(new Date(startOfWeek.getTime() + 6 * 86400000));
+
+    const rooms = await this.prisma.meetingRoom.findMany({
+      where: { isActive: true },
+    });
+
+    const where: any = {
+      status: { not: 'CANCELLED' },
+      startDate: { gte: startOfWeek, lte: endOfWeek },
+    };
+    if (deptId) {
+      where.user = { departmentId: deptId };
+    }
+
+    const reservations = await this.prisma.meetingRoomReservation.findMany({
+      where,
+      include: { room: { select: { name: true } } },
+    });
+
+    // 회의실별 예약 건수
+    const roomMap = new Map<string, number>();
+    rooms.forEach((r) => roomMap.set(r.name, 0));
+    reservations.forEach((r) => {
+      roomMap.set(r.room.name, (roomMap.get(r.room.name) || 0) + 1);
+    });
+
+    // 가동률: 예약 시간 / (회의실 수 × 주간 근무시간)
+    let totalBookedHours = 0;
+    reservations.forEach((r) => {
+      totalBookedHours += (r.endDate.getTime() - r.startDate.getTime()) / 3600000;
+    });
+    const totalAvailableHours = rooms.length * 40; // 주 40시간 기준
+    const utilizationRate = totalAvailableHours > 0
+      ? Math.round((totalBookedHours / totalAvailableHours) * 100)
+      : 0;
+
+    return {
+      totalReservations: reservations.length,
+      utilizationRate,
+      byRoom: Array.from(roomMap.entries()).map(([name, count]) => ({ name, count })),
+    };
+  }
+
+  /** 출근율 (ActivityLog LOGIN 기반, 부서별/일별) */
+  async getAttendanceStats(startDate?: string, endDate?: string) {
+    const now = new Date();
+    const start = startDate ? new Date(startDate) : DateUtil.getMonday(now);
+    const end = endDate ? new Date(endDate) : DateUtil.setEndOfDay(new Date(start.getTime() + 6 * 86400000));
+
+    // 로그인 기록에서 일자별 고유 사용자 추출
+    const loginLogs = await this.prisma.activityLog.findMany({
+      where: {
+        action: 'LOGIN',
+        statusCode: 200,
+        createdAt: { gte: start, lte: end },
+        userId: { not: null },
+      },
+      select: { userId: true, createdAt: true },
+    });
+
+    // 부서별 전체 인원
+    const departments = await this.prisma.department.findMany();
+    const users = await this.prisma.user.findMany({
+      select: { id: true, departmentId: true },
+    });
+
+    // 일별-부서별 출근자 집계
+    const dayMap = new Map<string, Map<number, Set<number>>>();
+    loginLogs.forEach((log) => {
+      const dateKey = log.createdAt.toISOString().slice(0, 10);
+      if (!dayMap.has(dateKey)) dayMap.set(dateKey, new Map());
+      const deptMap = dayMap.get(dateKey)!;
+
+      const user = users.find((u) => u.id === log.userId);
+      const deptId = user?.departmentId || 0;
+      if (!deptMap.has(deptId)) deptMap.set(deptId, new Set());
+      deptMap.get(deptId)!.add(log.userId!);
+    });
+
+    const deptMemberCounts = new Map<number, number>();
+    users.forEach((u) => {
+      const deptId = u.departmentId || 0;
+      deptMemberCounts.set(deptId, (deptMemberCounts.get(deptId) || 0) + 1);
+    });
+
+    const result: any[] = [];
+    dayMap.forEach((deptMap, dateKey) => {
+      departments.forEach((dept) => {
+        const loggedIn = deptMap.get(dept.id)?.size || 0;
+        const total = deptMemberCounts.get(dept.id) || 1;
+        result.push({
+          date: dateKey,
+          deptId: dept.id,
+          deptName: dept.name,
+          loggedIn,
+          total,
+          rate: Math.round((loggedIn / total) * 100),
+        });
+      });
+    });
+
+    return result.sort((a, b) => a.date.localeCompare(b.date) || a.deptId - b.deptId);
+  }
+
+  /** 월간 연차 사용 추이 (전사) */
+  async getVacationTrend(year?: number) {
+    const targetYear = year || new Date().getFullYear();
+    const yearStart = new Date(targetYear, 0, 1);
+    const yearEnd = new Date(targetYear, 11, 31, 23, 59, 59);
+
+    const vacations = await this.prisma.vacation.findMany({
+      where: {
+        status: 'APPROVED',
+        startDate: { gte: yearStart, lte: yearEnd },
+      },
+      select: { startDate: true },
+    });
+
+    const monthMap = new Map<string, number>();
+    for (let m = 0; m < 12; m++) {
+      const key = `${targetYear}-${String(m + 1).padStart(2, '0')}`;
+      monthMap.set(key, 0);
+    }
+
+    vacations.forEach((v) => {
+      const key = `${v.startDate.getFullYear()}-${String(v.startDate.getMonth() + 1).padStart(2, '0')}`;
+      if (monthMap.has(key)) {
+        monthMap.set(key, (monthMap.get(key) || 0) + 1);
+      }
+    });
+
+    return Array.from(monthMap.entries()).map(([month, count]) => ({ month, count }));
+  }
+
   // --- 4. Personal (개인 현황) ---
   private async getPersonalStats(userId: number) {
     const today = DateUtil.setStartOfDay(new Date());

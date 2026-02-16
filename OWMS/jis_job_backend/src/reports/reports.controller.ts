@@ -12,6 +12,7 @@ import {
 
 import { ReportsService } from './reports.service';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { SaveJobsDto } from './dto/save-jobs.dto';
 
 @Controller('reports')
 @UseGuards(JwtAuthGuard)
@@ -26,7 +27,7 @@ export class ReportsController {
   @Post('jobs')
   async saveJobs(
     @Request() req: any,
-    @Body() body: { date: string; jobs: any[] },
+    @Body() body: SaveJobsDto,
   ) {
     return this.reportsService.saveJobs(req.user.id, body.date, body.jobs);
   }
@@ -113,6 +114,23 @@ export class ReportsController {
       body.content,
       body.date,
     );
+  }
+
+  // ── 대시보드 위젯 전용 엔드포인트 ──
+
+  @Get('jobs-count')
+  async getJobsCount(@Request() req: any, @Query('date') date: string) {
+    return this.reportsService.getJobsCount(req.user.id, date);
+  }
+
+  @Get('my-completion-rate')
+  async getMyCompletionRate(@Request() req: any, @Query('date') date?: string) {
+    return this.reportsService.getMyCompletionRate(req.user.id, date);
+  }
+
+  @Get('weekly-note-status')
+  async getWeeklyNoteStatus(@Request() req: any, @Query('date') date?: string) {
+    return this.reportsService.getWeeklyNoteWritten(req.user.id, date);
   }
 
   @Get('search-jobs')

@@ -10,21 +10,26 @@ export class DispatchController {
 
     @Post()
     create(@Request() req: any, @Body() createDto: CreateDispatchDto) {
-        return this.dispatchService.create(req.user.userId, createDto);
+        return this.dispatchService.create(req.user.id, createDto);
     }
 
     @Get()
-    findAll(@Query('start') start?: string, @Query('end') end?: string) {
-        return this.dispatchService.findAll(start, end);
+    findAll(
+        @Query('start') start?: string,
+        @Query('end') end?: string,
+        @Query('teamId') teamId?: string,
+        @Query('deptId') deptId?: string,
+    ) {
+        return this.dispatchService.findAll(start, end, teamId ? +teamId : undefined, deptId ? +deptId : undefined);
     }
 
     @Get('my')
     findMyDispatches(@Request() req: any) {
-        return this.dispatchService.findMyDispatches(req.user.userId);
+        return this.dispatchService.findMyDispatches(req.user.id);
     }
 
     @Patch(':id/cancel')
-    cancel(@Request() req: any, @Param('id') id: string) {
-        return this.dispatchService.cancel(+id, req.user.userId);
+    cancel(@Param('id') id: string) {
+        return this.dispatchService.cancel(+id);
     }
 }

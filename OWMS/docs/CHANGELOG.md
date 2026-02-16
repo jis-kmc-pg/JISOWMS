@@ -1,5 +1,64 @@
 # JISOWMS CHANGELOG
 
+## [2026-02-16] 대시보드 위젯 데이터 검증 및 사이즈 반응형 수정
+
+> 32개 위젯의 API 데이터 파싱 정합성 + small/medium/large 사이즈별 데이터 표시 검증
+
+---
+
+### 데이터 파싱 수정 (5건)
+
+| 위젯 | 문제 | 수정 |
+|------|------|------|
+| TeamAttendanceWidget | `members`에 `status` 필드 없음 → 카운트 0 | `upcomingLeave` 기반 카운팅으로 변경 |
+| DeptHeadcountWidget | API `kpi.deptMembers` ≠ `kpi.totalEmployees` | `deptMembers` 우선 fallback 추가 |
+| VehicleUtilizationWidget | API `byVehicle[].name` ≠ `stats[].vehicleName` | `byVehicle` 추출 + 필드 매핑 |
+| CompanyMeetingUtilWidget | API `byRoom[].name` ≠ `rooms[].roomName` | `byRoom` 추출 + 필드 매핑 |
+| DeptResourceUtilWidget | 배차/회의실 모두 필드명 불일치 | 양쪽 추출 + 필드 매핑 |
+
+### 사이즈 반응형 수정 (2건)
+
+| 위젯 | 문제 | 수정 |
+|------|------|------|
+| MonthlyVacationTrendWidget | `chartHeight` 반전 (large=130 < medium=140) | large=160, medium=140 |
+| CompanyReportRateWidget | `Math.random()` 가짜 트렌드 → 항상 "↑" | 실제 데이터 기반 비교 |
+
+### 검증 결과
+- 32개 위젯 전체 small/medium/large 데이터 표시 확인 완료
+- Size 전파 경로 정상 확인: WidgetGrid → SortableWidget → WidgetContainer → WidgetRenderer → Component
+- `npx next build` PASS
+
+---
+
+## [2026-02-15] 대시보드 위젯 시스템 전면 재구성
+
+> 39개 → 32개 위젯 체계 전환, SWR/WebSocket/DnD/다크모드 추가, 레거시 정리
+
+---
+
+### 위젯 시스템 재설계
+- 기존 39개 → 신규 32개 (MEMBER 7 + TEAM_LEADER 9 + DEPT_HEAD 7 + EXECUTIVE/CEO 9)
+- 26개 신규 커스텀 위젯 컴포넌트 생성
+- `WidgetRenderer.tsx` Map 기반 dispatch 패턴으로 재작성
+- `widget-registry.ts` 전면 교체
+- Backend `/work-status/keywords` 키워드 분석 엔드포인트 추가
+
+### 신규 기능
+- SWR 캐싱 (5분 갱신, 30초 중복 방지, focus revalidate)
+- WebSocket 실시간 갱신 (Socket.IO + SWR 캐시 무효화)
+- @dnd-kit 드래그앤드롭 위젯 정렬 + 자동 저장
+- small↔medium↔large 사이즈 토글
+- 다크 모드 (useTheme 훅, class-based light/dark/system)
+
+### 레거시 정리
+- 미사용 위젯 29개 파일 삭제, 활성 31개 + CalendarRenderer 유지
+
+### 페이지 점검 버그 수정
+- `weekly-status/page.tsx`: Backend 응답 구조 변경 대응 + 중복 호출 제거
+- `reports/dto/save-jobs.dto.ts`: 서버 반환 필드 DTO 미선언 → `@Allow()` 추가
+
+---
+
 ## [2026-02-15] PDCA 개선 작업 (Phase 1~5)
 
 > 기능 로직 변경 없이 보안/품질/성능/테스트 개선 수행

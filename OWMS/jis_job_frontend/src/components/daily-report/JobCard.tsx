@@ -53,7 +53,7 @@ export default function JobCard({
 
     return (
         <div
-            className={`group bg-white border rounded-2xl p-6 space-y-5 transition-all shadow-sm hover:shadow-md relative ${job.isIssue ? 'border-rose-200 bg-rose-50/30' : 'border-stone-200 hover:border-indigo-200'
+            className={`group bg-white border rounded-2xl p-3 sm:p-6 space-y-3 sm:space-y-5 transition-all shadow-sm hover:shadow-md relative ${job.isIssue ? 'border-rose-200 bg-rose-50/30' : 'border-stone-200 hover:border-indigo-200'
                 } ${dragOverIndex === index ? 'border-t-4 border-t-indigo-500 mt-2' : ''}`}
             onDragOver={(e) => onDragOver(e, index)}
             onDrop={(e) => onDrop(e, index)}
@@ -62,15 +62,36 @@ export default function JobCard({
                 <div className="absolute -top-3 left-0 w-full h-1 bg-indigo-500 rounded-full animate-pulse z-10 pointer-events-none shadow-lg shadow-indigo-200" />
             )}
 
-            <div className="flex items-center justify-between">
-                <div className="flex items-center space-x-3 flex-1 relative">
-                    <span className="bg-indigo-50 text-indigo-600 text-[10px] font-bold px-2.5 py-1 rounded-lg tracking-widest uppercase shrink-0 border border-indigo-100">업무 {index + 1}</span>
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 sm:gap-0">
+                <div className="flex flex-col sm:flex-row sm:items-center space-y-2 sm:space-y-0 sm:space-x-3 flex-1 relative">
+                    <div className="flex items-center justify-between sm:justify-start gap-2">
+                        <span className="bg-indigo-50 text-indigo-600 text-[10px] font-bold px-2.5 py-1 rounded-lg tracking-widest uppercase shrink-0 border border-indigo-100">업무 {index + 1}</span>
+                        {/* Mobile: show issue & delete buttons inline */}
+                        <div className="flex sm:hidden items-center gap-1.5">
+                            <button
+                                onClick={() => onUpdateJob(index, 'isIssue', !job.isIssue)}
+                                className={`flex items-center space-x-1 px-2 py-1 rounded-lg border transition-all ${job.isIssue
+                                    ? 'bg-rose-50 border-rose-200 text-rose-500'
+                                    : 'bg-white border-stone-200 text-slate-400'}`}
+                                title={job.isIssue ? "이슈 해제" : "이슈 표시"}
+                            >
+                                <AlertTriangle size={14} />
+                            </button>
+                            <button
+                                onClick={() => onDeleteJob(index)}
+                                className="text-slate-300 hover:text-rose-500 transition-colors p-1 no-print"
+                                title="업무 삭제"
+                            >
+                                <Trash2 size={16} />
+                            </button>
+                        </div>
+                    </div>
 
                     {/* Custom Dropdown */}
                     <div className="relative w-full sm:w-[50%] lg:w-[420px]">
                         <button
                             onClick={() => onToggleDropdown(openDropdownIndex === index ? null : index)}
-                            className="w-full bg-stone-50 hover:bg-white border border-stone-200 hover:border-indigo-400 rounded-xl px-5 py-3.5 flex items-center justify-between transition-all group-dropdown shadow-sm hover:shadow-md h-full"
+                            className="w-full bg-stone-50 hover:bg-white border border-stone-200 hover:border-indigo-400 rounded-xl px-3 py-2.5 sm:px-5 sm:py-3.5 flex items-center justify-between transition-all group-dropdown shadow-sm hover:shadow-md h-full"
                         >
                             <div className="flex flex-col items-start flex-1 min-w-0 pr-2">
                                 {job.projectId ? (
@@ -87,14 +108,14 @@ export default function JobCard({
                                         );
                                     })()
                                 ) : (
-                                    <span className="text-slate-400 text-base font-bold">업무 선택 (검색 가능)</span>
+                                    <span className="text-slate-400 text-sm sm:text-base font-bold">업무 선택 (검색 가능)</span>
                                 )}
                             </div>
                             <ChevronDown size={18} className={`text-slate-400 transition-transform flex-shrink-0 ${openDropdownIndex === index ? 'rotate-180 text-indigo-500' : ''}`} />
                         </button>
 
                         {openDropdownIndex === index && (
-                            <div className="absolute top-full left-0 w-full min-w-[300px] sm:min-w-[480px] mt-2 bg-white border border-stone-100 rounded-2xl shadow-2xl z-50 max-h-[500px] overflow-y-auto overflow-x-hidden p-1 animate-in zoom-in-95 duration-200 custom-scrollbar flex flex-col">
+                            <div className="absolute top-full left-0 w-full min-w-0 sm:min-w-[480px] mt-2 bg-white border border-stone-100 rounded-2xl shadow-2xl z-50 max-h-[400px] sm:max-h-[500px] overflow-y-auto overflow-x-hidden p-1 animate-in zoom-in-95 duration-200 custom-scrollbar flex flex-col">
                                 <div className="p-3 border-b border-stone-100 sticky top-0 bg-white/95 backdrop-blur-md z-10 shrink-0">
                                     <div className="flex items-center justify-between mb-2 px-1">
                                         <span className="text-[10px] font-bold text-indigo-500 uppercase tracking-tight">업무 검색</span>
@@ -171,7 +192,7 @@ export default function JobCard({
 
                     <button
                         onClick={() => onUpdateJob(index, 'isIssue', !job.isIssue)}
-                        className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-xl border transition-all ${job.isIssue
+                        className={`hidden sm:flex items-center space-x-1.5 px-3 py-1.5 rounded-xl border transition-all ${job.isIssue
                             ? 'bg-rose-50 border-rose-200 text-rose-500 shadow-sm'
                             : 'bg-white border-stone-200 text-slate-400 hover:text-rose-500 hover:border-rose-200 hover:bg-rose-50/50'}`}
                         title={job.isIssue ? "이슈 해제" : "이슈/블로커로 표시"}
@@ -183,7 +204,7 @@ export default function JobCard({
 
                 <button
                     onClick={() => onDeleteJob(index)}
-                    className="text-slate-300 hover:text-rose-500 transition-colors opacity-0 group-hover:opacity-100 no-print px-2"
+                    className="hidden sm:block text-slate-300 hover:text-rose-500 transition-colors opacity-0 group-hover:opacity-100 no-print px-2"
                     title="업무 삭제"
                 >
                     <Trash2 size={18} />
@@ -201,7 +222,7 @@ export default function JobCard({
                         }}
                         placeholder="업무 제목을 입력하세요"
                         rows={1}
-                        className={`flex-1 bg-stone-50 border rounded-xl px-5 py-3.5 text-slate-800 font-bold outline-none focus:bg-white focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 transition-all placeholder:text-slate-400 overflow-hidden resize-none min-h-[50px] whitespace-pre-wrap break-words ${isLineExceeded(job.title) ? 'border-rose-300 ring-2 ring-rose-100' : 'border-stone-200'}`}
+                        className={`flex-1 bg-stone-50 border rounded-xl px-3 py-2.5 sm:px-5 sm:py-3.5 text-sm sm:text-base text-slate-800 font-bold outline-none focus:bg-white focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 transition-all placeholder:text-slate-400 overflow-hidden resize-none min-h-[44px] sm:min-h-[50px] whitespace-pre-wrap break-words ${isLineExceeded(job.title) ? 'border-rose-300 ring-2 ring-rose-100' : 'border-stone-200'}`}
                         style={{ height: 'auto' }}
                     />
                     {job.title && job.projectId && job.isCustomTitle && (
@@ -227,7 +248,7 @@ export default function JobCard({
                     onChange={(e) => onUpdateJob(index, 'content', e.target.value)}
                     placeholder="상세 업무 내용을 기록하세요"
                     rows={4}
-                    className={`w-full bg-stone-50 border rounded-xl px-5 py-4 text-slate-700 font-medium outline-none focus:bg-white focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 resize-none transition-all placeholder:text-slate-400 leading-relaxed whitespace-pre-wrap break-words ${isLineExceeded(job.content) ? 'border-rose-300 ring-2 ring-rose-100' : 'border-stone-200'}`}
+                    className={`w-full bg-stone-50 border rounded-xl px-3 py-3 sm:px-5 sm:py-4 text-sm sm:text-base text-slate-700 font-medium outline-none focus:bg-white focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 resize-none transition-all placeholder:text-slate-400 leading-relaxed whitespace-pre-wrap break-words ${isLineExceeded(job.content) ? 'border-rose-300 ring-2 ring-rose-100' : 'border-stone-200'}`}
                 ></textarea>
                 {isLineExceeded(job.content) && (
                     <p className="text-[11px] text-rose-500 font-bold ml-2 animate-pulse flex items-center space-x-1">

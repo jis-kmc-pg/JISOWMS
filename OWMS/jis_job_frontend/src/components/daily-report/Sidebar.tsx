@@ -40,7 +40,7 @@ export default function Sidebar({
     };
 
     return (
-        <div className="lg:col-span-1 space-y-8 lg:sticky lg:top-8 self-start">
+        <div className="lg:col-span-1 space-y-6 sm:space-y-8 lg:sticky lg:top-8 self-start">
             {/* System Memos */}
             {systemMemos.length > 0 ? (
                 <div className="space-y-4 animate-in fade-in slide-in-from-right-4 duration-500">
@@ -80,10 +80,10 @@ export default function Sidebar({
             )}
 
             {/* Past Task Search */}
-            <div className="bg-white border border-stone-200 rounded-2xl p-6 shadow-sm space-y-4">
+            <div className="bg-white border border-stone-200 rounded-2xl p-4 sm:p-6 shadow-sm space-y-3 sm:space-y-4">
                 <div className="flex items-center space-x-2">
                     <Search size={16} className="text-indigo-500" />
-                    <h4 className="text-base font-bold text-slate-800">과거 업무 검색 (기간)</h4>
+                    <h4 className="text-sm sm:text-base font-bold text-slate-800">과거 업무 검색 (기간)</h4>
                 </div>
 
                 <div className="flex flex-col space-y-2">
@@ -172,9 +172,9 @@ export default function Sidebar({
             </div>
 
             {/* Weekly Note */}
-            <div className="bg-white border border-stone-200 rounded-2xl p-6 shadow-sm">
-                <div className="flex items-center justify-between mb-4">
-                    <h4 className="text-base font-bold text-slate-800">주간 정보 사항</h4>
+            <div className="bg-white border border-stone-200 rounded-2xl p-4 sm:p-6 shadow-sm">
+                <div className="flex items-center justify-between mb-3 sm:mb-4">
+                    <h4 className="text-sm sm:text-base font-bold text-slate-800">주간 정보 사항</h4>
                     <span className="text-[10px] bg-violet-50 text-violet-600 border border-violet-100 px-2.5 py-1 rounded-full font-bold uppercase">주간 공통</span>
                 </div>
                 <textarea
@@ -186,7 +186,7 @@ export default function Sidebar({
                     }}
                     placeholder="이번 주(일~토) 공용 참고사항을 입력하세요..."
                     rows={1}
-                    className={`w-full bg-stone-50 border rounded-xl px-5 py-4 text-sm text-slate-700 font-medium outline-none transition-all placeholder:text-slate-400 overflow-hidden resize-none focus:bg-white focus:ring-2 focus:ring-violet-100 ${isWeeklyNoteExceeded(weeklyNote) ? 'border-rose-300 ring-2 ring-rose-100 focus:border-rose-400' : 'border-stone-200 focus:border-violet-500'}`}
+                    className={`w-full bg-stone-50 border rounded-xl px-3 py-3 sm:px-5 sm:py-4 text-xs sm:text-sm text-slate-700 font-medium outline-none transition-all placeholder:text-slate-400 overflow-hidden resize-none focus:bg-white focus:ring-2 focus:ring-violet-100 ${isWeeklyNoteExceeded(weeklyNote) ? 'border-rose-300 ring-2 ring-rose-100 focus:border-rose-400' : 'border-stone-200 focus:border-violet-500'}`}
                 ></textarea>
                 {isWeeklyNoteExceeded(weeklyNote) && (
                     <p className="text-[11px] text-rose-500 font-bold mt-2 animate-pulse flex items-center space-x-1 ml-1">

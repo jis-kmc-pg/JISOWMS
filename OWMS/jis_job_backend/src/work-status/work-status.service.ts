@@ -19,19 +19,22 @@ export class WorkStatusService {
     const startOfWeek = DateUtil.getMonday(targetDate);
     const endOfWeek = DateUtil.setEndOfDay(new Date(startOfWeek.getTime() + 6 * 86400000));
 
-    // 1. Get filtered users based on role
+    // 1. Get filtered users based on role (역할별 데이터 스코핑)
     const where: any = {};
-    if (requestUser.role !== 'CEO' && requestUser.role !== 'EXECUTIVE') {
+    if (requestUser.role === 'TEAM_LEADER') {
+      // 팀장: 자기 팀원만 조회
+      where.teamId = requestUser.teamId;
+    } else if (requestUser.role === 'DEPT_HEAD') {
+      // 부서장: 자기 부서만 조회
       where.departmentId = requestUser.departmentId;
-    }
-
-    // 만약 특정 팀 ID가 명시되었다면 해당 팀만 필터링
-    if (teamId) {
-      where.teamId = teamId;
-    } else if (deptId) {
-      // 팀 없이 부서로 필터링하는 경우 (팀 미지정 사용자들)
-      where.departmentId = deptId;
-      where.teamId = null;
+      if (teamId) where.teamId = teamId;
+    } else if (requestUser.role !== 'CEO' && requestUser.role !== 'EXECUTIVE') {
+      // MEMBER: 자기 부서만 (읽기 전용)
+      where.departmentId = requestUser.departmentId;
+    } else {
+      // CEO/EXECUTIVE: 전체 조회, 선택적 필터
+      if (teamId) where.teamId = teamId;
+      else if (deptId) where.departmentId = deptId;
     }
 
     const users = await this.prisma.user.findMany({
@@ -153,15 +156,34 @@ export class WorkStatusService {
     nextWeekDate.setDate(targetDate.getDate() + 7);
     const nextWeek = getMonToFri(nextWeekDate);
 
-    // 1. 소속 부서 필터링 (requestUser에서 직접 참조)
+    // 1. 소속 부서/팀 필터링 (역할별 데이터 스코핑)
     let baseWhere: any = {};
-    if (requestUser.role !== 'CEO' && requestUser.role !== 'EXECUTIVE') {
+    let teamFilter: number | undefined = undefined;
+
+    if (requestUser.role === 'TEAM_LEADER') {
+      // 팀장: 자기 부서 내 자기 팀만
+      if (requestUser.departmentId) {
+        baseWhere = { id: requestUser.departmentId };
+      } else {
+        baseWhere = { id: -1 };
+      }
+      teamFilter = requestUser.teamId;
+    } else if (requestUser.role === 'DEPT_HEAD') {
+      // 부서장: 자기 부서만
+      if (requestUser.departmentId) {
+        baseWhere = { id: requestUser.departmentId };
+      } else {
+        baseWhere = { id: -1 };
+      }
+    } else if (requestUser.role !== 'CEO' && requestUser.role !== 'EXECUTIVE') {
+      // MEMBER: 자기 부서
       if (requestUser.departmentId) {
         baseWhere = { id: requestUser.departmentId };
       } else {
         baseWhere = { id: -1 };
       }
     }
+    // CEO/EXECUTIVE: baseWhere = {} → 전체
 
     // 2. 부서 및 관련 팀/사용자 조회
     const departments = await this.prisma.department.findMany({
@@ -238,6 +260,8 @@ export class WorkStatusService {
     for (const dept of departments) {
       if (dept.teams.length > 0) {
         for (const team of dept.teams) {
+          // 팀장인 경우 자기 팀만 포함
+          if (teamFilter && team.id !== teamFilter) continue;
           entries.push({
             teamId: team.id, deptId: dept.id,
             teamName: team.name, isTeam: true,
@@ -245,6 +269,8 @@ export class WorkStatusService {
           });
         }
       } else {
+        // 팀장인 경우 미지정 사용자 제외
+        if (teamFilter) continue;
         entries.push({
           teamId: 0, deptId: dept.id,
           teamName: `${dept.name} (미지정)`, isTeam: false,
@@ -274,7 +300,78 @@ export class WorkStatusService {
       nextWeek: statsResults[i].nextWeek,
     }));
 
-    return summaries.sort((a, b) => a.teamId - b.teamId);
+    const sorted = summaries.sort((a, b) => a.teamId - b.teamId);
+
+    // 대시보드 위젯 호환 필드 추가
+    const totalMembers = sorted.reduce((sum, s) => sum + s.totalMembers, 0);
+    const totalCompleted = sorted.reduce(
+      (sum, s) => sum + s.currentWeek.completed,
+      0,
+    );
+    const entryRate =
+      totalMembers > 0 ? Math.round((totalCompleted / totalMembers) * 100) : 0;
+
+    // 각 팀 항목에 위젯 호환 필드 추가
+    const widgetSummaries = sorted.map((s) => ({
+      ...s,
+      teamName: s.teamName,
+      total: s.totalMembers,
+      completed: s.currentWeek.completed,
+      entryRate:
+        s.totalMembers > 0
+          ? Math.round((s.currentWeek.completed / s.totalMembers) * 100)
+          : 0,
+    }));
+
+    return {
+      entryRate,
+      teams: widgetSummaries,
+    };
+  }
+
+  async getKeywords(requestUser: any, dateStr?: string) {
+    const targetDate = dateStr ? new Date(dateStr) : new Date();
+    const startOfWeek = DateUtil.getMonday(targetDate);
+    const endOfWeek = new Date(startOfWeek.getTime() + 6 * 86400000);
+    endOfWeek.setHours(23, 59, 59, 999);
+
+    const where: any = {
+      jobDate: { gte: startOfWeek, lte: endOfWeek },
+    };
+
+    if (requestUser.role !== 'CEO' && requestUser.role !== 'EXECUTIVE') {
+      where.user = { departmentId: requestUser.departmentId };
+    }
+
+    const jobs = await this.prisma.job.findMany({
+      where,
+      select: { title: true },
+    });
+
+    const STOP_WORDS = new Set([
+      '및', '등', '외', '의', '에', '를', '을', '이', '가', '는', '은',
+      '로', '으로', '와', '과', '도', '에서', '까지', '부터', '대한',
+      '위한', '통한', '관련', '수행', '진행', '작업', '업무', '처리',
+    ]);
+
+    const freq = new Map<string, number>();
+    for (const job of jobs) {
+      if (!job.title) continue;
+      const words = job.title
+        .replace(/[^\uAC00-\uD7A3a-zA-Z0-9\s]/g, ' ')
+        .split(/\s+/)
+        .filter(w => w.length >= 2 && !STOP_WORDS.has(w));
+      for (const word of words) {
+        freq.set(word, (freq.get(word) || 0) + 1);
+      }
+    }
+
+    const sorted = [...freq.entries()]
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, 30)
+      .map(([keyword, count]) => ({ keyword, count }));
+
+    return { keywords: sorted, totalJobs: jobs.length };
   }
 
   async getWeeklyDetail(dateStr: string, userId: number) {

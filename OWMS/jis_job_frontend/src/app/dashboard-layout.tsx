@@ -16,16 +16,26 @@ import {
     Bell,
     Plus,
     CheckCircle,
+    CalendarCheck,
     Car,
     Megaphone,
-    MessageSquare
+    MessageSquare,
+    ChevronDown,
+    ClipboardCheck,
+    Lightbulb,
+    Activity,
+    Sun,
+    Moon,
 } from 'lucide-react';
 import api from '../lib/api';
+import { useTheme } from '../lib/hooks/useTheme';
+import { useSocket } from '../lib/hooks/useSocket';
 
 interface MenuItem {
     name: string;
     icon: React.ReactNode;
     href: string;
+    children?: MenuItem[];
 }
 
 interface UserInfo {
@@ -52,6 +62,8 @@ export default function DashboardLayout({
 
     const [isProfileOpen, setIsProfileOpen] = useState(false);
     const [user, setUser] = useState<UserInfo | null>(null);
+    const { resolvedTheme, toggleTheme } = useTheme();
+    useSocket(); // WebSocket 연결 (SWR 캐시 자동 갱신)
 
     useEffect(() => {
         // 클라이언트 사이드에서 사용자 정보 로드
@@ -76,21 +88,33 @@ export default function DashboardLayout({
         router.push('/login');
     };
 
+    const [openSubmenu, setOpenSubmenu] = useState<string | null>(null);
+
     const menuItems: MenuItem[] = [
         { name: '대시보드', icon: <LayoutDashboard size={18} />, href: '/' },
         { name: '일일 업무 보고', icon: <FileText size={18} />, href: '/daily-report' },
         { name: '주간 업무 현황', icon: <Calendar size={18} />, href: '/weekly-status' },
         { name: '연차 신청', icon: <ClipboardList size={18} />, href: '/attendance' },
-        { name: '배차 현황', icon: <Car size={18} />, href: '/dispatch' },
+        { name: '예약', icon: <CalendarCheck size={18} />, href: '/reservation' },
         { name: '공지사항', icon: <Megaphone size={18} />, href: '/board/notice' },
-        { name: '자유게시판', icon: <MessageSquare size={18} />, href: '/board/free' },
+        {
+            name: '게시판', icon: <MessageSquare size={18} />, href: '/board',
+            children: [
+                { name: '팀현황보고', icon: <ClipboardCheck size={16} />, href: '/board/team-status' },
+                { name: '자유게시판', icon: <MessageSquare size={16} />, href: '/board/free' },
+                { name: '건의게시판', icon: <Lightbulb size={16} />, href: '/board/suggestion' },
+            ],
+        },
     ];
 
     if (user?.role === 'DEPT_HEAD') {
         menuItems.push({ name: '연차 승인', icon: <CheckCircle size={18} />, href: '/attendance/approval' });
     }
 
-    const managementItems = [];
+    const managementItems: MenuItem[] = [];
+    if (['CEO', 'EXECUTIVE', 'DEPT_HEAD', 'TEAM_LEADER'].includes(user?.role || '')) {
+        managementItems.push({ name: '활동 로그', icon: <Activity size={18} />, href: '/activity-log' });
+    }
     if (user?.departmentId === 3) {
         managementItems.push({
             name: '연차 관리',
@@ -108,9 +132,9 @@ export default function DashboardLayout({
     if (pathname === '/login') return <>{children}</>;
 
     return (
-        <div className="min-h-screen bg-[#fdfbf7] text-slate-700 flex flex-col font-sans transition-colors duration-300 whitespace-nowrap">
+        <div className="min-h-screen bg-[#fdfbf7] dark:bg-slate-900 text-slate-700 dark:text-slate-200 flex flex-col font-sans transition-colors duration-300 whitespace-nowrap">
             {/* Top Navigation Bar */}
-            <header className="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-xl border-b border-stone-200 h-16 shadow-sm">
+            <header className="fixed top-0 left-0 right-0 z-50 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl border-b border-stone-200 dark:border-slate-700 h-16 shadow-sm">
                 <div className="max-w-7xl mx-auto px-4 h-full flex items-center justify-between">
                     {/* Logo */}
                     <Link href="/" className="flex items-center space-x-2 group">
@@ -127,6 +151,49 @@ export default function DashboardLayout({
                     <nav className="hidden md:flex items-center space-x-1">
                         {menuItems.map((item) => {
                             const isActive = pathname === item.href || (item.href !== '/' && pathname.startsWith(item.href));
+
+                            if (item.children) {
+                                return (
+                                    <div
+                                        key={item.href}
+                                        className="relative"
+                                        onMouseEnter={() => setOpenSubmenu(item.name)}
+                                        onMouseLeave={() => setOpenSubmenu(null)}
+                                    >
+                                        <button
+                                            className={`flex items-center space-x-2 px-3.5 py-2 rounded-xl text-sm font-bold transition-all ${isActive
+                                                ? 'bg-stone-50 text-indigo-600 shadow-sm'
+                                                : 'text-slate-500 hover:text-slate-900 hover:bg-stone-50'
+                                                }`}
+                                        >
+                                            {item.icon}
+                                            <span>{item.name}</span>
+                                            <ChevronDown size={14} className={`transition-transform ${openSubmenu === item.name ? 'rotate-180' : ''}`} />
+                                        </button>
+                                        {openSubmenu === item.name && (
+                                            <div className="absolute top-full left-0 mt-1 w-44 bg-white border border-stone-200 rounded-xl shadow-lg py-1 z-50">
+                                                {item.children.map((child) => {
+                                                    const isChildActive = pathname === child.href || pathname.startsWith(child.href + '/');
+                                                    return (
+                                                        <Link
+                                                            key={child.href}
+                                                            href={child.href}
+                                                            className={`flex items-center space-x-2 px-4 py-2.5 text-sm font-bold transition-all ${isChildActive
+                                                                ? 'bg-indigo-50 text-indigo-600'
+                                                                : 'text-slate-500 hover:text-slate-900 hover:bg-stone-50'
+                                                                }`}
+                                                        >
+                                                            {child.icon}
+                                                            <span>{child.name}</span>
+                                                        </Link>
+                                                    );
+                                                })}
+                                            </div>
+                                        )}
+                                    </div>
+                                );
+                            }
+
                             return (
                                 <Link
                                     key={item.href}
@@ -165,10 +232,17 @@ export default function DashboardLayout({
                             })}
                         </div>
 
-                        <div className="h-6 w-px bg-stone-200 mx-2"></div>
-                        <button className="p-2 text-slate-400 hover:text-indigo-500 hover:bg-indigo-50 rounded-full transition-all relative">
+                        <div className="h-6 w-px bg-stone-200 dark:bg-slate-600 mx-2"></div>
+                        <button
+                            onClick={toggleTheme}
+                            className="p-2 text-slate-400 hover:text-indigo-500 hover:bg-indigo-50 dark:hover:bg-slate-700 rounded-full transition-all"
+                            title={resolvedTheme === 'dark' ? '라이트 모드' : '다크 모드'}
+                        >
+                            {resolvedTheme === 'dark' ? <Sun size={20} /> : <Moon size={20} />}
+                        </button>
+                        <button className="p-2 text-slate-400 hover:text-indigo-500 hover:bg-indigo-50 dark:hover:bg-slate-700 rounded-full transition-all relative">
                             <Bell size={20} />
-                            <span className="absolute top-2 right-2 w-2 h-2 bg-rose-400 rounded-full border-2 border-white"></span>
+                            <span className="absolute top-2 right-2 w-2 h-2 bg-rose-400 rounded-full border-2 border-white dark:border-slate-800"></span>
                         </button>
 
                         <div className="flex items-center space-x-3 pl-2 relative">
@@ -188,8 +262,8 @@ export default function DashboardLayout({
                             {isProfileOpen && (
                                 <>
                                     <div className="fixed inset-0 z-10" onClick={() => setIsProfileOpen(false)}></div>
-                                    <div className="absolute right-0 top-full mt-3 w-64 bg-white border border-stone-200 rounded-3xl shadow-2xl z-20 overflow-hidden animate-in fade-in zoom-in-95 duration-200 origin-top-right">
-                                        <div className="p-5 border-b border-stone-100 bg-stone-50/50">
+                                    <div className="absolute right-0 top-full mt-3 w-64 bg-white dark:bg-slate-800 border border-stone-200 dark:border-slate-700 rounded-3xl shadow-2xl z-20 overflow-hidden animate-in fade-in zoom-in-95 duration-200 origin-top-right">
+                                        <div className="p-5 border-b border-stone-100 dark:border-slate-700 bg-stone-50/50 dark:bg-slate-800/50">
                                             <div className="flex items-center space-x-3">
                                                 <div className="w-11 h-11 rounded-2xl bg-white border border-stone-200 flex items-center justify-center shadow-sm">
                                                     <UserCircle size={28} className="text-indigo-500" />
@@ -240,10 +314,52 @@ export default function DashboardLayout({
 
                 {/* Mobile Menu Dropdown */}
                 {isMobileMenuOpen && (
-                    <div className="md:hidden absolute top-16 left-0 right-0 bg-white border-b border-stone-200 p-6 shadow-2xl animate-in slide-in-from-top-4 duration-300 z-50">
+                    <div className="md:hidden absolute top-16 left-0 right-0 bg-white dark:bg-slate-900 border-b border-stone-200 dark:border-slate-700 p-6 shadow-2xl animate-in slide-in-from-top-4 duration-300 z-50">
                         <nav className="flex flex-col space-y-2">
                             {menuItems.map((item) => {
                                 const isActive = pathname === item.href || (item.href !== '/' && pathname.startsWith(item.href));
+
+                                if (item.children) {
+                                    return (
+                                        <div key={item.href}>
+                                            <button
+                                                onClick={() => setOpenSubmenu(openSubmenu === item.name ? null : item.name)}
+                                                className={`w-full flex items-center justify-between px-4 py-3.5 rounded-2xl transition-all text-sm font-bold ${isActive
+                                                    ? 'bg-indigo-50 text-indigo-600 border border-indigo-100 shadow-sm'
+                                                    : 'text-slate-500 hover:bg-stone-50'
+                                                    }`}
+                                            >
+                                                <div className="flex items-center space-x-4">
+                                                    {item.icon}
+                                                    <span>{item.name}</span>
+                                                </div>
+                                                <ChevronDown size={16} className={`transition-transform ${openSubmenu === item.name ? 'rotate-180' : ''}`} />
+                                            </button>
+                                            {openSubmenu === item.name && (
+                                                <div className="ml-6 mt-1 space-y-1">
+                                                    {item.children.map((child) => {
+                                                        const isChildActive = pathname === child.href || pathname.startsWith(child.href + '/');
+                                                        return (
+                                                            <Link
+                                                                key={child.href}
+                                                                href={child.href}
+                                                                onClick={() => setIsMobileMenuOpen(false)}
+                                                                className={`flex items-center space-x-3 px-4 py-2.5 rounded-xl transition-all text-sm font-bold ${isChildActive
+                                                                    ? 'bg-indigo-50 text-indigo-600'
+                                                                    : 'text-slate-400 hover:text-slate-700 hover:bg-stone-50'
+                                                                    }`}
+                                                            >
+                                                                {child.icon}
+                                                                <span>{child.name}</span>
+                                                            </Link>
+                                                        );
+                                                    })}
+                                                </div>
+                                            )}
+                                        </div>
+                                    );
+                                }
+
                                 return (
                                     <Link
                                         key={item.href}
