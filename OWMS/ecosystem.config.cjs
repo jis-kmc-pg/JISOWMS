@@ -1,0 +1,41 @@
+module.exports = {
+  apps: [
+    {
+      name: 'owms-backend',
+      cwd: './jis_job_backend',
+      script: 'dist/main.js',
+      instances: 1,
+      exec_mode: 'fork',
+      env: {
+        NODE_ENV: 'production',
+        PORT: 4000,
+      },
+      watch: false,
+      max_memory_restart: '512M',
+      error_file: './logs/backend-error.log',
+      out_file: './logs/backend-out.log',
+      log_date_format: 'YYYY-MM-DD HH:mm:ss',
+      restart_delay: 3000,
+      max_restarts: 10,
+    },
+    {
+      name: 'owms-frontend',
+      cwd: './jis_job_frontend',
+      script: 'node_modules/.bin/next',
+      args: 'start -p 3000 -H 0.0.0.0',
+      instances: 1,
+      exec_mode: 'fork',
+      env: {
+        NODE_ENV: 'production',
+        PORT: 3000,
+      },
+      watch: false,
+      max_memory_restart: '1G',
+      error_file: './logs/frontend-error.log',
+      out_file: './logs/frontend-out.log',
+      log_date_format: 'YYYY-MM-DD HH:mm:ss',
+      restart_delay: 3000,
+      max_restarts: 10,
+    },
+  ],
+};

@@ -1,6 +1,6 @@
 # JISOWMS 프로젝트 현황 문서
 
-> 작성일: 2026-02-15 | 최종 갱신: 2026-02-16 위젯 데이터 검증 + 사이즈 반응형 수정
+> 작성일: 2026-02-15 | 최종 갱신: 2026-02-19 업무망 배포 준비
 
 ---
 
@@ -369,6 +369,24 @@ CEO > EXECUTIVE > DEPT_HEAD > TEAM_LEADER > MEMBER
 
 ## 8. 최근 변경 이력
 
+### 업무망 배포 준비 (2026-02-19)
+
+**환경 전환:**
+- `DATABASE_URL`: 외부망(jis4f.iptime.org:54321) → 내부망(192.168.123.205:5432)
+- `NEXT_PUBLIC_API_URL`: localhost:4000 → `/api` (Nginx 상대경로)
+- CORS: `http://192.168.123.75:3000` origin 추가
+
+**Nginx 리버스 프록시:**
+- `nginx/owms.conf`: `:80` 단일 진입점 → `/api/*`(Backend) + `/socket.io/`(WS) + `/*`(Frontend)
+- WebSocket: `useSocket.ts` Nginx 환경 자동 감지
+
+**배포 구성:**
+- `ecosystem.config.cjs` 생성 (PM2: owms-backend + owms-frontend)
+- `docs/02-design/deployment-spec.md` 배포 사양서 작성
+- 배포 서버: 192.168.123.75 / DB 서버: 192.168.123.205
+
+**빌드 검증:** Backend `nest build` PASS, Frontend `next build` PASS (22개 라우트)
+
 ### 위젯 데이터 검증 및 사이즈 반응형 수정 (2026-02-16)
 
 **데이터 파싱 수정 (5건):**
@@ -706,9 +724,15 @@ JISOWMS/OWMS/
     PROJECT-STATUS.md                 # 이 문서
     CHANGELOG.md                      # 변경 이력
     PERMISSION-RULES.md               # 권한 규칙
+    02-design/
+      deployment-spec.md              # 배포 사양서
+
+  ecosystem.config.cjs                # PM2 프로세스 관리 설정
+  nginx/
+    owms.conf                         # Nginx 리버스 프록시 설정
 ```
 
 ---
 
-*이 문서는 JISOWMS 대시보드 위젯 시스템 전체 검증 후 자동 생성되었습니다.*
-*최종 갱신: 2026-02-16 — 위젯 데이터 파싱 5건 + 사이즈 반응형 2건 수정, 종합 품질 99/100*
+*이 문서는 JISOWMS 프로젝트 현황을 기록합니다.*
+*최종 갱신: 2026-02-19 — 업무망 배포 준비 (DB 내부망 전환, PM2 설정, 배포 사양서)*

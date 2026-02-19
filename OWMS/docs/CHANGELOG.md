@@ -1,5 +1,42 @@
 # JISOWMS CHANGELOG
 
+## [2026-02-19] 업무망 배포 준비
+
+> DB를 업무망(내부망)으로 전환하고 배포 서버(192.168.123.75) 환경 구성
+
+---
+
+### 환경 설정 변경
+
+| 항목 | Before | After |
+|------|--------|-------|
+| `DATABASE_URL` | `jis4f.iptime.org:54321` (외부망) | `192.168.123.205:5432` (내부망) |
+| `NEXT_PUBLIC_API_URL` | `http://localhost:4000` | `/api` (Nginx 상대경로) |
+| CORS origin | 미포함 | `http://192.168.123.75:3000` 추가 |
+
+### 웹 서버 (Nginx 리버스 프록시)
+
+- `nginx/owms.conf` 생성: `:80` 단일 진입점
+- `/api/*` → `localhost:4000` (Backend, /api 프리픽스 제거)
+- `/socket.io/` → `localhost:4000` (WebSocket 프록시 + Upgrade 헤더)
+- `/*` → `localhost:3000` (Frontend)
+
+### WebSocket URL 수정
+
+- `useSocket.ts`: Nginx 환경에서 same-origin 네임스페이스 `/dashboard` 사용
+- `NEXT_PUBLIC_API_URL`이 상대경로(`/api`)일 때 자동 감지
+
+### 배포 구성 생성
+
+- `ecosystem.config.cjs`: PM2 프로세스 관리 설정 (Backend + Frontend)
+- `docs/02-design/deployment-spec.md`: 배포 사양서 작성
+
+### 빌드 검증
+- Backend (`npx nest build`): PASS
+- Frontend (`npx next build`): PASS (22개 라우트)
+
+---
+
 ## [2026-02-16] 대시보드 위젯 데이터 검증 및 사이즈 반응형 수정
 
 > 32개 위젯의 API 데이터 파싱 정합성 + small/medium/large 사이즈별 데이터 표시 검증

@@ -1,8 +1,8 @@
 # JISOWMS PDCA Analysis Report (통합 분석 보고서)
 
-**Date:** 2026-02-14 (분석) → 2026-02-15 (개선) → 2026-02-16 (위젯 데이터/사이즈 검증)
+**Date:** 2026-02-14 (분석) → 2026-02-15 (개선) → 2026-02-16 (위젯 검증) → 2026-02-19 (배포 준비)
 **Scope:** OWMS (Web) + OWMS_SYS (Desktop) 전체 시스템
-**Status:** Act Phase (Phase 1~5 개선 + 대시보드 위젯 재구성 + 데이터/사이즈 검증 완료)
+**Status:** Deployment Phase (업무망 배포 준비 완료)
 
 ---
 
@@ -18,6 +18,17 @@
 | **배포 가능 여부** | **CONDITIONAL** | **CONDITIONAL** | **BLOCKED** | **CONDITIONAL** |
 
 **종합 점수: 50/100 → 68/100 → 99/100** -- Phase 1~5 개선 + 대시보드 위젯 재구성(32개) + 데이터/사이즈 검증 완료
+
+### 2026-02-19 배포 준비
+
+| 항목 | 내용 |
+|------|------|
+| DB 전환 | DATABASE_URL 외부망 → 내부망(192.168.123.205:5432) |
+| API URL 전환 | NEXT_PUBLIC_API_URL → 192.168.123.75:4000 |
+| CORS 추가 | 192.168.123.75:3000 origin 추가 |
+| PM2 설정 | ecosystem.config.cjs 생성 (backend + frontend) |
+| 배포 문서 | deployment-spec.md 작성 |
+| 빌드 검증 | Backend PASS, Frontend PASS (22 라우트) |
 
 ### 2026-02-16 추가 개선
 
