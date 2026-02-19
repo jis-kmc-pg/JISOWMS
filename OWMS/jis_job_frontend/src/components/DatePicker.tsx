@@ -59,29 +59,29 @@ export default function DatePicker({ value, onChange, label, minDate }: DatePick
 
     return (
         <div className="relative">
-            {label && <label className="block text-sm font-bold text-slate-600 mb-1.5">{label}</label>}
+            {label && <label className="block text-sm font-bold text-slate-600 dark:text-slate-300 mb-1.5">{label}</label>}
             <div
                 onClick={() => setIsOpen(!isOpen)}
-                className="w-full bg-stone-50 border border-stone-200 rounded-xl p-3 text-slate-800 font-medium outline-none focus-within:border-indigo-500 focus-within:ring-2 focus-within:ring-indigo-100 transition-all cursor-pointer flex items-center justify-between"
+                className="w-full bg-stone-50 dark:bg-slate-700/50 border border-stone-200 dark:border-slate-600 rounded-xl p-3 text-slate-800 dark:text-slate-100 font-medium outline-none focus-within:border-indigo-500 focus-within:ring-2 focus-within:ring-indigo-100 dark:focus-within:ring-indigo-800/30 transition-all cursor-pointer flex items-center justify-between"
             >
-                <span className={value ? "text-slate-800" : "text-slate-400"}>
+                <span className={value ? "text-slate-800 dark:text-slate-100" : "text-slate-400 dark:text-slate-400"}>
                     {value || '날짜 선택'}
                 </span>
-                <CalendarIcon size={18} className="text-slate-400" />
+                <CalendarIcon size={18} className="text-slate-400 dark:text-slate-400" />
             </div>
 
             {isOpen && (
                 <>
                     <div className="fixed inset-0 z-40" onClick={() => setIsOpen(false)}></div>
-                    <div className="absolute top-full left-0 mt-2 p-4 bg-white border border-stone-200 rounded-2xl shadow-xl z-50 w-72 animate-in fade-in zoom-in-95 duration-150">
+                    <div className="absolute top-full left-0 mt-2 p-4 bg-white dark:bg-slate-800 border border-stone-200 dark:border-slate-600 rounded-2xl shadow-xl z-50 w-72 animate-in fade-in zoom-in-95 duration-150">
                         {/* Header */}
                         <div className="flex items-center justify-between mb-4">
-                            <span className="text-sm font-bold text-slate-800">{year}년 {month + 1}월</span>
+                            <span className="text-sm font-bold text-slate-800 dark:text-slate-100">{year}년 {month + 1}월</span>
                             <div className="flex space-x-1">
-                                <button type="button" onClick={handlePrevMonth} className="p-1.5 hover:bg-stone-100 rounded-lg text-slate-500 transition-colors">
+                                <button type="button" onClick={handlePrevMonth} className="p-1.5 hover:bg-stone-100 dark:hover:bg-slate-700 rounded-lg text-slate-500 dark:text-slate-400 transition-colors">
                                     <ChevronLeft size={16} />
                                 </button>
-                                <button type="button" onClick={handleNextMonth} className="p-1.5 hover:bg-stone-100 rounded-lg text-slate-500 transition-colors">
+                                <button type="button" onClick={handleNextMonth} className="p-1.5 hover:bg-stone-100 dark:hover:bg-slate-700 rounded-lg text-slate-500 dark:text-slate-400 transition-colors">
                                     <ChevronRight size={16} />
                                 </button>
                             </div>
@@ -90,14 +90,14 @@ export default function DatePicker({ value, onChange, label, minDate }: DatePick
                         {/* Calendar Grid */}
                         <div className="grid grid-cols-7 gap-1 mb-2">
                             {daysOfWeek.map(d => (
-                                <div key={d} className="text-[10px] font-bold text-slate-400 text-center py-1">{d}</div>
+                                <div key={d} className="text-[10px] font-bold text-slate-400 dark:text-slate-400 text-center py-1">{d}</div>
                             ))}
                         </div>
 
                         <div className="grid grid-cols-7 gap-1">
                             {/* Empty slots from prev month */}
                             {Array.from({ length: firstDayOfMonth }).map((_, i) => (
-                                <div key={`prev-${i}`} className="text-xs text-slate-300 text-center py-2">
+                                <div key={`prev-${i}`} className="text-xs text-slate-300 dark:text-slate-500 text-center py-2">
                                     {prevMonthDays - firstDayOfMonth + i + 1}
                                 </div>
                             ))}
@@ -117,9 +117,9 @@ export default function DatePicker({ value, onChange, label, minDate }: DatePick
                                         onClick={() => handleDateSelect(dayNum)}
                                         className={`
                                             text-xs font-medium py-2 rounded-lg transition-all relative
-                                            ${disabled ? 'text-slate-200 cursor-not-allowed' : 'text-slate-600 hover:bg-indigo-50 hover:text-indigo-600'}
-                                            ${selected ? 'bg-indigo-600 text-white hover:bg-indigo-700 hover:text-white ring-2 ring-indigo-100' : ''}
-                                            ${today && !selected ? 'text-indigo-600 font-bold' : ''}
+                                            ${disabled ? 'text-slate-200 dark:text-slate-600 cursor-not-allowed' : 'text-slate-600 dark:text-slate-300 hover:bg-indigo-50 dark:hover:bg-indigo-900/30 hover:text-indigo-600 dark:hover:text-indigo-400'}
+                                            ${selected ? 'bg-indigo-600 text-white hover:bg-indigo-700 hover:text-white ring-2 ring-indigo-100 dark:ring-indigo-800/30' : ''}
+                                            ${today && !selected ? 'text-indigo-600 dark:text-indigo-400 font-bold' : ''}
                                         `}
                                     >
                                         {dayNum}

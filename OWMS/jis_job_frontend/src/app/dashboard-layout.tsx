@@ -17,7 +17,6 @@ import {
     Plus,
     CheckCircle,
     CalendarCheck,
-    Car,
     Megaphone,
     MessageSquare,
     ChevronDown,
@@ -120,11 +119,6 @@ export default function DashboardLayout({
             name: '연차 관리',
             icon: <Plus size={18} />,
             href: '/vacation-mgmt',
-        });
-        managementItems.push({
-            name: '차량 관리',
-            icon: <Car size={18} />,
-            href: '/settings/vehicles',
         });
     }
     managementItems.push({ name: '설정', icon: <Settings size={18} />, href: '/settings' });
@@ -411,7 +405,7 @@ export default function DashboardLayout({
             </header>
 
             {/* Main Content Area */}
-            <main className="flex-1 pt-16 relative">
+            <main className="flex-1 pt-16 relative whitespace-normal">
                 {/* Background decoration */}
                 <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
                     <div className="absolute top-[-10%] left-[20%] w-[40%] h-[40%] bg-indigo-200/20 rounded-full blur-[120px] mix-blend-multiply"></div>

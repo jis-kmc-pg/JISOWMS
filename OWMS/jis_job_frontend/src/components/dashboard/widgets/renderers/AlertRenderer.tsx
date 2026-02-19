@@ -28,8 +28,8 @@ export default function AlertRenderer({ title, config, data }: AlertRendererProp
     return (
         <div className={`relative overflow-hidden rounded-2xl border shadow-sm transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5 ${
             isOk
-                ? 'border-emerald-200 bg-gradient-to-br from-emerald-50 via-white to-emerald-50/50'
-                : 'border-amber-200 bg-gradient-to-br from-amber-50 via-white to-amber-50/50'
+                ? 'border-emerald-200 dark:border-emerald-800/30 bg-gradient-to-br from-emerald-50 dark:from-emerald-900/30 via-white dark:via-slate-800 to-emerald-50/50 dark:to-emerald-900/20'
+                : 'border-amber-200 dark:border-amber-800/30 bg-gradient-to-br from-amber-50 dark:from-amber-900/30 via-white dark:via-slate-800 to-amber-50/50 dark:to-amber-900/20'
         }`}>
             {/* 배경 데코 서클 */}
             <div className={`absolute -right-6 -top-6 w-24 h-24 rounded-full opacity-10 ${
@@ -42,7 +42,7 @@ export default function AlertRenderer({ title, config, data }: AlertRendererProp
             <div className="relative p-6">
                 <div className="flex items-start justify-between">
                     <div className="flex-1">
-                        <p className="text-sm font-bold text-slate-500 uppercase tracking-wide">{title}</p>
+                        <p className="text-sm font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wide">{title}</p>
                         <h3 className={`text-lg font-black mt-2 ${isOk ? 'text-emerald-700' : 'text-amber-700'}`}>
                             {message}
                         </h3>
@@ -69,8 +69,8 @@ export default function AlertRenderer({ title, config, data }: AlertRendererProp
                     </div>
                     <div className={`p-3.5 rounded-2xl ${
                         isOk
-                            ? 'bg-gradient-to-br from-emerald-100 to-emerald-50 text-emerald-600'
-                            : 'bg-gradient-to-br from-amber-100 to-amber-50 text-amber-600'
+                            ? 'bg-gradient-to-br from-emerald-100 to-emerald-50 dark:from-emerald-900/40 dark:to-emerald-900/20 text-emerald-600 dark:text-emerald-400'
+                            : 'bg-gradient-to-br from-amber-100 to-amber-50 dark:from-amber-900/40 dark:to-amber-900/20 text-amber-600 dark:text-amber-400'
                     }`}>
                         <div className={!isOk ? 'animate-pulse' : ''}>
                             <Icon size={26} />

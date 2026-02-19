@@ -188,8 +188,8 @@ export default function WidgetRenderer({ widgetDef, data }: WidgetRendererProps)
 
     // fallback
     return (
-        <div className="bg-white p-6 rounded-2xl border border-stone-200 shadow-sm h-full flex items-center justify-center">
-            <p className="text-sm text-slate-400">{widgetDef.title} (미구현)</p>
+        <div className="bg-white dark:bg-slate-800 p-6 rounded-2xl border border-stone-200 dark:border-slate-600 shadow-sm h-full flex items-center justify-center">
+            <p className="text-sm text-slate-400 dark:text-slate-400">{widgetDef.title} (미구현)</p>
         </div>
     );
 }

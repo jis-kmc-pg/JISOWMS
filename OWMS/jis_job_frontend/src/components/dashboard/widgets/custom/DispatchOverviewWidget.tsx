@@ -30,21 +30,21 @@ function getVehicleIcon(type?: string) {
 function getStatusInfo(status?: string) {
     const s = status?.toLowerCase();
     if (s === 'confirmed' || s === '확정' || s === 'approved') {
-        return { label: '확정', bg: 'bg-emerald-50', text: 'text-emerald-600', dot: 'bg-emerald-400' };
+        return { label: '확정', bg: 'bg-emerald-50 dark:bg-emerald-900/30', text: 'text-emerald-600 dark:text-emerald-400', dot: 'bg-emerald-400' };
     }
     if (s === 'pending' || s === '대기' || s === 'requested') {
-        return { label: '대기', bg: 'bg-amber-50', text: 'text-amber-600', dot: 'bg-amber-400' };
+        return { label: '대기', bg: 'bg-amber-50 dark:bg-amber-900/30', text: 'text-amber-600 dark:text-amber-400', dot: 'bg-amber-400' };
     }
     if (s === 'in_progress' || s === '운행중' || s === 'active') {
-        return { label: '운행중', bg: 'bg-indigo-50', text: 'text-indigo-600', dot: 'bg-indigo-400' };
+        return { label: '운행중', bg: 'bg-indigo-50 dark:bg-indigo-900/30', text: 'text-indigo-600 dark:text-indigo-400', dot: 'bg-indigo-400' };
     }
     if (s === 'completed' || s === '완료') {
-        return { label: '완료', bg: 'bg-slate-50', text: 'text-slate-500', dot: 'bg-slate-400' };
+        return { label: '완료', bg: 'bg-slate-50 dark:bg-slate-700/50', text: 'text-slate-500 dark:text-slate-400', dot: 'bg-slate-400' };
     }
     if (s === 'rejected' || s === '반려') {
-        return { label: '반려', bg: 'bg-rose-50', text: 'text-rose-600', dot: 'bg-rose-400' };
+        return { label: '반려', bg: 'bg-rose-50 dark:bg-rose-900/30', text: 'text-rose-600 dark:text-rose-400', dot: 'bg-rose-400' };
     }
-    return { label: status || '예정', bg: 'bg-slate-50', text: 'text-slate-600', dot: 'bg-slate-400' };
+    return { label: status || '예정', bg: 'bg-slate-50 dark:bg-slate-700/50', text: 'text-slate-600 dark:text-slate-300', dot: 'bg-slate-400' };
 }
 
 function formatDateRange(start?: string, end?: string): string {
@@ -107,7 +107,17 @@ export default function DispatchOverviewWidget({ data, size }: DispatchOverviewW
 
     const allItems: DispatchItem[] = useMemo(() => {
         const raw = Array.isArray(data) ? data : (data?.data || data?.items || data?.dispatches || []);
-        return raw as DispatchItem[];
+        // 오늘 시작(00:00) 기준으로 과거 완료된 배차는 제외 (오늘+미래만 표시)
+        const todayStart = new Date();
+        todayStart.setHours(0, 0, 0, 0);
+        return (raw as DispatchItem[]).filter(item => {
+            const end = item.endDate ? new Date(item.endDate) : null;
+            const start = item.startDate ? new Date(item.startDate) : null;
+            // endDate가 있으면 endDate 기준, 없으면 startDate 기준
+            const refDate = end || start;
+            if (!refDate) return true; // 날짜 없으면 표시
+            return refDate >= todayStart;
+        });
     }, [data]);
 
     const items = useMemo(() => allItems.slice(0, maxItems), [allItems, maxItems]);
@@ -122,30 +132,29 @@ export default function DispatchOverviewWidget({ data, size }: DispatchOverviewW
         return false;
     }
 
-    // Small 모드: 상태별 건수 요약
+    // Small 모드: 상태별 건수 요약 (필터링된 allItems 기반)
     const statusSummary = useMemo(() => {
         if (!isSmall) return null;
-        const allRaw = Array.isArray(data) ? data : (data?.data || data?.items || data?.dispatches || []);
         const counts: Record<string, number> = {};
-        (allRaw as DispatchItem[]).forEach(item => {
+        allItems.forEach(item => {
             const info = getStatusInfo(item.status);
             counts[info.label] = (counts[info.label] || 0) + 1;
         });
-        return { total: (allRaw as DispatchItem[]).length, counts };
-    }, [data, isSmall]);
+        return { total: allItems.length, counts };
+    }, [allItems, isSmall]);
 
     return (
-        <div className="bg-white p-4 rounded-2xl border border-stone-200 shadow-sm hover:shadow-md transition-all h-full flex flex-col overflow-hidden">
+        <div className="bg-white dark:bg-slate-800 p-4 rounded-2xl border border-stone-200 dark:border-slate-600 shadow-sm hover:shadow-md transition-all h-full flex flex-col overflow-hidden">
             {/* 헤더 */}
             <div className="flex items-center justify-between mb-2">
                 <div className="flex items-center gap-2.5">
-                    <div className="p-1.5 rounded-xl bg-amber-50">
+                    <div className="p-1.5 rounded-xl bg-amber-50 dark:bg-amber-900/30">
                         <Car size={14} className="text-amber-500" />
                     </div>
-                    <h4 className="text-sm font-bold text-slate-800">배차 현황</h4>
+                    <h4 className="text-sm font-bold text-slate-800 dark:text-slate-100">배차 현황</h4>
                 </div>
                 <div className="flex items-center gap-3">
-                    <span className="text-[10px] font-bold text-slate-300 uppercase tracking-wider">
+                    <span className="text-[10px] font-bold text-slate-300 dark:text-slate-500 uppercase tracking-wider">
                         {isSmall ? `${statusSummary?.total ?? 0}건` : `${allItems.length}건`}
                     </span>
                     {!isSmall && (
@@ -165,7 +174,7 @@ export default function DispatchOverviewWidget({ data, size }: DispatchOverviewW
                 items.length === 0 ? (
                     <div className="flex-1 flex flex-col items-center justify-center py-4">
                         <Navigation size={24} className="text-slate-200 mb-2" />
-                        <p className="text-xs text-slate-400 font-medium">배차 정보 없음</p>
+                        <p className="text-xs text-slate-400 dark:text-slate-400 font-medium">배차 정보 없음</p>
                     </div>
                 ) : (
                     <div className="flex-1 min-h-0 overflow-auto space-y-1.5">
@@ -188,22 +197,22 @@ export default function DispatchOverviewWidget({ data, size }: DispatchOverviewW
                                 return (
                                     <div
                                         key={item.id ?? idx}
-                                        className={`flex items-center gap-2 p-1.5 rounded-lg border ${mine ? 'border-indigo-100 bg-indigo-50/30' : 'border-stone-100 bg-stone-50/30'}`}
+                                        className={`flex items-center gap-2 p-1.5 rounded-lg border ${mine ? 'border-indigo-100 dark:border-indigo-800/30 bg-indigo-50/30 dark:bg-indigo-900/20' : 'border-stone-100 dark:border-slate-700 bg-stone-50/30 dark:bg-slate-700/30'}`}
                                     >
-                                        <span className={`text-[9px] font-bold px-1.5 py-0.5 rounded-md ${statusInfo.bg} ${statusInfo.text}`}>
+                                        <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded-md ${statusInfo.bg} ${statusInfo.text}`}>
                                             {statusInfo.label}
                                         </span>
-                                        <span className="text-xs font-bold text-slate-700 truncate flex-1">
+                                        <span className="text-xs font-bold text-slate-700 dark:text-slate-200 truncate flex-1">
                                             {item.destination || '목적지 미정'}
                                         </span>
                                         {mine && (
-                                            <span className="text-[8px] font-black px-1 py-0.5 rounded bg-indigo-500 text-white">MY</span>
+                                            <span className="text-[10px] font-black px-1 py-0.5 rounded bg-indigo-500 text-white">MY</span>
                                         )}
                                     </div>
                                 );
                             })}
                             {remainingCount > 0 && (
-                                <p className="text-[10px] text-slate-400 font-medium text-center">+{remainingCount}건 더보기</p>
+                                <p className="text-[10px] text-slate-400 dark:text-slate-400 font-medium text-center">+{remainingCount}건 더보기</p>
                             )}
                         </div>
                     </div>
@@ -213,10 +222,10 @@ export default function DispatchOverviewWidget({ data, size }: DispatchOverviewW
                     {/* Medium/Large 리스트 */}
                     {items.length === 0 ? (
                         <div className="flex-1 flex flex-col items-center justify-center py-4">
-                            <div className="p-3 rounded-2xl bg-slate-50 mb-2">
+                            <div className="p-3 rounded-2xl bg-slate-50 dark:bg-slate-700/50 mb-2">
                                 <Navigation size={24} className="text-slate-200" />
                             </div>
-                            <p className="text-xs text-slate-400 font-medium">배차 정보가 없습니다</p>
+                            <p className="text-xs text-slate-400 dark:text-slate-400 font-medium">배차 정보가 없습니다</p>
                         </div>
                     ) : (
                         <div className="flex-1 min-h-0 overflow-auto custom-scrollbar space-y-1.5">
@@ -233,8 +242,8 @@ export default function DispatchOverviewWidget({ data, size }: DispatchOverviewW
                                             group/card p-2.5 rounded-xl border transition-all duration-200
                                             hover:shadow-md cursor-default
                                             ${mine
-                                                ? 'bg-gradient-to-r from-indigo-50/40 to-white border-indigo-200/60 ring-1 ring-indigo-100/50'
-                                                : 'bg-gradient-to-r from-white to-stone-50/30 border-stone-150 hover:border-stone-200'
+                                                ? 'bg-gradient-to-r from-indigo-50/40 dark:from-indigo-900/20 to-white dark:to-slate-800 border-indigo-200/60 dark:border-indigo-800/40 ring-1 ring-indigo-100/50 dark:ring-indigo-800/30'
+                                                : 'bg-gradient-to-r from-white dark:from-slate-800 to-stone-50/30 dark:to-slate-700/30 border-stone-150 dark:border-slate-600/50 hover:border-stone-200 dark:hover:border-slate-500'
                                             }
                                         `}
                                     >
@@ -242,9 +251,9 @@ export default function DispatchOverviewWidget({ data, size }: DispatchOverviewW
                                             {/* 차량 아이콘 */}
                                             <div className={`
                                                 p-2 rounded-xl flex-shrink-0
-                                                ${mine ? 'bg-indigo-100' : 'bg-amber-50'}
+                                                ${mine ? 'bg-indigo-100 dark:bg-indigo-900/40' : 'bg-amber-50 dark:bg-amber-900/30'}
                                             `}>
-                                                <VehicleIcon size={16} className={mine ? 'text-indigo-600' : 'text-amber-500'} />
+                                                <VehicleIcon size={16} className={mine ? 'text-indigo-600 dark:text-indigo-400' : 'text-amber-500'} />
                                             </div>
 
                                             {/* 정보 */}
@@ -253,29 +262,29 @@ export default function DispatchOverviewWidget({ data, size }: DispatchOverviewW
                                                 <div className="flex items-center gap-1.5 flex-wrap">
                                                     <span className={`
                                                         text-xs font-black uppercase tracking-wider
-                                                        ${mine ? 'text-indigo-600' : 'text-slate-700'}
+                                                        ${mine ? 'text-indigo-600 dark:text-indigo-400' : 'text-slate-700 dark:text-slate-200'}
                                                     `}>
                                                         {item.vehicle?.plateNumber || item.vehicle?.name || '차량 미정'}
                                                     </span>
-                                                    <span className={`text-[9px] font-bold px-1.5 py-0.5 rounded-md ${statusInfo.bg} ${statusInfo.text}`}>
+                                                    <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded-md ${statusInfo.bg} ${statusInfo.text}`}>
                                                         {statusInfo.label}
                                                     </span>
                                                     {mine && (
-                                                        <span className="text-[8px] font-black px-1 py-0.5 rounded-md bg-indigo-500 text-white uppercase tracking-wider">
+                                                        <span className="text-[10px] font-black px-1 py-0.5 rounded-md bg-indigo-500 text-white uppercase tracking-wider">
                                                             MY
                                                         </span>
                                                     )}
                                                 </div>
 
                                                 {/* 목적지 + 날짜 한 줄 */}
-                                                <div className="flex items-center gap-2 mt-0.5 text-[10px] text-slate-500">
+                                                <div className="flex items-center gap-2 mt-0.5 text-[10px] text-slate-500 dark:text-slate-400">
                                                     <span className="flex items-center gap-0.5 truncate">
-                                                        <MapPin size={10} className="text-slate-300 flex-shrink-0" />
+                                                        <MapPin size={10} className="text-slate-300 dark:text-slate-500 flex-shrink-0" />
                                                         <span className="truncate font-medium">{item.destination || '목적지 미정'}</span>
                                                     </span>
                                                     {dateRange && (
-                                                        <span className="flex items-center gap-0.5 font-medium tabular-nums text-slate-400 flex-shrink-0">
-                                                            <Clock size={9} className="text-slate-300" />
+                                                        <span className="flex items-center gap-0.5 font-medium tabular-nums text-slate-400 dark:text-slate-400 flex-shrink-0">
+                                                            <Clock size={9} className="text-slate-300 dark:text-slate-500" />
                                                             {dateRange}
                                                         </span>
                                                     )}
@@ -292,7 +301,7 @@ export default function DispatchOverviewWidget({ data, size }: DispatchOverviewW
                                 );
                             })}
                             {remainingCount > 0 && (
-                                <p className="text-[10px] text-slate-400 font-medium text-center py-0.5">+{remainingCount}건 더보기</p>
+                                <p className="text-[10px] text-slate-400 dark:text-slate-400 font-medium text-center py-0.5">+{remainingCount}건 더보기</p>
                             )}
                         </div>
                     )}

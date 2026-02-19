@@ -12,20 +12,20 @@ export default function DeleteConfirmModal({ show, onConfirm, onCancel }: Delete
     if (!show) return null;
 
     return (
-        <div className="fixed inset-0 z-[300] flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-sm animate-in fade-in duration-200">
-            <div className="bg-white border border-stone-100 rounded-2xl w-full max-w-sm p-6 shadow-2xl scale-100 animate-in zoom-in-95 duration-200 text-center">
-                <div className="w-12 h-12 bg-rose-50 text-rose-500 rounded-full flex items-center justify-center mx-auto mb-4">
+        <div className="fixed inset-0 z-[300] flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-in fade-in duration-200">
+            <div className="bg-white dark:bg-slate-800 border border-stone-100 dark:border-slate-700 rounded-2xl w-full max-w-sm p-6 shadow-2xl scale-100 animate-in zoom-in-95 duration-200 text-center">
+                <div className="w-12 h-12 bg-rose-50 dark:bg-rose-900/30 text-rose-500 dark:text-rose-400 rounded-full flex items-center justify-center mx-auto mb-4">
                     <Trash2 size={24} />
                 </div>
-                <h3 className="text-lg font-bold text-slate-800 mb-2">정말 삭제하시겠습니까?</h3>
-                <p className="text-sm text-slate-500 mb-6 leading-relaxed">
+                <h3 className="text-lg font-bold text-slate-800 dark:text-slate-100 mb-2">정말 삭제하시겠습니까?</h3>
+                <p className="text-sm text-slate-500 dark:text-slate-400 mb-6 leading-relaxed">
                     선택한 업무 항목이 리스트에서 제거됩니다.<br />
                     (작성된 내용은 복구할 수 없습니다)
                 </p>
                 <div className="flex space-x-3">
                     <button
                         onClick={onCancel}
-                        className="flex-1 py-3 rounded-xl font-bold text-slate-500 hover:bg-stone-100 transition-all text-sm"
+                        className="flex-1 py-3 rounded-xl font-bold text-slate-500 dark:text-slate-400 hover:bg-stone-100 dark:hover:bg-slate-600 transition-all text-sm"
                     >
                         취소
                     </button>

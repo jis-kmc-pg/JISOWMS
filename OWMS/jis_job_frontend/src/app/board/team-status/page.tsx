@@ -20,6 +20,7 @@ import { format, startOfWeek, endOfWeek, addWeeks, subWeeks, isSameWeek } from "
 import { ko } from "date-fns/locale";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import ConfirmDialog from '@/components/ConfirmDialog';
 
 interface StatusItem {
     id: number;
@@ -71,6 +72,8 @@ export default function TeamStatusListPage() {
     const [userRole, setUserRole] = useState<string>("");
     const [currentUserId, setCurrentUserId] = useState<number | null>(null);
     const [currentWeek, setCurrentWeek] = useState(new Date());
+    const [showConfirm, setShowConfirm] = useState(false);
+    const [confirmAction, setConfirmAction] = useState<(() => void) | null>(null);
 
     // Toast
     const [showToast, setShowToast] = useState(false);
@@ -120,15 +123,17 @@ export default function TeamStatusListPage() {
         }
     };
 
-    const handleDelete = async (reportId: number) => {
-        if (!confirm("정말 삭제하시겠습니까?")) return;
-        try {
-            await api.delete(`/team-status/${reportId}`);
-            toast("삭제되었습니다.");
-            fetchReports();
-        } catch {
-            toast("삭제에 실패했습니다.", "error");
-        }
+    const handleDelete = (reportId: number) => {
+        setConfirmAction(() => async () => {
+            try {
+                await api.delete(`/team-status/${reportId}`);
+                toast("삭제되었습니다.");
+                fetchReports();
+            } catch {
+                toast("삭제에 실패했습니다.", "error");
+            }
+        });
+        setShowConfirm(true);
     };
 
     // 팀별로 그룹핑 후 항목 통합
@@ -169,26 +174,26 @@ export default function TeamStatusListPage() {
             {/* Header */}
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-0 mb-4 sm:mb-6">
                 <div className="flex items-center space-x-3 sm:space-x-4 min-w-0">
-                    <Link href="/" className="text-slate-400 hover:text-indigo-600 transition-colors shrink-0">
-                        <ArrowLeft size={22} />
+                    <Link href="/" className="text-slate-400 dark:text-slate-400 hover:text-indigo-600 transition-colors shrink-0" aria-label="홈으로 이동">
+                        <ArrowLeft size={22} aria-hidden="true" />
                     </Link>
                     <div className="min-w-0">
-                        <h1 className="text-lg sm:text-2xl font-extrabold text-slate-800 flex items-center gap-2 sm:gap-2.5">
-                            <div className="bg-indigo-50 p-1.5 sm:p-2 rounded-xl border border-indigo-100 shrink-0">
-                                <ClipboardCheck size={18} className="text-indigo-600 sm:hidden" />
-                                <ClipboardCheck size={22} className="text-indigo-600 hidden sm:block" />
+                        <h1 className="text-lg sm:text-2xl font-extrabold text-slate-800 dark:text-slate-100 flex items-center gap-2 sm:gap-2.5">
+                            <div className="bg-indigo-50 dark:bg-indigo-900/30 p-1.5 sm:p-2 rounded-xl border border-indigo-100 dark:border-indigo-800/30 shrink-0">
+                                <ClipboardCheck size={18} className="text-indigo-600 dark:text-indigo-400 sm:hidden" />
+                                <ClipboardCheck size={22} className="text-indigo-600 dark:text-indigo-400 hidden sm:block" />
                             </div>
                             <span className="truncate">팀현황보고</span>
                         </h1>
-                        <p className="hidden sm:block text-sm text-slate-400 mt-1 ml-12">부서 내 팀별 주간 현황을 확인하세요</p>
+                        <p className="hidden sm:block text-sm text-slate-400 dark:text-slate-400 mt-1 ml-12">부서 내 팀별 주간 현황을 확인하세요</p>
                     </div>
                 </div>
                 {canWrite && (
                     <Link
                         href="/board/team-status/write"
-                        className="bg-indigo-600 text-white px-5 py-2.5 rounded-xl hover:bg-indigo-700 flex items-center justify-center gap-2 shadow-lg shadow-indigo-200 font-bold text-sm transition-all active:scale-[0.97] w-full sm:w-auto shrink-0"
+                        className="bg-indigo-600 text-white px-5 py-2.5 rounded-xl hover:bg-indigo-700 flex items-center justify-center gap-2 shadow-lg shadow-indigo-200 dark:shadow-indigo-900/30 font-bold text-sm transition-colors active:scale-[0.97] w-full sm:w-auto shrink-0"
                     >
-                        <PenSquare size={16} /> 보고서 작성
+                        <PenSquare size={16} aria-hidden="true" /> 보고서 작성
                     </Link>
                 )}
             </div>
@@ -197,28 +202,30 @@ export default function TeamStatusListPage() {
             <div className="flex items-center justify-center gap-3 mb-5">
                 <button
                     onClick={() => setCurrentWeek(subWeeks(currentWeek, 1))}
-                    className="p-2 rounded-xl border border-stone-200 hover:bg-stone-50 text-slate-500 hover:text-indigo-600 transition-all"
+                    className="p-2 rounded-xl border border-stone-200 dark:border-slate-600 hover:bg-stone-50 dark:hover:bg-slate-700 text-slate-500 dark:text-slate-400 hover:text-indigo-600 transition-colors"
+                    aria-label="이전 주"
                 >
-                    <ChevronLeft size={18} />
+                    <ChevronLeft size={18} aria-hidden="true" />
                 </button>
                 <div className="text-center min-w-[220px]">
-                    <p className="text-sm sm:text-base font-extrabold text-slate-800">
+                    <p className="text-sm sm:text-base font-extrabold text-slate-800 dark:text-slate-100">
                         {format(weekStart, "M월 d일", { locale: ko })} ~ {format(weekEnd, "M월 d일", { locale: ko })}
                     </p>
-                    <p className="text-[11px] text-slate-400 font-medium mt-0.5">
+                    <p className="text-[11px] text-slate-400 dark:text-slate-400 font-medium mt-0.5">
                         {format(weekStart, "yyyy년", { locale: ko })}
                     </p>
                 </div>
                 <button
                     onClick={() => setCurrentWeek(addWeeks(currentWeek, 1))}
-                    className="p-2 rounded-xl border border-stone-200 hover:bg-stone-50 text-slate-500 hover:text-indigo-600 transition-all"
+                    className="p-2 rounded-xl border border-stone-200 dark:border-slate-600 hover:bg-stone-50 dark:hover:bg-slate-700 text-slate-500 dark:text-slate-400 hover:text-indigo-600 transition-colors"
+                    aria-label="다음 주"
                 >
-                    <ChevronRight size={18} />
+                    <ChevronRight size={18} aria-hidden="true" />
                 </button>
                 {!isThisWeek && (
                     <button
                         onClick={() => setCurrentWeek(new Date())}
-                        className="text-xs font-bold text-indigo-600 px-3 py-1.5 rounded-lg border border-indigo-200 hover:bg-indigo-50 transition-all"
+                        className="text-xs font-bold text-indigo-600 dark:text-indigo-400 px-3 py-1.5 rounded-lg border border-indigo-200 dark:border-indigo-800/30 hover:bg-indigo-50 dark:hover:bg-indigo-900/30 transition-colors"
                     >
                         이번주
                     </button>
@@ -226,16 +233,16 @@ export default function TeamStatusListPage() {
             </div>
 
             {/* Consolidated Table */}
-            <div className="bg-white rounded-2xl border border-stone-200 shadow-sm overflow-hidden">
+            <div className="bg-white dark:bg-slate-800 rounded-2xl border border-stone-200 dark:border-slate-600 shadow-sm overflow-hidden">
                 {loading ? (
-                    <div className="flex items-center justify-center py-20 text-slate-400">
+                    <div className="flex items-center justify-center py-20 text-slate-400 dark:text-slate-400">
                         <Loader2 size={24} className="animate-spin mr-3" />
                         <span className="font-medium">불러오는 중...</span>
                     </div>
                 ) : flatRows.length === 0 ? (
-                    <div className="flex flex-col items-center justify-center py-20 text-slate-400">
-                        <FileText size={48} className="text-stone-200 mb-4" />
-                        <p className="font-bold text-slate-500 mb-1">이 주간에 보고서가 없습니다</p>
+                    <div className="flex flex-col items-center justify-center py-20 text-slate-400 dark:text-slate-400">
+                        <FileText size={48} className="text-stone-200 dark:text-slate-600 mb-4" />
+                        <p className="font-bold text-slate-500 dark:text-slate-400 mb-1">이 주간에 보고서가 없습니다</p>
                         <p className="text-sm">팀장이 보고서를 작성하면 여기에 표시됩니다</p>
                     </div>
                 ) : (
@@ -244,41 +251,41 @@ export default function TeamStatusListPage() {
                         <div className="hidden sm:block">
                             <table className="w-full border-collapse">
                                 <thead>
-                                    <tr className="bg-stone-50/80 border-b border-stone-100">
-                                        <th className="px-4 py-3 text-left text-xs font-bold text-slate-400 uppercase tracking-wider w-32 border-r border-stone-100">팀</th>
-                                        <th className="px-4 py-3 text-left text-xs font-bold text-slate-400 uppercase tracking-wider w-24 border-r border-stone-100">항목</th>
-                                        <th className="px-4 py-3 text-left text-xs font-bold text-slate-400 uppercase tracking-wider w-28 border-r border-stone-100">일자</th>
-                                        <th className="px-4 py-3 text-left text-xs font-bold text-slate-400 uppercase tracking-wider">내용</th>
-                                        <th className="px-3 py-3 text-center text-xs font-bold text-slate-400 uppercase tracking-wider w-20">관리</th>
+                                    <tr className="bg-stone-50/80 dark:bg-slate-700/30 border-b border-stone-100 dark:border-slate-700">
+                                        <th className="px-4 py-3 text-left text-xs font-bold text-slate-400 dark:text-slate-400 uppercase tracking-wider w-32 border-r border-stone-100 dark:border-slate-700">팀</th>
+                                        <th className="px-4 py-3 text-left text-xs font-bold text-slate-400 dark:text-slate-400 uppercase tracking-wider w-24 border-r border-stone-100 dark:border-slate-700">항목</th>
+                                        <th className="px-4 py-3 text-left text-xs font-bold text-slate-400 dark:text-slate-400 uppercase tracking-wider w-28 border-r border-stone-100 dark:border-slate-700">일자</th>
+                                        <th className="px-4 py-3 text-left text-xs font-bold text-slate-400 dark:text-slate-400 uppercase tracking-wider">내용</th>
+                                        <th className="px-3 py-3 text-center text-xs font-bold text-slate-400 dark:text-slate-400 uppercase tracking-wider w-20">관리</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     {flatRows.map((row, idx) => (
-                                        <tr key={idx} className="border-b border-stone-100 last:border-b-0 hover:bg-stone-50/30 transition-colors">
+                                        <tr key={idx} className="border-b border-stone-100 dark:border-slate-700 last:border-b-0 hover:bg-stone-50/30 dark:hover:bg-slate-700/30 transition-colors">
                                             {row.isFirstOfTeam && (
                                                 <td
                                                     rowSpan={row.teamRowSpan}
-                                                    className="px-4 py-3 border-r border-stone-100 align-top"
+                                                    className="px-4 py-3 border-r border-stone-100 dark:border-slate-700 align-top"
                                                 >
                                                     <Link href={`/board/team-status/${row.reportId}`} className="hover:text-indigo-600 transition-colors">
                                                         <div className="flex items-center gap-2">
-                                                            <div className="bg-indigo-50 p-1 rounded-lg shrink-0">
+                                                            <div className="bg-indigo-50 dark:bg-indigo-900/30 p-1 rounded-lg shrink-0">
                                                                 <Users size={13} className="text-indigo-500" />
                                                             </div>
-                                                            <span className="font-bold text-sm text-slate-800">{row.teamName}</span>
+                                                            <span className="font-bold text-sm text-slate-800 dark:text-slate-100">{row.teamName}</span>
                                                         </div>
                                                     </Link>
                                                 </td>
                                             )}
-                                            <td className="px-4 py-3 border-r border-stone-100">
+                                            <td className="px-4 py-3 border-r border-stone-100 dark:border-slate-700">
                                                 <span className={`text-[11px] font-bold px-2 py-0.5 rounded-md border ${CATEGORY_COLORS[row.category] || "bg-slate-50 text-slate-600 border-slate-100"}`}>
                                                     {CATEGORY_LABELS[row.category] || row.category}
                                                 </span>
                                             </td>
-                                            <td className="px-4 py-3 text-sm text-slate-500 border-r border-stone-100">
+                                            <td className="px-4 py-3 text-sm text-slate-500 dark:text-slate-400 border-r border-stone-100 dark:border-slate-700">
                                                 {format(new Date(row.itemDate), "MM.dd")}
                                             </td>
-                                            <td className="px-4 py-3 text-sm text-slate-700 leading-relaxed">
+                                            <td className="px-4 py-3 text-sm text-slate-700 dark:text-slate-200 leading-relaxed">
                                                 {row.content}
                                             </td>
                                             {row.isFirstOfTeam && (
@@ -287,17 +294,17 @@ export default function TeamStatusListPage() {
                                                         <div className="flex flex-col items-center gap-1">
                                                             <Link
                                                                 href={`/board/team-status/write?id=${row.reportId}`}
-                                                                className="p-1.5 text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-all"
-                                                                title="수정"
+                                                                className="p-1.5 text-slate-400 dark:text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 dark:hover:bg-indigo-900/30 rounded-lg transition-colors"
+                                                                aria-label="수정"
                                                             >
-                                                                <Pencil size={14} />
+                                                                <Pencil size={14} aria-hidden="true" />
                                                             </Link>
                                                             <button
                                                                 onClick={() => handleDelete(row.reportId)}
-                                                                className="p-1.5 text-slate-400 hover:text-rose-500 hover:bg-rose-50 rounded-lg transition-all"
-                                                                title="삭제"
+                                                                className="p-1.5 text-slate-400 dark:text-slate-400 hover:text-rose-500 dark:hover:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-900/30 rounded-lg transition-colors"
+                                                                aria-label="삭제"
                                                             >
-                                                                <Trash2 size={14} />
+                                                                <Trash2 size={14} aria-hidden="true" />
                                                             </button>
                                                         </div>
                                                     )}
@@ -310,44 +317,46 @@ export default function TeamStatusListPage() {
                         </div>
 
                         {/* Mobile Cards (팀별 그룹) */}
-                        <div className="sm:hidden divide-y divide-stone-100">
+                        <div className="sm:hidden divide-y divide-stone-100 dark:divide-slate-700">
                             {Object.values(groupedByTeam).map((group) => (
                                 <div key={group.teamName} className="p-3">
                                     <div className="flex items-center gap-2 mb-2.5">
                                         <Link href={`/board/team-status/${group.reportId}`} className="flex items-center gap-2 flex-1 min-w-0">
-                                            <div className="bg-indigo-50 p-1 rounded-lg shrink-0">
+                                            <div className="bg-indigo-50 dark:bg-indigo-900/30 p-1 rounded-lg shrink-0">
                                                 <Users size={13} className="text-indigo-500" />
                                             </div>
-                                            <span className="font-bold text-sm text-slate-800">{group.teamName}</span>
-                                            <span className="text-[10px] text-slate-400">{group.userName}</span>
+                                            <span className="font-bold text-sm text-slate-800 dark:text-slate-100">{group.teamName}</span>
+                                            <span className="text-[10px] text-slate-400 dark:text-slate-400">{group.userName}</span>
                                         </Link>
                                         {(currentUserId === group.userId || isSeniorRole) && (
                                             <div className="flex items-center gap-0.5 shrink-0">
                                                 <Link
                                                     href={`/board/team-status/write?id=${group.reportId}`}
-                                                    className="p-1.5 text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-all"
+                                                    className="p-1.5 text-slate-400 dark:text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 dark:hover:bg-indigo-900/30 rounded-lg transition-colors"
+                                                    aria-label="수정"
                                                 >
-                                                    <Pencil size={13} />
+                                                    <Pencil size={13} aria-hidden="true" />
                                                 </Link>
                                                 <button
                                                     onClick={() => handleDelete(group.reportId)}
-                                                    className="p-1.5 text-slate-400 hover:text-rose-500 hover:bg-rose-50 rounded-lg transition-all"
+                                                    className="p-1.5 text-slate-400 dark:text-slate-400 hover:text-rose-500 dark:hover:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-900/30 rounded-lg transition-colors"
+                                                    aria-label="삭제"
                                                 >
-                                                    <Trash2 size={13} />
+                                                    <Trash2 size={13} aria-hidden="true" />
                                                 </button>
                                             </div>
                                         )}
                                     </div>
                                     <div className="space-y-2">
                                         {group.items.map((item, idx) => (
-                                            <div key={idx} className="bg-stone-50 p-2.5 rounded-xl border border-stone-100">
+                                            <div key={idx} className="bg-stone-50 dark:bg-slate-700/50 p-2.5 rounded-xl border border-stone-100 dark:border-slate-700">
                                                 <div className="flex items-center justify-between mb-1.5">
                                                     <span className={`text-[10px] font-bold px-2 py-0.5 rounded-md border ${CATEGORY_COLORS[item.category] || "bg-slate-50 text-slate-600 border-slate-100"}`}>
                                                         {CATEGORY_LABELS[item.category] || item.category}
                                                     </span>
-                                                    <span className="text-[11px] text-slate-400">{format(new Date(item.itemDate), "MM.dd")}</span>
+                                                    <span className="text-[11px] text-slate-400 dark:text-slate-400">{format(new Date(item.itemDate), "MM.dd")}</span>
                                                 </div>
-                                                <p className="text-xs text-slate-700 leading-relaxed">{item.content}</p>
+                                                <p className="text-xs text-slate-700 dark:text-slate-200 leading-relaxed">{item.content}</p>
                                             </div>
                                         ))}
                                     </div>
@@ -360,15 +369,32 @@ export default function TeamStatusListPage() {
 
             {/* Toast */}
             {showToast && (
-                <div className={`fixed bottom-8 left-1/2 -translate-x-1/2 z-[100] px-4 py-3 sm:px-6 sm:py-3.5 rounded-2xl shadow-2xl flex items-center gap-2 sm:gap-3 font-bold text-xs sm:text-sm transition-all max-w-[90vw] ${
+                <div className={`fixed bottom-8 left-1/2 -translate-x-1/2 z-[100] px-4 py-3 sm:px-6 sm:py-3.5 rounded-2xl shadow-2xl flex items-center gap-2 sm:gap-3 font-bold text-xs sm:text-sm transition-colors max-w-[90vw] ${
                     toastType === "success"
                         ? "bg-emerald-600 text-white shadow-emerald-200"
                         : "bg-rose-600 text-white shadow-rose-200"
                 }`}>
-                    {toastType === "success" ? <CheckCircle2 size={16} /> : <AlertCircle size={16} />}
+                    {toastType === "success" ? <CheckCircle2 size={16} aria-hidden="true" /> : <AlertCircle size={16} aria-hidden="true" />}
                     {toastMessage}
                 </div>
             )}
+
+            <ConfirmDialog
+                show={showConfirm}
+                title="삭제 확인"
+                description="정말 삭제하시겠습니까? 이 작업은 되돌릴 수 없습니다."
+                confirmLabel="삭제"
+                variant="danger"
+                onConfirm={() => {
+                    confirmAction?.();
+                    setShowConfirm(false);
+                    setConfirmAction(null);
+                }}
+                onCancel={() => {
+                    setShowConfirm(false);
+                    setConfirmAction(null);
+                }}
+            />
         </div>
     );
 }

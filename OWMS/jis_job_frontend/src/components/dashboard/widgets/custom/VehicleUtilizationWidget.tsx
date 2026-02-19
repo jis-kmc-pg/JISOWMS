@@ -76,22 +76,22 @@ export default function VehicleUtilizationWidget({ data, size }: VehicleUtilizat
     // Small: 가동률% 단일 통계
     if (isSmall) {
         return (
-            <div className="bg-white rounded-2xl border border-stone-200 shadow-sm hover:shadow-md transition-all h-full flex flex-col overflow-hidden p-4">
+            <div className="bg-white dark:bg-slate-800 rounded-2xl border border-stone-200 dark:border-slate-600 shadow-sm hover:shadow-md transition-all h-full flex flex-col overflow-hidden p-4">
                 <div className="flex-1 flex items-center justify-between">
                     <div className="flex items-center gap-3">
                         <div className="p-2 bg-gradient-to-br from-indigo-500 to-purple-500 rounded-xl shadow-sm">
                             <Truck size={14} className="text-white" />
                         </div>
                         <div>
-                            <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">차량 가동률</p>
+                            <p className="text-[10px] font-bold text-slate-400 dark:text-slate-400 uppercase tracking-wider">차량 가동률</p>
                             <p className="text-2xl font-black text-indigo-700 tabular-nums">
-                                {utilizationRate}<span className="text-xs font-bold text-slate-400 ml-0.5">%</span>
+                                {utilizationRate}<span className="text-xs font-bold text-slate-400 dark:text-slate-400 ml-0.5">%</span>
                             </p>
                         </div>
                     </div>
                     <div className="text-right">
-                        <p className="text-sm font-bold text-slate-500 tabular-nums">{totalVehicles}대</p>
-                        <p className="text-[10px] text-slate-400 font-medium">{activeDispatches}건 운행</p>
+                        <p className="text-sm font-bold text-slate-500 dark:text-slate-400 tabular-nums">{totalVehicles}대</p>
+                        <p className="text-[10px] text-slate-400 dark:text-slate-400 font-medium">{activeDispatches}건 운행</p>
                     </div>
                 </div>
             </div>
@@ -99,14 +99,14 @@ export default function VehicleUtilizationWidget({ data, size }: VehicleUtilizat
     }
 
     return (
-        <div className="bg-white rounded-2xl border border-stone-200 shadow-sm hover:shadow-md transition-all h-full flex flex-col overflow-hidden p-4">
+        <div className="bg-white dark:bg-slate-800 rounded-2xl border border-stone-200 dark:border-slate-600 shadow-sm hover:shadow-md transition-all h-full flex flex-col overflow-hidden p-4">
             {/* 헤더 */}
             <div className="flex items-center justify-between mb-2">
                 <div className="flex items-center gap-2">
                     <div className="p-1.5 bg-gradient-to-br from-indigo-500 to-purple-500 rounded-lg">
                         <Truck size={14} className="text-white" />
                     </div>
-                    <h4 className="text-sm font-bold text-slate-800">차량 가동률</h4>
+                    <h4 className="text-sm font-bold text-slate-800 dark:text-slate-100">차량 가동률</h4>
                 </div>
                 <span className="text-xs font-bold text-indigo-600 tabular-nums">{utilizationRate}%</span>
             </div>
@@ -115,8 +115,8 @@ export default function VehicleUtilizationWidget({ data, size }: VehicleUtilizat
             <div className="flex-1 min-h-0 overflow-auto">
                 {stats.length === 0 ? (
                     <div className="h-full flex flex-col items-center justify-center py-4">
-                        <Truck size={24} className="text-slate-200 mb-2" />
-                        <p className="text-xs text-slate-400 font-medium">차량 데이터가 없습니다</p>
+                        <Truck size={24} className="text-slate-200 dark:text-slate-600 mb-2" />
+                        <p className="text-xs text-slate-400 dark:text-slate-400 font-medium">차량 데이터가 없습니다</p>
                     </div>
                 ) : (
                     <div className={`flex ${isLarge ? 'flex-row items-start gap-4' : 'flex-row items-center gap-3'}`}>
@@ -165,21 +165,21 @@ export default function VehicleUtilizationWidget({ data, size }: VehicleUtilizat
                         <div className="flex-1 min-w-0">
                             {/* 통계 카드 */}
                             <div className="grid grid-cols-2 gap-1.5 mb-1.5">
-                                <div className="flex items-center gap-1.5 p-1.5 bg-indigo-50/60 rounded-lg border border-indigo-100">
+                                <div className="flex items-center gap-1.5 p-1.5 bg-indigo-50/60 dark:bg-indigo-900/20 rounded-lg border border-indigo-100 dark:border-indigo-800/30">
                                     <Car size={12} className="text-indigo-600" />
                                     <div>
-                                        <p className="text-[9px] font-bold text-slate-400 uppercase">차량</p>
+                                        <p className="text-[10px] font-bold text-slate-400 dark:text-slate-400 uppercase">차량</p>
                                         <p className="text-sm font-black text-indigo-700 tabular-nums">
-                                            {totalVehicles}<span className="text-[9px] font-bold text-slate-400 ml-0.5">대</span>
+                                            {totalVehicles}<span className="text-[10px] font-bold text-slate-400 dark:text-slate-400 ml-0.5">대</span>
                                         </p>
                                     </div>
                                 </div>
-                                <div className="flex items-center gap-1.5 p-1.5 bg-emerald-50/60 rounded-lg border border-emerald-100">
+                                <div className="flex items-center gap-1.5 p-1.5 bg-emerald-50/60 dark:bg-emerald-900/20 rounded-lg border border-emerald-100 dark:border-emerald-800/30">
                                     <Activity size={12} className="text-emerald-600" />
                                     <div>
-                                        <p className="text-[9px] font-bold text-slate-400 uppercase">운행</p>
+                                        <p className="text-[10px] font-bold text-slate-400 dark:text-slate-400 uppercase">운행</p>
                                         <p className="text-sm font-black text-emerald-700 tabular-nums">
-                                            {activeDispatches}<span className="text-[9px] font-bold text-slate-400 ml-0.5">건</span>
+                                            {activeDispatches}<span className="text-[10px] font-bold text-slate-400 dark:text-slate-400 ml-0.5">건</span>
                                         </p>
                                     </div>
                                 </div>
@@ -194,10 +194,10 @@ export default function VehicleUtilizationWidget({ data, size }: VehicleUtilizat
                                                 className="w-2 h-2 rounded-full flex-shrink-0"
                                                 style={{ backgroundColor: seg.color }}
                                             />
-                                            <span className="text-[10px] font-bold text-slate-600 truncate">
+                                            <span className="text-[10px] font-bold text-slate-600 dark:text-slate-300 truncate">
                                                 {seg.name}
                                             </span>
-                                            <span className="text-[9px] text-slate-400 font-medium">
+                                            <span className="text-[10px] text-slate-400 dark:text-slate-400 font-medium">
                                                 ({seg.count}건)
                                             </span>
                                         </div>

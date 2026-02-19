@@ -47,14 +47,14 @@ export default function MonthlyVacationTrendWidget({ data, size }: MonthlyVacati
     // Small: 이번 달 사용 건수 + 트렌드 화살표
     if (isSmall) {
         return (
-            <div className="bg-white rounded-2xl border border-stone-200 shadow-sm hover:shadow-md transition-all h-full flex flex-col overflow-hidden p-4">
+            <div className="bg-white dark:bg-slate-800 rounded-2xl border border-stone-200 dark:border-slate-600 shadow-sm hover:shadow-md transition-all h-full flex flex-col overflow-hidden p-4">
                 <div className="flex-1 flex items-center justify-between">
                     <div className="flex items-center gap-3">
                         <div className="p-2 bg-gradient-to-br from-purple-500 to-indigo-500 rounded-xl shadow-sm">
                             <CalendarDays size={14} className="text-white" />
                         </div>
                         <div>
-                            <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">이번 달 연차</p>
+                            <p className="text-[10px] font-bold text-slate-400 dark:text-slate-400 uppercase tracking-wider">이번 달 연차</p>
                             <p className="text-2xl font-black text-purple-700 tabular-nums">
                                 {latestMonth}<span className="text-xs font-bold text-slate-400 ml-0.5">일</span>
                             </p>
@@ -81,14 +81,14 @@ export default function MonthlyVacationTrendWidget({ data, size }: MonthlyVacati
     }
 
     return (
-        <div className="bg-white rounded-2xl border border-stone-200 shadow-sm hover:shadow-md transition-all h-full flex flex-col overflow-hidden p-4">
+        <div className="bg-white dark:bg-slate-800 rounded-2xl border border-stone-200 dark:border-slate-600 shadow-sm hover:shadow-md transition-all h-full flex flex-col overflow-hidden p-4">
             {/* 헤더 */}
             <div className="flex items-center justify-between mb-2">
                 <div className="flex items-center gap-2">
                     <div className="p-1.5 bg-gradient-to-br from-purple-500 to-indigo-500 rounded-lg">
                         <CalendarDays size={14} className="text-white" />
                     </div>
-                    <h4 className="text-sm font-bold text-slate-800">월간 연차 사용 추이</h4>
+                    <h4 className="text-sm font-bold text-slate-800 dark:text-slate-100">월간 연차 사용 추이</h4>
                 </div>
                 <div className="flex items-center gap-1">
                     <span className="text-xs font-bold text-purple-600 tabular-nums">누적 {totalUsed}일</span>
@@ -100,7 +100,7 @@ export default function MonthlyVacationTrendWidget({ data, size }: MonthlyVacati
                 {chartData.length === 0 ? (
                     <div className="h-full flex flex-col items-center justify-center py-4">
                         <CalendarDays size={24} className="text-slate-200 mb-2" />
-                        <p className="text-xs text-slate-400 font-medium">데이터가 없습니다</p>
+                        <p className="text-xs text-slate-400 dark:text-slate-400 font-medium">데이터가 없습니다</p>
                     </div>
                 ) : (
                     <ResponsiveContainer width="100%" height={chartHeight}>

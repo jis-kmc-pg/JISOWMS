@@ -15,16 +15,16 @@ interface ReportKeywordAnalysisWidgetProps {
 }
 
 const COLOR_PALETTE = [
-    { bg: 'bg-indigo-50', text: 'text-indigo-600', border: 'border-indigo-200' },
-    { bg: 'bg-emerald-50', text: 'text-emerald-600', border: 'border-emerald-200' },
-    { bg: 'bg-amber-50', text: 'text-amber-600', border: 'border-amber-200' },
-    { bg: 'bg-rose-50', text: 'text-rose-600', border: 'border-rose-200' },
-    { bg: 'bg-violet-50', text: 'text-violet-600', border: 'border-violet-200' },
-    { bg: 'bg-cyan-50', text: 'text-cyan-600', border: 'border-cyan-200' },
-    { bg: 'bg-pink-50', text: 'text-pink-600', border: 'border-pink-200' },
-    { bg: 'bg-teal-50', text: 'text-teal-600', border: 'border-teal-200' },
-    { bg: 'bg-orange-50', text: 'text-orange-600', border: 'border-orange-200' },
-    { bg: 'bg-sky-50', text: 'text-sky-600', border: 'border-sky-200' },
+    { bg: 'bg-indigo-50 dark:bg-indigo-900/30', text: 'text-indigo-600 dark:text-indigo-400', border: 'border-indigo-200 dark:border-indigo-800/30' },
+    { bg: 'bg-emerald-50 dark:bg-emerald-900/30', text: 'text-emerald-600 dark:text-emerald-400', border: 'border-emerald-200 dark:border-emerald-800/30' },
+    { bg: 'bg-amber-50 dark:bg-amber-900/30', text: 'text-amber-600 dark:text-amber-400', border: 'border-amber-200 dark:border-amber-800/30' },
+    { bg: 'bg-rose-50 dark:bg-rose-900/30', text: 'text-rose-600 dark:text-rose-400', border: 'border-rose-200 dark:border-rose-800/30' },
+    { bg: 'bg-violet-50 dark:bg-violet-900/30', text: 'text-violet-600 dark:text-violet-400', border: 'border-violet-200 dark:border-violet-800/30' },
+    { bg: 'bg-cyan-50 dark:bg-cyan-900/30', text: 'text-cyan-600 dark:text-cyan-400', border: 'border-cyan-200 dark:border-cyan-800/30' },
+    { bg: 'bg-pink-50 dark:bg-pink-900/30', text: 'text-pink-600 dark:text-pink-400', border: 'border-pink-200 dark:border-pink-800/30' },
+    { bg: 'bg-teal-50 dark:bg-teal-900/30', text: 'text-teal-600 dark:text-teal-400', border: 'border-teal-200 dark:border-teal-800/30' },
+    { bg: 'bg-orange-50 dark:bg-orange-900/30', text: 'text-orange-600 dark:text-orange-400', border: 'border-orange-200 dark:border-orange-800/30' },
+    { bg: 'bg-sky-50 dark:bg-sky-900/30', text: 'text-sky-600 dark:text-sky-400', border: 'border-sky-200 dark:border-sky-800/30' },
 ];
 
 function mapCountToFontSize(count: number, minCount: number, maxCount: number): number {
@@ -61,17 +61,17 @@ export default function ReportKeywordAnalysisWidget({ data, size }: ReportKeywor
     };
 
     return (
-        <div className="bg-white rounded-2xl border border-stone-200 shadow-sm hover:shadow-md transition-all h-full flex flex-col overflow-hidden p-4">
+        <div className="bg-white dark:bg-slate-800 rounded-2xl border border-stone-200 dark:border-slate-600 shadow-sm hover:shadow-md transition-all h-full flex flex-col overflow-hidden p-4">
             {/* 헤더 */}
             <div className="flex items-center justify-between mb-2">
                 <div className="flex items-center gap-2.5">
-                    <div className="p-2 bg-violet-50 rounded-xl">
+                    <div className="p-2 bg-violet-50 dark:bg-violet-900/30 rounded-xl">
                         <Search size={14} className="text-violet-500" />
                     </div>
-                    <h4 className="text-sm font-bold text-slate-800">업무보고 키워드 분석</h4>
+                    <h4 className="text-sm font-bold text-slate-800 dark:text-slate-100">업무보고 키워드 분석</h4>
                 </div>
                 {keywords.length > 0 && !isSmall && (
-                    <div className="flex items-center gap-1.5 px-2.5 py-1 bg-violet-50 rounded-lg border border-violet-100">
+                    <div className="flex items-center gap-1.5 px-2.5 py-1 bg-violet-50 dark:bg-violet-900/30 rounded-lg border border-violet-100 dark:border-violet-800/30">
                         <Hash size={12} className="text-violet-400" />
                         <span className="text-xs font-black text-violet-600 tabular-nums">{keywords.length}</span>
                         <span className="text-[10px] font-bold text-violet-400">키워드</span>
@@ -84,8 +84,8 @@ export default function ReportKeywordAnalysisWidget({ data, size }: ReportKeywor
                 <div className="flex-1 min-h-0 overflow-auto">
                     {keywords.length === 0 ? (
                         <div className="flex-1 flex flex-col items-center justify-center py-4">
-                            <Search size={24} className="text-slate-200 mb-2" />
-                            <p className="text-xs text-slate-400 font-medium">키워드 데이터가 없습니다</p>
+                            <Search size={24} className="text-slate-200 dark:text-slate-600 mb-2" />
+                            <p className="text-xs text-slate-400 dark:text-slate-400 font-medium">키워드 데이터가 없습니다</p>
                         </div>
                     ) : (
                         <div className="space-y-1.5">
@@ -94,9 +94,9 @@ export default function ReportKeywordAnalysisWidget({ data, size }: ReportKeywor
                                 const color = COLOR_PALETTE[colorIdx];
                                 return (
                                     <div key={idx} className="flex items-center gap-2">
-                                        <span className="text-[10px] font-black text-slate-400 w-5 flex-shrink-0">#{idx + 1}</span>
+                                        <span className="text-[10px] font-black text-slate-400 dark:text-slate-400 w-5 flex-shrink-0">#{idx + 1}</span>
                                         <span className={`text-xs font-bold truncate ${color.text}`}>{item.keyword}</span>
-                                        <span className="text-[10px] font-black text-slate-400 tabular-nums flex-shrink-0 ml-auto">({item.count})</span>
+                                        <span className="text-[10px] font-black text-slate-400 dark:text-slate-400 tabular-nums flex-shrink-0 ml-auto">({item.count})</span>
                                     </div>
                                 );
                             })}
@@ -109,8 +109,8 @@ export default function ReportKeywordAnalysisWidget({ data, size }: ReportKeywor
                     <div className="flex-1 min-h-0 overflow-auto">
                         {keywords.length === 0 ? (
                             <div className="flex-1 flex flex-col items-center justify-center py-4">
-                                <Search size={24} className="text-slate-200 mb-2" />
-                                <p className="text-xs text-slate-400 font-medium">키워드 데이터가 없습니다</p>
+                                <Search size={24} className="text-slate-200 dark:text-slate-600 mb-2" />
+                                <p className="text-xs text-slate-400 dark:text-slate-400 font-medium">키워드 데이터가 없습니다</p>
                             </div>
                         ) : (
                             <div className="flex flex-wrap gap-1.5 items-center justify-center py-1">

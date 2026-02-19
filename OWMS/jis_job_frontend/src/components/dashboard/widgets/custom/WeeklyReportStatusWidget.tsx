@@ -104,23 +104,23 @@ export default function WeeklyReportStatusWidget({ data, size }: WeeklyReportSta
     ];
 
     return (
-        <div className="bg-white p-4 rounded-2xl border border-stone-200 shadow-sm hover:shadow-md transition-all h-full flex flex-col overflow-hidden">
+        <div className="bg-white dark:bg-slate-800 p-4 rounded-2xl border border-stone-200 dark:border-slate-600 shadow-sm hover:shadow-md transition-all h-full flex flex-col overflow-hidden">
             {/* 헤더 */}
             <div className="flex items-center justify-between mb-2">
                 <div className="flex items-center gap-2.5">
-                    <div className="p-1.5 rounded-xl bg-indigo-50">
+                    <div className="p-1.5 rounded-xl bg-indigo-50 dark:bg-indigo-900/30">
                         <FileText size={14} className="text-indigo-500" />
                     </div>
-                    <h4 className="text-sm font-bold text-slate-800">주간업무 작성현황</h4>
+                    <h4 className="text-sm font-bold text-slate-800 dark:text-slate-100">주간업무 작성현황</h4>
                 </div>
             </div>
 
             {isEmpty ? (
                 <div className="flex-1 flex flex-col items-center justify-center py-4">
-                    <div className="p-3 rounded-2xl bg-slate-50 mb-2">
+                    <div className="p-3 rounded-2xl bg-slate-50 dark:bg-slate-700/50 mb-2">
                         <ClipboardCheck size={24} className="text-slate-200" />
                     </div>
-                    <p className="text-xs text-slate-400 font-medium">주간업무 현황 정보가 없습니다</p>
+                    <p className="text-xs text-slate-400 dark:text-slate-400 font-medium">주간업무 현황 정보가 없습니다</p>
                 </div>
             ) : (
                 <div className="flex-1 min-h-0 overflow-auto flex flex-row gap-2">
@@ -134,8 +134,8 @@ export default function WeeklyReportStatusWidget({ data, size }: WeeklyReportSta
                                     flex-1 p-3 rounded-xl border transition-all duration-200
                                     hover:shadow-md cursor-default
                                     ${complete
-                                        ? 'bg-gradient-to-br from-emerald-50/60 to-white border-emerald-200/60'
-                                        : 'bg-gradient-to-br from-amber-50/40 to-white border-amber-200/50'
+                                        ? 'bg-gradient-to-br from-emerald-50/60 dark:from-emerald-900/20 to-white dark:to-slate-800 border-emerald-200/60 dark:border-emerald-800/40'
+                                        : 'bg-gradient-to-br from-amber-50/40 dark:from-amber-900/20 to-white dark:to-slate-800 border-amber-200/50 dark:border-amber-800/40'
                                     }
                                 `}
                             >
@@ -144,14 +144,14 @@ export default function WeeklyReportStatusWidget({ data, size }: WeeklyReportSta
                                     <div className="flex items-center gap-1.5">
                                         <div className={`
                                             p-1 rounded-lg
-                                            ${complete ? 'bg-emerald-100' : 'bg-amber-100'}
+                                            ${complete ? 'bg-emerald-100 dark:bg-emerald-900/40' : 'bg-amber-100 dark:bg-amber-900/40'}
                                         `}>
                                             <Icon size={12} className={complete ? 'text-emerald-600' : 'text-amber-600'} />
                                         </div>
-                                        <span className="text-[10px] font-bold text-slate-600">{label}</span>
+                                        <span className="text-[10px] font-bold text-slate-600 dark:text-slate-300">{label}</span>
                                     </div>
                                     {weekData.dateRange && (
-                                        <span className="text-[9px] font-medium text-slate-400 tabular-nums">
+                                        <span className="text-[10px] font-medium text-slate-400 dark:text-slate-400 tabular-nums">
                                             {weekData.dateRange}
                                         </span>
                                     )}
@@ -162,7 +162,7 @@ export default function WeeklyReportStatusWidget({ data, size }: WeeklyReportSta
                                     <div className="flex items-center gap-2">
                                         <div className={`
                                             p-1 rounded-full transition-colors
-                                            ${complete ? 'bg-emerald-100/80' : 'bg-amber-100/80'}
+                                            ${complete ? 'bg-emerald-100/80 dark:bg-emerald-900/40' : 'bg-amber-100/80 dark:bg-amber-900/40'}
                                         `}>
                                             {complete ? (
                                                 <CheckCircle2 size={14} className="text-emerald-500" />
@@ -172,12 +172,12 @@ export default function WeeklyReportStatusWidget({ data, size }: WeeklyReportSta
                                         </div>
                                         <span className={`
                                             text-xs font-black tracking-wide
-                                            ${complete ? 'text-emerald-600' : 'text-amber-600'}
+                                            ${complete ? 'text-emerald-600 dark:text-emerald-400' : 'text-amber-600 dark:text-amber-400'}
                                         `}>
                                             {complete ? '작성완료' : '미작성'}
                                         </span>
                                         {weekData.totalDays > 0 && (
-                                            <span className="text-[10px] font-bold text-slate-400 tabular-nums ml-auto">
+                                            <span className="text-[10px] font-bold text-slate-400 dark:text-slate-400 tabular-nums ml-auto">
                                                 {weekData.completedDays}/{weekData.totalDays}일
                                             </span>
                                         )}
@@ -188,7 +188,7 @@ export default function WeeklyReportStatusWidget({ data, size }: WeeklyReportSta
                                         <div className="flex flex-col items-center py-2">
                                             <div className={`
                                                 p-2 rounded-full mb-1.5 transition-colors
-                                                ${complete ? 'bg-emerald-100/80' : 'bg-amber-100/80'}
+                                                ${complete ? 'bg-emerald-100/80 dark:bg-emerald-900/40' : 'bg-amber-100/80 dark:bg-amber-900/40'}
                                             `}>
                                                 {complete ? (
                                                     <CheckCircle2 size={22} className="text-emerald-500" />
@@ -198,7 +198,7 @@ export default function WeeklyReportStatusWidget({ data, size }: WeeklyReportSta
                                             </div>
                                             <span className={`
                                                 text-sm font-black tracking-wide
-                                                ${complete ? 'text-emerald-600' : 'text-amber-600'}
+                                                ${complete ? 'text-emerald-600 dark:text-emerald-400' : 'text-amber-600 dark:text-amber-400'}
                                             `}>
                                                 {complete ? '작성완료' : '미작성'}
                                             </span>
@@ -206,12 +206,12 @@ export default function WeeklyReportStatusWidget({ data, size }: WeeklyReportSta
 
                                         {/* 작성 일수 상세 */}
                                         {weekData.totalDays > 0 && (
-                                            <div className="mt-1.5 pt-1.5 border-t border-stone-100/80">
-                                                <div className="flex justify-between text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">
+                                            <div className="mt-1.5 pt-1.5 border-t border-stone-100/80 dark:border-slate-600/50">
+                                                <div className="flex justify-between text-[10px] font-bold text-slate-400 dark:text-slate-400 uppercase tracking-wider mb-1">
                                                     <span>작성일</span>
                                                     <span className="tabular-nums">{weekData.completedDays}/{weekData.totalDays}일</span>
                                                 </div>
-                                                <div className="h-1.5 bg-stone-100 rounded-full overflow-hidden">
+                                                <div className="h-1.5 bg-stone-100 dark:bg-slate-700 rounded-full overflow-hidden">
                                                     <div
                                                         className={`h-full rounded-full transition-all duration-700 ease-out ${
                                                             complete ? 'bg-emerald-400' : 'bg-amber-400'

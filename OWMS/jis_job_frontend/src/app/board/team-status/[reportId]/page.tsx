@@ -16,6 +16,7 @@ import {
 import { format } from "date-fns";
 import { useRouter, useParams } from "next/navigation";
 import Link from "next/link";
+import ConfirmDialog from '@/components/ConfirmDialog';
 
 interface StatusItem {
     id: number;
@@ -69,6 +70,8 @@ export default function TeamStatusDetailPage() {
     const [loading, setLoading] = useState(true);
     const [currentUserId, setCurrentUserId] = useState<number | null>(null);
     const [currentUserRole, setCurrentUserRole] = useState<string>("");
+    const [showConfirm, setShowConfirm] = useState(false);
+    const [confirmAction, setConfirmAction] = useState<(() => void) | null>(null);
 
     // Toast
     const [showToast, setShowToast] = useState(false);
@@ -107,20 +110,22 @@ export default function TeamStatusDetailPage() {
         }
     };
 
-    const handleDelete = async () => {
-        if (!confirm("정말 삭제하시겠습니까?")) return;
-        try {
-            await api.delete(`/team-status/${reportId}`);
-            toast("삭제되었습니다.");
-            setTimeout(() => router.push("/board/team-status"), 500);
-        } catch {
-            toast("삭제에 실패했습니다.", "error");
-        }
+    const handleDelete = () => {
+        setConfirmAction(() => async () => {
+            try {
+                await api.delete(`/team-status/${reportId}`);
+                toast("삭제되었습니다.");
+                setTimeout(() => router.push("/board/team-status"), 500);
+            } catch {
+                toast("삭제에 실패했습니다.", "error");
+            }
+        });
+        setShowConfirm(true);
     };
 
     if (loading) {
         return (
-            <div className="flex items-center justify-center py-32 text-slate-400">
+            <div className="flex items-center justify-center py-32 text-slate-400 dark:text-slate-400">
                 <Loader2 size={24} className="animate-spin mr-3" />
                 <span className="font-medium">불러오는 중...</span>
             </div>
@@ -129,9 +134,9 @@ export default function TeamStatusDetailPage() {
 
     if (!report) {
         return (
-            <div className="flex flex-col items-center justify-center py-32 text-slate-400">
-                <p className="font-bold text-slate-500 mb-2">보고서가 없습니다</p>
-                <Link href="/board/team-status" className="text-indigo-600 hover:underline text-sm font-medium">목록으로 돌아가기</Link>
+            <div className="flex flex-col items-center justify-center py-32 text-slate-400 dark:text-slate-400">
+                <p className="font-bold text-slate-500 dark:text-slate-400 mb-2">보고서가 없습니다</p>
+                <Link href="/board/team-status" className="text-indigo-600 dark:text-indigo-400 hover:underline text-sm font-medium">목록으로 돌아가기</Link>
             </div>
         );
     }
@@ -143,28 +148,28 @@ export default function TeamStatusDetailPage() {
     return (
         <div className="p-3 sm:p-6 max-w-5xl mx-auto">
             {/* Back Link */}
-            <Link href="/board/team-status" className="inline-flex items-center text-slate-400 mb-4 sm:mb-6 hover:text-indigo-600 transition-colors font-medium text-sm">
+            <Link href="/board/team-status" className="inline-flex items-center text-slate-400 dark:text-slate-400 mb-4 sm:mb-6 hover:text-indigo-600 transition-colors font-medium text-sm">
                 <ArrowLeft size={18} className="mr-1.5" /> 목록으로 돌아가기
             </Link>
 
             {/* Report Card */}
-            <div className="bg-white border border-stone-200 rounded-2xl shadow-sm overflow-hidden">
+            <div className="bg-white dark:bg-slate-800 border border-stone-200 dark:border-slate-600 rounded-2xl shadow-sm overflow-hidden">
                 {/* Report Header */}
-                <div className="p-4 sm:p-6 pb-3 sm:pb-4 border-b border-stone-100">
-                    <h1 className="text-base sm:text-xl font-extrabold text-slate-800 mb-3 sm:mb-4 leading-snug flex items-center gap-2.5">
-                        <div className="bg-indigo-50 p-1.5 rounded-xl border border-indigo-100 shrink-0">
-                            <ClipboardCheck size={20} className="text-indigo-600" />
+                <div className="p-4 sm:p-6 pb-3 sm:pb-4 border-b border-stone-100 dark:border-slate-700">
+                    <h1 className="text-base sm:text-xl font-extrabold text-slate-800 dark:text-slate-100 mb-3 sm:mb-4 leading-snug flex items-center gap-2.5">
+                        <div className="bg-indigo-50 dark:bg-indigo-900/30 p-1.5 rounded-xl border border-indigo-100 dark:border-indigo-800/30 shrink-0">
+                            <ClipboardCheck size={20} className="text-indigo-600 dark:text-indigo-400" />
                         </div>
                         {report.team.name} 현황점검
                     </h1>
-                    <div className="flex flex-wrap items-center gap-2 sm:gap-3 text-xs sm:text-sm text-slate-400">
-                        <div className="flex items-center gap-1.5 bg-stone-50 px-2.5 py-1 sm:px-3 sm:py-1.5 rounded-lg">
+                    <div className="flex flex-wrap items-center gap-2 sm:gap-3 text-xs sm:text-sm text-slate-400 dark:text-slate-400">
+                        <div className="flex items-center gap-1.5 bg-stone-50 dark:bg-slate-700/50 px-2.5 py-1 sm:px-3 sm:py-1.5 rounded-lg">
                             <Users size={14} className="text-indigo-400" />
-                            <span className="text-slate-700 font-bold">{report.user.name}</span>
-                            <span className="text-xs text-slate-400 hidden sm:inline">{report.user.position}</span>
+                            <span className="text-slate-700 dark:text-slate-200 font-bold">{report.user.name}</span>
+                            <span className="text-xs text-slate-400 dark:text-slate-400 hidden sm:inline">{report.user.position}</span>
                         </div>
                         <div className="flex items-center gap-1.5">
-                            <Clock size={14} className="text-slate-300" />
+                            <Clock size={14} className="text-slate-300 dark:text-slate-500" />
                             <span>보고일: {format(new Date(report.reportDate), "yyyy.MM.dd")}</span>
                         </div>
                     </div>
@@ -176,24 +181,24 @@ export default function TeamStatusDetailPage() {
                     <div className="hidden sm:block">
                         <table className="w-full border-collapse">
                             <thead>
-                                <tr className="bg-stone-50 border border-stone-200 rounded-t-xl">
-                                    <th className="px-4 py-3 text-left text-xs font-bold text-slate-400 uppercase tracking-wider w-28 border-r border-stone-200">항목</th>
-                                    <th className="px-4 py-3 text-left text-xs font-bold text-slate-400 uppercase tracking-wider w-32 border-r border-stone-200">일자</th>
-                                    <th className="px-4 py-3 text-left text-xs font-bold text-slate-400 uppercase tracking-wider">내용</th>
+                                <tr className="bg-stone-50 dark:bg-slate-700/50 border border-stone-200 dark:border-slate-600 rounded-t-xl">
+                                    <th className="px-4 py-3 text-left text-xs font-bold text-slate-400 dark:text-slate-400 uppercase tracking-wider w-28 border-r border-stone-200 dark:border-slate-600">항목</th>
+                                    <th className="px-4 py-3 text-left text-xs font-bold text-slate-400 dark:text-slate-400 uppercase tracking-wider w-32 border-r border-stone-200 dark:border-slate-600">일자</th>
+                                    <th className="px-4 py-3 text-left text-xs font-bold text-slate-400 dark:text-slate-400 uppercase tracking-wider">내용</th>
                                 </tr>
                             </thead>
-                            <tbody className="border border-stone-200 border-t-0">
+                            <tbody className="border border-stone-200 dark:border-slate-600 border-t-0">
                                 {sortedItems.map((item) => (
-                                    <tr key={item.id} className="border-b border-stone-100 last:border-b-0 hover:bg-stone-50/50 transition-colors">
-                                        <td className="px-4 py-3 border-r border-stone-100">
+                                    <tr key={item.id} className="border-b border-stone-100 dark:border-slate-700 last:border-b-0 hover:bg-stone-50/50 dark:hover:bg-slate-700/30 transition-colors">
+                                        <td className="px-4 py-3 border-r border-stone-100 dark:border-slate-700">
                                             <span className={`text-xs font-bold px-2.5 py-1 rounded-lg border ${CATEGORY_COLORS[item.category] || "bg-slate-50 text-slate-600 border-slate-100"}`}>
                                                 {CATEGORY_LABELS[item.category] || item.category}
                                             </span>
                                         </td>
-                                        <td className="px-4 py-3 text-sm text-slate-600 border-r border-stone-100">
+                                        <td className="px-4 py-3 text-sm text-slate-600 dark:text-slate-300 border-r border-stone-100 dark:border-slate-700">
                                             {format(new Date(item.itemDate), "yyyy.MM.dd")}
                                         </td>
-                                        <td className="px-4 py-3 text-sm text-slate-700 leading-relaxed whitespace-pre-wrap">
+                                        <td className="px-4 py-3 text-sm text-slate-700 dark:text-slate-200 leading-relaxed whitespace-pre-wrap">
                                             {item.content}
                                         </td>
                                     </tr>
@@ -205,14 +210,14 @@ export default function TeamStatusDetailPage() {
                     {/* Mobile Cards */}
                     <div className="sm:hidden space-y-3">
                         {sortedItems.map((item) => (
-                            <div key={item.id} className="bg-stone-50 p-3 rounded-xl border border-stone-100">
+                            <div key={item.id} className="bg-stone-50 dark:bg-slate-700/50 p-3 rounded-xl border border-stone-100 dark:border-slate-700">
                                 <div className="flex items-center justify-between mb-2">
                                     <span className={`text-xs font-bold px-2.5 py-1 rounded-lg border ${CATEGORY_COLORS[item.category] || "bg-slate-50 text-slate-600 border-slate-100"}`}>
                                         {CATEGORY_LABELS[item.category] || item.category}
                                     </span>
-                                    <span className="text-xs text-slate-400">{format(new Date(item.itemDate), "MM.dd")}</span>
+                                    <span className="text-xs text-slate-400 dark:text-slate-400">{format(new Date(item.itemDate), "MM.dd")}</span>
                                 </div>
-                                <p className="text-sm text-slate-700 leading-relaxed whitespace-pre-wrap">{item.content}</p>
+                                <p className="text-sm text-slate-700 dark:text-slate-200 leading-relaxed whitespace-pre-wrap">{item.content}</p>
                             </div>
                         ))}
                     </div>
@@ -220,18 +225,18 @@ export default function TeamStatusDetailPage() {
 
                 {/* Actions */}
                 {(currentUserId === report.user.id || ["CEO", "EXECUTIVE", "DEPT_HEAD"].includes(currentUserRole)) && (
-                    <div className="px-4 sm:px-6 py-3 sm:py-4 bg-stone-50/80 border-t border-stone-100 flex justify-end gap-2">
+                    <div className="px-4 sm:px-6 py-3 sm:py-4 bg-stone-50/80 dark:bg-slate-700/30 border-t border-stone-100 dark:border-slate-700 flex justify-end gap-2">
                         <Link
                             href={`/board/team-status/write?id=${reportId}`}
-                            className="flex items-center gap-1.5 text-indigo-600 hover:text-indigo-700 text-sm font-bold px-3 py-2 sm:px-4 rounded-xl hover:bg-indigo-50 transition-all"
+                            className="flex items-center gap-1.5 text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 text-sm font-bold px-3 py-2 sm:px-4 rounded-xl hover:bg-indigo-50 dark:hover:bg-indigo-900/30 transition-colors"
                         >
-                            <Pencil size={15} /> 수정
+                            <Pencil size={15} aria-hidden="true" /> 수정
                         </Link>
                         <button
                             onClick={handleDelete}
-                            className="flex items-center gap-1.5 text-rose-500 hover:text-rose-600 text-sm font-bold px-3 py-2 sm:px-4 rounded-xl hover:bg-rose-50 transition-all"
+                            className="flex items-center gap-1.5 text-rose-500 dark:text-rose-400 hover:text-rose-600 text-sm font-bold px-3 py-2 sm:px-4 rounded-xl hover:bg-rose-50 dark:hover:bg-rose-900/30 transition-colors"
                         >
-                            <Trash2 size={15} /> 삭제
+                            <Trash2 size={15} aria-hidden="true" /> 삭제
                         </button>
                     </div>
                 )}
@@ -239,15 +244,32 @@ export default function TeamStatusDetailPage() {
 
             {/* Toast */}
             {showToast && (
-                <div className={`fixed bottom-8 left-1/2 -translate-x-1/2 z-[100] px-4 py-3 sm:px-6 sm:py-3.5 rounded-2xl shadow-2xl flex items-center gap-2 sm:gap-3 font-bold text-xs sm:text-sm transition-all max-w-[90vw] ${
+                <div className={`fixed bottom-8 left-1/2 -translate-x-1/2 z-[100] px-4 py-3 sm:px-6 sm:py-3.5 rounded-2xl shadow-2xl flex items-center gap-2 sm:gap-3 font-bold text-xs sm:text-sm transition-colors max-w-[90vw] ${
                     toastType === "success"
                         ? "bg-emerald-600 text-white shadow-emerald-200"
                         : "bg-rose-600 text-white shadow-rose-200"
                 }`}>
-                    {toastType === "success" ? <CheckCircle2 size={16} /> : <AlertCircle size={16} />}
+                    {toastType === "success" ? <CheckCircle2 size={16} aria-hidden="true" /> : <AlertCircle size={16} aria-hidden="true" />}
                     {toastMessage}
                 </div>
             )}
+
+            <ConfirmDialog
+                show={showConfirm}
+                title="삭제 확인"
+                description="정말 삭제하시겠습니까? 이 작업은 되돌릴 수 없습니다."
+                confirmLabel="삭제"
+                variant="danger"
+                onConfirm={() => {
+                    confirmAction?.();
+                    setShowConfirm(false);
+                    setConfirmAction(null);
+                }}
+                onCancel={() => {
+                    setShowConfirm(false);
+                    setConfirmAction(null);
+                }}
+            />
         </div>
     );
 }

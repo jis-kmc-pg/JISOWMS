@@ -17,16 +17,16 @@ interface DeptReportComparisonWidgetProps {
 }
 
 function getBarColor(rate: number): { bar: string; bg: string; text: string } {
-    if (rate >= 80) return { bar: 'from-emerald-400 to-emerald-500', bg: 'bg-emerald-50', text: 'text-emerald-600' };
-    if (rate >= 60) return { bar: 'from-amber-400 to-amber-500', bg: 'bg-amber-50', text: 'text-amber-600' };
-    return { bar: 'from-rose-400 to-rose-500', bg: 'bg-rose-50', text: 'text-rose-600' };
+    if (rate >= 80) return { bar: 'from-emerald-400 to-emerald-500', bg: 'bg-emerald-50 dark:bg-emerald-900/30', text: 'text-emerald-600 dark:text-emerald-400' };
+    if (rate >= 60) return { bar: 'from-amber-400 to-amber-500', bg: 'bg-amber-50 dark:bg-amber-900/30', text: 'text-amber-600 dark:text-amber-400' };
+    return { bar: 'from-rose-400 to-rose-500', bg: 'bg-rose-50 dark:bg-rose-900/30', text: 'text-rose-600 dark:text-rose-400' };
 }
 
 function getRankBadge(index: number): string {
-    if (index === 0) return 'bg-amber-100 text-amber-700 border-amber-200';
-    if (index === 1) return 'bg-slate-100 text-slate-600 border-slate-200';
-    if (index === 2) return 'bg-orange-100 text-orange-600 border-orange-200';
-    return 'bg-stone-50 text-stone-400 border-stone-200';
+    if (index === 0) return 'bg-amber-100 dark:bg-amber-900/40 text-amber-700 dark:text-amber-400 border-amber-200 dark:border-amber-800/30';
+    if (index === 1) return 'bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 border-slate-200 dark:border-slate-600';
+    if (index === 2) return 'bg-orange-100 dark:bg-orange-900/40 text-orange-600 dark:text-orange-400 border-orange-200 dark:border-orange-800/30';
+    return 'bg-stone-50 dark:bg-slate-700/50 text-stone-400 dark:text-slate-400 border-stone-200 dark:border-slate-600';
 }
 
 export default function DeptReportComparisonWidget({ data, size }: DeptReportComparisonWidgetProps) {
@@ -52,16 +52,16 @@ export default function DeptReportComparisonWidget({ data, size }: DeptReportCom
         : 0;
 
     return (
-        <div className="bg-white rounded-2xl border border-stone-200 shadow-sm hover:shadow-md transition-all h-full flex flex-col overflow-hidden p-4">
+        <div className="bg-white dark:bg-slate-800 rounded-2xl border border-stone-200 dark:border-slate-600 shadow-sm hover:shadow-md transition-all h-full flex flex-col overflow-hidden p-4">
             {/* 헤더 */}
             <div className="flex items-center justify-between mb-2">
                 <div className="flex items-center gap-2.5">
-                    <div className="p-2 bg-indigo-50 rounded-xl">
+                    <div className="p-2 bg-indigo-50 dark:bg-indigo-900/30 rounded-xl">
                         <BarChart3 size={14} className="text-indigo-500" />
                     </div>
-                    <h4 className="text-sm font-bold text-slate-800">팀별 업무보고 작성률 비교</h4>
+                    <h4 className="text-sm font-bold text-slate-800 dark:text-slate-100">팀별 업무보고 작성률 비교</h4>
                 </div>
-                <div className={`flex items-center gap-2 px-3 py-1.5 bg-indigo-50 rounded-xl border border-indigo-100 ${isSmall ? 'hidden' : ''}`}>
+                <div className={`flex items-center gap-2 px-3 py-1.5 bg-indigo-50 dark:bg-indigo-900/30 rounded-xl border border-indigo-100 dark:border-indigo-800/30 ${isSmall ? 'hidden' : ''}`}>
                     <span className="text-[10px] font-bold text-indigo-400 uppercase">평균</span>
                     <span className={`text-lg font-black tabular-nums ${
                         avgRate >= 80 ? 'text-emerald-600' : avgRate >= 60 ? 'text-amber-600' : 'text-rose-600'
@@ -73,8 +73,8 @@ export default function DeptReportComparisonWidget({ data, size }: DeptReportCom
             <div className={`flex-1 min-h-0 overflow-auto space-y-1.5`}>
                 {sortedTeams.length === 0 ? (
                     <div className="flex-1 flex flex-col items-center justify-center py-4">
-                        <BarChart3 size={24} className="text-slate-200 mb-2" />
-                        <p className="text-xs text-slate-400 font-medium">데이터가 없습니다</p>
+                        <BarChart3 size={24} className="text-slate-200 dark:text-slate-600 mb-2" />
+                        <p className="text-xs text-slate-400 dark:text-slate-400 font-medium">데이터가 없습니다</p>
                     </div>
                 ) : isSmall ? (
                     /* Small: 컴팩트 인라인 바 (팀명 + 퍼센트) */
@@ -82,10 +82,10 @@ export default function DeptReportComparisonWidget({ data, size }: DeptReportCom
                         const colors = getBarColor(team.entryRate);
                         return (
                             <div key={idx} className="flex items-center gap-2">
-                                <span className="text-xs font-bold text-slate-700 w-16 truncate flex-shrink-0">
+                                <span className="text-xs font-bold text-slate-700 dark:text-slate-200 w-16 truncate flex-shrink-0">
                                     {team.teamName}
                                 </span>
-                                <div className="flex-1 h-4 bg-stone-100 rounded overflow-hidden">
+                                <div className="flex-1 h-4 bg-stone-100 dark:bg-slate-700 rounded overflow-hidden">
                                     <div
                                         className={`h-full bg-gradient-to-r ${colors.bar} rounded transition-all duration-700 ease-out`}
                                         style={{ width: `${Math.max(team.entryRate, 2)}%` }}
@@ -111,12 +111,12 @@ export default function DeptReportComparisonWidget({ data, size }: DeptReportCom
                                     </span>
 
                                     {/* 팀명 */}
-                                    <span className={`text-sm font-bold text-slate-700 truncate flex-shrink-0 group-hover/row:text-indigo-600 transition-colors ${isLarge ? 'w-28' : 'w-20'}`}>
+                                    <span className={`text-sm font-bold text-slate-700 dark:text-slate-200 truncate flex-shrink-0 group-hover/row:text-indigo-600 transition-colors ${isLarge ? 'w-28' : 'w-20'}`}>
                                         {team.teamName}
                                     </span>
 
                                     {/* 프로그레스 바 */}
-                                    <div className={`flex-1 bg-stone-100 rounded-lg overflow-hidden relative ${isLarge ? 'h-5' : 'h-4'}`}>
+                                    <div className={`flex-1 bg-stone-100 dark:bg-slate-700 rounded-lg overflow-hidden relative ${isLarge ? 'h-5' : 'h-4'}`}>
                                         <div
                                             className={`h-full bg-gradient-to-r ${colors.bar} rounded-lg transition-all duration-700 ease-out relative`}
                                             style={{ width: `${Math.max(team.entryRate, 2)}%` }}
@@ -126,7 +126,7 @@ export default function DeptReportComparisonWidget({ data, size }: DeptReportCom
                                         </div>
                                         {/* 바 위에 건수 표시 */}
                                         {team.total > 0 && (
-                                            <span className="absolute inset-0 flex items-center px-2.5 text-[10px] font-bold text-slate-500">
+                                            <span className="absolute inset-0 flex items-center px-2.5 text-[10px] font-bold text-slate-500 dark:text-slate-400">
                                                 {team.completed}/{team.total}건
                                             </span>
                                         )}
@@ -147,7 +147,7 @@ export default function DeptReportComparisonWidget({ data, size }: DeptReportCom
 
                                     {/* Large: 추가 팀 상세 정보 */}
                                     {isLarge && team.total > 0 && (
-                                        <span className="text-[10px] font-bold text-slate-400 flex-shrink-0 w-16 text-right">
+                                        <span className="text-[10px] font-bold text-slate-400 dark:text-slate-400 flex-shrink-0 w-16 text-right">
                                             {team.completed}/{team.total}건
                                         </span>
                                     )}

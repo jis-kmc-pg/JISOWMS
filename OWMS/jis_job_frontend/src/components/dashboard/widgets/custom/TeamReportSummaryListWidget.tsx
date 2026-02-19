@@ -95,21 +95,21 @@ export default function TeamReportSummaryListWidget({ data, size }: TeamReportSu
     // ── Small: "이름 3/7 | 이름 3/7" 인라인 칩 형태 (전원 표시) ──
     if (isSmall) {
         return (
-            <div className="bg-white p-4 rounded-2xl border border-stone-200 shadow-sm hover:shadow-md transition-all h-full flex flex-col overflow-hidden">
+            <div className="bg-white dark:bg-slate-800 p-4 rounded-2xl border border-stone-200 dark:border-slate-600 shadow-sm hover:shadow-md transition-all h-full flex flex-col overflow-hidden">
                 {/* 헤더 */}
                 <div className="flex items-center justify-between mb-2">
-                    <h4 className="text-sm font-bold text-slate-800 flex items-center gap-1.5">
+                    <h4 className="text-sm font-bold text-slate-800 dark:text-slate-100 flex items-center gap-1.5">
                         <ClipboardList size={14} className="text-indigo-500" />
                         업무보고 요약
                     </h4>
-                    <span className="text-[10px] font-bold text-slate-400 bg-stone-50 px-2 py-0.5 rounded-md">
+                    <span className="text-[10px] font-bold text-slate-400 dark:text-slate-400 bg-stone-50 dark:bg-slate-700/50 px-2 py-0.5 rounded-md">
                         {members.length}명
                     </span>
                 </div>
 
                 {members.length === 0 ? (
                     <div className="flex-1 min-h-0 flex items-center justify-center">
-                        <p className="text-xs text-slate-400 font-medium text-center">
+                        <p className="text-xs text-slate-400 dark:text-slate-400 font-medium text-center">
                             데이터 없음
                         </p>
                     </div>
@@ -153,35 +153,35 @@ export default function TeamReportSummaryListWidget({ data, size }: TeamReportSu
         const colWidth = '24px';
 
         return (
-            <div className="bg-white p-4 rounded-2xl border border-stone-200 shadow-sm hover:shadow-md transition-all h-full flex flex-col overflow-hidden">
+            <div className="bg-white dark:bg-slate-800 p-4 rounded-2xl border border-stone-200 dark:border-slate-600 shadow-sm hover:shadow-md transition-all h-full flex flex-col overflow-hidden">
                 {/* 헤더 */}
                 <div className="flex items-center justify-between mb-2">
-                    <h4 className="text-sm font-bold text-slate-800 flex items-center gap-1.5">
+                    <h4 className="text-sm font-bold text-slate-800 dark:text-slate-100 flex items-center gap-1.5">
                         <ClipboardList size={14} className="text-indigo-500" />
                         팀원 업무보고 요약
                     </h4>
-                    <span className="text-[10px] font-bold text-slate-400 bg-stone-50 px-2 py-0.5 rounded-md">
+                    <span className="text-[10px] font-bold text-slate-400 dark:text-slate-400 bg-stone-50 dark:bg-slate-700/50 px-2 py-0.5 rounded-md">
                         {members.length}명
                     </span>
                 </div>
 
                 {members.length === 0 ? (
                     <div className="flex-1 min-h-0 flex items-center justify-center">
-                        <p className="text-xs text-slate-400 font-medium text-center">
+                        <p className="text-xs text-slate-400 dark:text-slate-400 font-medium text-center">
                             업무보고 데이터가 없습니다
                         </p>
                     </div>
                 ) : (
                     <div className="flex-1 min-h-0 overflow-auto -mx-1">
                         {/* 테이블 헤더 */}
-                        <div className="sticky top-0 z-10 bg-white">
-                            <div className="grid items-center gap-1 px-2 py-1 border-b border-stone-100"
+                        <div className="sticky top-0 z-10 bg-white dark:bg-slate-800">
+                            <div className="grid items-center gap-1 px-2 py-1 border-b border-stone-100 dark:border-slate-700"
                                  style={{ gridTemplateColumns: `1fr repeat(${displayDays.length}, ${colWidth})` }}>
-                                <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">
+                                <span className="text-[10px] font-bold text-slate-400 dark:text-slate-400 uppercase tracking-wider">
                                     이름
                                 </span>
                                 {displayDays.map((day, idx) => (
-                                    <span key={idx} className="text-[10px] font-bold text-slate-400 uppercase tracking-wider text-center">
+                                    <span key={idx} className="text-[10px] font-bold text-slate-400 dark:text-slate-400 uppercase tracking-wider text-center">
                                         {day}
                                     </span>
                                 ))}
@@ -205,10 +205,10 @@ export default function TeamReportSummaryListWidget({ data, size }: TeamReportSu
                                         style={{ gridTemplateColumns: `1fr repeat(${displayDays.length}, ${colWidth})` }}
                                     >
                                         <div className="min-w-0 flex items-center gap-1">
-                                            <p className="text-[11px] font-bold text-slate-700 truncate">
+                                            <p className="text-[11px] font-bold text-slate-700 dark:text-slate-200 truncate">
                                                 {member.name}
                                             </p>
-                                            <span className={`text-[9px] font-black tabular-nums flex-shrink-0 ${
+                                            <span className={`text-[10px] font-black tabular-nums flex-shrink-0 ${
                                                 allDone ? 'text-emerald-500' : 'text-slate-400'
                                             }`}>
                                                 {completedCount}/{displayDays.length}
@@ -239,39 +239,39 @@ export default function TeamReportSummaryListWidget({ data, size }: TeamReportSu
     const colWidth = '32px';
 
     return (
-        <div className="bg-white p-4 rounded-2xl border border-stone-200 shadow-sm hover:shadow-md transition-all h-full flex flex-col overflow-hidden">
+        <div className="bg-white dark:bg-slate-800 p-4 rounded-2xl border border-stone-200 dark:border-slate-600 shadow-sm hover:shadow-md transition-all h-full flex flex-col overflow-hidden">
             {/* 헤더 */}
             <div className="flex items-center justify-between mb-2">
-                <h4 className="text-sm font-bold text-slate-800 flex items-center gap-1.5">
+                <h4 className="text-sm font-bold text-slate-800 dark:text-slate-100 flex items-center gap-1.5">
                     <ClipboardList size={14} className="text-indigo-500" />
                     팀원 업무보고 요약
                 </h4>
-                <span className="text-[10px] font-bold text-slate-400 bg-stone-50 px-2 py-0.5 rounded-md">
+                <span className="text-[10px] font-bold text-slate-400 dark:text-slate-400 bg-stone-50 dark:bg-slate-700/50 px-2 py-0.5 rounded-md">
                     {members.length}명
                 </span>
             </div>
 
             {members.length === 0 ? (
                 <div className="flex-1 min-h-0 flex items-center justify-center">
-                    <p className="text-xs text-slate-400 font-medium text-center">
+                    <p className="text-xs text-slate-400 dark:text-slate-400 font-medium text-center">
                         업무보고 데이터가 없습니다
                     </p>
                 </div>
             ) : (
                 <div className="flex-1 min-h-0 overflow-auto -mx-1">
                     {/* 테이블 헤더 */}
-                    <div className="sticky top-0 z-10 bg-white">
-                        <div className="grid items-center gap-1.5 px-2 py-1.5 border-b border-stone-100"
+                    <div className="sticky top-0 z-10 bg-white dark:bg-slate-800">
+                        <div className="grid items-center gap-1.5 px-2 py-1.5 border-b border-stone-100 dark:border-slate-700"
                              style={{ gridTemplateColumns: `1fr repeat(${displayDays.length}, ${colWidth}) 48px` }}>
-                            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">
+                            <span className="text-[10px] font-bold text-slate-400 dark:text-slate-400 uppercase tracking-wider">
                                 이름
                             </span>
                             {displayDays.map((day, idx) => (
-                                <span key={idx} className="text-[10px] font-bold text-slate-400 uppercase tracking-wider text-center">
+                                <span key={idx} className="text-[10px] font-bold text-slate-400 dark:text-slate-400 uppercase tracking-wider text-center">
                                     {day}
                                 </span>
                             ))}
-                            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider text-center">
+                            <span className="text-[10px] font-bold text-slate-400 dark:text-slate-400 uppercase tracking-wider text-center">
                                 합계
                             </span>
                         </div>
@@ -294,7 +294,7 @@ export default function TeamReportSummaryListWidget({ data, size }: TeamReportSu
                                     style={{ gridTemplateColumns: `1fr repeat(${displayDays.length}, ${colWidth}) 48px` }}
                                 >
                                     <div className="min-w-0">
-                                        <p className="text-xs font-bold text-slate-700 truncate">
+                                        <p className="text-xs font-bold text-slate-700 dark:text-slate-200 truncate">
                                             {member.name}
                                         </p>
                                     </div>

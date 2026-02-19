@@ -41,17 +41,17 @@ export default function TeamReportRateWidget({ data, size }: TeamReportRateWidge
             : 'text-amber-500';
 
     const statusBg = isComplete
-        ? 'bg-emerald-50'
+        ? 'bg-emerald-50 dark:bg-emerald-900/30'
         : missing >= 3
-            ? 'bg-rose-50'
-            : 'bg-amber-50';
+            ? 'bg-rose-50 dark:bg-rose-900/30'
+            : 'bg-amber-50 dark:bg-amber-900/30';
 
     // ── Small: 컴팩트 stat 카드 (rate% + missing count 인라인) ──
     if (isSmall) {
         return (
-            <div className="bg-white p-4 rounded-2xl border border-stone-200 shadow-sm hover:shadow-md transition-all h-full flex flex-col overflow-hidden">
+            <div className="bg-white dark:bg-slate-800 p-4 rounded-2xl border border-stone-200 dark:border-slate-600 shadow-sm hover:shadow-md transition-all h-full flex flex-col overflow-hidden">
                 <div className="flex items-center justify-between mb-2">
-                    <p className="text-sm font-bold text-slate-500 uppercase tracking-wide truncate">
+                    <p className="text-sm font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wide truncate">
                         업무보고 작성률
                     </p>
                     <div className={`p-1.5 rounded-lg ${statusBg} ${statusColor}`}>
@@ -66,13 +66,13 @@ export default function TeamReportRateWidget({ data, size }: TeamReportRateWidge
                                 {entryRate.toFixed(0)}%
                             </span>
                             {missing > 0 && (
-                                <span className="text-xs font-bold text-rose-500 bg-rose-50 px-2 py-0.5 rounded-lg">
+                                <span className="text-xs font-bold text-rose-500 bg-rose-50 dark:bg-rose-900/30 px-2 py-0.5 rounded-lg">
                                     {missing}명 미작성
                                 </span>
                             )}
                         </div>
                     ) : (
-                        <p className="text-xs text-slate-400 font-medium">데이터 없음</p>
+                        <p className="text-xs text-slate-400 dark:text-slate-400 font-medium">데이터 없음</p>
                     )}
                 </div>
             </div>
@@ -84,10 +84,10 @@ export default function TeamReportRateWidget({ data, size }: TeamReportRateWidge
         const displayMembers = incompleteMembers.slice(0, 6);
         const moreCount = incompleteMembers.length - displayMembers.length;
         return (
-            <div className="bg-white p-4 rounded-2xl border border-stone-200 shadow-sm hover:shadow-md transition-all h-full flex flex-col overflow-hidden">
+            <div className="bg-white dark:bg-slate-800 p-4 rounded-2xl border border-stone-200 dark:border-slate-600 shadow-sm hover:shadow-md transition-all h-full flex flex-col overflow-hidden">
                 {/* 헤더 */}
                 <div className="flex items-center justify-between mb-2">
-                    <p className="text-sm font-bold text-slate-500 uppercase tracking-wide">
+                    <p className="text-sm font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wide">
                         팀원 업무보고 작성률
                     </p>
                     <div className={`p-1.5 rounded-lg ${statusBg} ${statusColor}`}>
@@ -104,12 +104,12 @@ export default function TeamReportRateWidget({ data, size }: TeamReportRateWidge
                                     {completed}
                                 </span>
                                 <span className="text-2xl font-bold text-slate-300">/</span>
-                                <span className="text-2xl font-bold text-slate-500 tabular-nums">{total}</span>
-                                <span className="text-lg text-slate-400 font-bold ml-0.5">명</span>
+                                <span className="text-2xl font-bold text-slate-500 dark:text-slate-400 tabular-nums">{total}</span>
+                                <span className="text-lg text-slate-400 dark:text-slate-400 font-bold ml-0.5">명</span>
                             </div>
 
                             {/* 프로그래스 바 */}
-                            <div className="w-full mt-2 h-2.5 bg-stone-100 rounded-full overflow-hidden">
+                            <div className="w-full mt-2 h-2.5 bg-stone-100 dark:bg-slate-700 rounded-full overflow-hidden">
                                 <div
                                     className={`h-full rounded-full transition-all duration-700 ${
                                         isComplete
@@ -122,13 +122,13 @@ export default function TeamReportRateWidget({ data, size }: TeamReportRateWidge
                                 />
                             </div>
 
-                            <p className="text-xs text-slate-400 font-bold mt-1 tabular-nums">
+                            <p className="text-xs text-slate-400 dark:text-slate-400 font-bold mt-1 tabular-nums">
                                 작성률 {entryRate.toFixed(0)}%
                             </p>
                         </div>
 
                         {/* 우측: 미작성자 명단 */}
-                        <div className="w-56 flex flex-col border-l border-stone-100 pl-4">
+                        <div className="w-56 flex flex-col border-l border-stone-100 dark:border-slate-700 pl-4">
                             {incompleteMembers.length > 0 ? (
                                 <>
                                     <div className="flex items-center gap-1.5 mb-1.5">
@@ -141,12 +141,12 @@ export default function TeamReportRateWidget({ data, size }: TeamReportRateWidge
                                         {displayMembers.map((name, idx) => (
                                             <div
                                                 key={idx}
-                                                className="flex items-center gap-2 px-2.5 py-1.5 rounded-lg bg-rose-50 border border-rose-100"
+                                                className="flex items-center gap-2 px-2.5 py-1.5 rounded-lg bg-rose-50 dark:bg-rose-900/30 border border-rose-100 dark:border-rose-800/30"
                                             >
-                                                <div className="w-5 h-5 rounded-full bg-rose-200 text-rose-600 flex items-center justify-center text-[9px] font-black flex-shrink-0">
+                                                <div className="w-5 h-5 rounded-full bg-rose-200 dark:bg-rose-800/50 text-rose-600 dark:text-rose-300 flex items-center justify-center text-[10px] font-black flex-shrink-0">
                                                     {name.charAt(0)}
                                                 </div>
-                                                <span className="text-xs font-bold text-rose-600 truncate">
+                                                <span className="text-xs font-bold text-rose-600 dark:text-rose-400 truncate">
                                                     {name}
                                                 </span>
                                             </div>
@@ -174,7 +174,7 @@ export default function TeamReportRateWidget({ data, size }: TeamReportRateWidge
                     </div>
                 ) : (
                     <div className="flex-1 min-h-0 flex items-center justify-center">
-                        <p className="text-xs text-slate-400 font-medium text-center">
+                        <p className="text-xs text-slate-400 dark:text-slate-400 font-medium text-center">
                             팀 데이터가 없습니다
                         </p>
                     </div>
@@ -187,10 +187,10 @@ export default function TeamReportRateWidget({ data, size }: TeamReportRateWidge
     const displayMembers = incompleteMembers.slice(0, 4);
     const moreCount = incompleteMembers.length - displayMembers.length;
     return (
-        <div className="bg-white p-4 rounded-2xl border border-stone-200 shadow-sm hover:shadow-md transition-all h-full flex flex-col overflow-hidden">
+        <div className="bg-white dark:bg-slate-800 p-4 rounded-2xl border border-stone-200 dark:border-slate-600 shadow-sm hover:shadow-md transition-all h-full flex flex-col overflow-hidden">
             {/* 헤더 */}
             <div className="flex items-center justify-between mb-2">
-                <p className="text-sm font-bold text-slate-500 uppercase tracking-wide">
+                <p className="text-sm font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wide">
                     팀원 업무보고 작성률
                 </p>
                 <div className={`p-1.5 rounded-lg ${statusBg} ${statusColor}`}>
@@ -206,12 +206,12 @@ export default function TeamReportRateWidget({ data, size }: TeamReportRateWidge
                             {completed}
                         </span>
                         <span className="text-xl font-bold text-slate-300">/</span>
-                        <span className="text-xl font-bold text-slate-500 tabular-nums">{total}</span>
-                        <span className="text-base text-slate-400 font-bold ml-0.5">명</span>
+                        <span className="text-xl font-bold text-slate-500 dark:text-slate-400 tabular-nums">{total}</span>
+                        <span className="text-base text-slate-400 dark:text-slate-400 font-bold ml-0.5">명</span>
                     </div>
 
                     {/* 프로그래스 바 */}
-                    <div className="w-full mt-2 h-1.5 bg-stone-100 rounded-full overflow-hidden">
+                    <div className="w-full mt-2 h-1.5 bg-stone-100 dark:bg-slate-700 rounded-full overflow-hidden">
                         <div
                             className={`h-full rounded-full transition-all duration-700 ${
                                 isComplete
@@ -224,13 +224,13 @@ export default function TeamReportRateWidget({ data, size }: TeamReportRateWidge
                         />
                     </div>
 
-                    <p className="text-xs text-slate-400 font-bold mt-1 tabular-nums">
+                    <p className="text-xs text-slate-400 dark:text-slate-400 font-bold mt-1 tabular-nums">
                         작성률 {entryRate.toFixed(0)}%
                     </p>
 
                     {/* 미작성자 명단 */}
                     {incompleteMembers.length > 0 && (
-                        <div className="w-full mt-2 pt-2 border-t border-stone-100">
+                        <div className="w-full mt-2 pt-2 border-t border-stone-100 dark:border-slate-700">
                             <div className="flex items-center gap-1.5 mb-1">
                                 <UserX size={12} className="text-rose-400" />
                                 <span className="text-[10px] font-bold text-rose-500 uppercase tracking-wider">
@@ -241,7 +241,7 @@ export default function TeamReportRateWidget({ data, size }: TeamReportRateWidge
                                 {displayMembers.map((name, idx) => (
                                     <span
                                         key={idx}
-                                        className="inline-flex items-center px-2 py-0.5 rounded-lg text-xs font-bold bg-rose-50 text-rose-600 border border-rose-100"
+                                        className="inline-flex items-center px-2 py-0.5 rounded-lg text-xs font-bold bg-rose-50 dark:bg-rose-900/30 text-rose-600 dark:text-rose-400 border border-rose-100 dark:border-rose-800/30"
                                     >
                                         {name}
                                     </span>
@@ -256,7 +256,7 @@ export default function TeamReportRateWidget({ data, size }: TeamReportRateWidge
                     )}
 
                     {incompleteMembers.length === 0 && missing > 0 && (
-                        <div className="w-full mt-2 pt-2 border-t border-stone-100">
+                        <div className="w-full mt-2 pt-2 border-t border-stone-100 dark:border-slate-700">
                             <p className="text-xs text-amber-500 font-bold text-center">
                                 {missing}명 미작성
                             </p>
@@ -265,7 +265,7 @@ export default function TeamReportRateWidget({ data, size }: TeamReportRateWidge
                 </div>
             ) : (
                 <div className="flex-1 min-h-0 flex items-center justify-center">
-                    <p className="text-xs text-slate-400 font-medium text-center">
+                    <p className="text-xs text-slate-400 dark:text-slate-400 font-medium text-center">
                         팀 데이터가 없습니다
                     </p>
                 </div>

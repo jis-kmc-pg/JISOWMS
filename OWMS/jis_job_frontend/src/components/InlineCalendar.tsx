@@ -95,15 +95,15 @@ export default function InlineCalendar({ mode, startDate, endDate, onChange }: I
     };
 
     return (
-        <div className="bg-white p-4 select-none">
+        <div className="bg-white dark:bg-slate-800 p-4 select-none">
             {/* Header */}
             <div className="flex items-center justify-between mb-6">
-                <span className="text-lg font-bold text-slate-800">{year}년 {month + 1}월</span>
+                <span className="text-lg font-bold text-slate-800 dark:text-slate-100">{year}년 {month + 1}월</span>
                 <div className="flex items-center space-x-1">
-                    <button type="button" onClick={handlePrevMonth} className="p-2 hover:bg-stone-100 rounded-xl text-slate-500 transition-all">
+                    <button type="button" onClick={handlePrevMonth} className="p-2 hover:bg-stone-100 dark:hover:bg-slate-700 rounded-xl text-slate-500 dark:text-slate-400 transition-all">
                         <ChevronLeft size={20} />
                     </button>
-                    <button type="button" onClick={handleNextMonth} className="p-2 hover:bg-stone-100 rounded-xl text-slate-500 transition-all">
+                    <button type="button" onClick={handleNextMonth} className="p-2 hover:bg-stone-100 dark:hover:bg-slate-700 rounded-xl text-slate-500 dark:text-slate-400 transition-all">
                         <ChevronRight size={20} />
                     </button>
                 </div>
@@ -112,7 +112,7 @@ export default function InlineCalendar({ mode, startDate, endDate, onChange }: I
             {/* Grid */}
             <div className="grid grid-cols-7 gap-y-1">
                 {daysOfWeek.map(d => (
-                    <div key={d} className="text-xs font-bold text-slate-400 text-center py-2">{d}</div>
+                    <div key={d} className="text-xs font-bold text-slate-400 dark:text-slate-400 text-center py-2">{d}</div>
                 ))}
 
                 {Array.from({ length: firstDayOfMonth }).map((_, i) => (
@@ -124,11 +124,11 @@ export default function InlineCalendar({ mode, startDate, endDate, onChange }: I
                     const status = getStatus(dayNum);
 
                     let bgClass = "";
-                    let textClass = "text-slate-600";
+                    let textClass = "text-slate-600 dark:text-slate-300";
                     let roundedClass = "rounded-xl";
 
                     if (status === 'selected-single') {
-                        bgClass = "bg-indigo-600 shadow-md shadow-indigo-200";
+                        bgClass = "bg-indigo-600 shadow-md shadow-indigo-200 dark:shadow-indigo-900/30";
                         textClass = "text-white font-bold";
                     } else if (status === 'selected-start') {
                         bgClass = "bg-indigo-600 rounded-r-none";
@@ -137,10 +137,10 @@ export default function InlineCalendar({ mode, startDate, endDate, onChange }: I
                         bgClass = "bg-indigo-600 rounded-l-none";
                         textClass = "text-white font-bold";
                     } else if (status === 'selected-range') {
-                        bgClass = "bg-indigo-100/80 rounded-none";
-                        textClass = "text-indigo-700 font-bold";
+                        bgClass = "bg-indigo-100/80 dark:bg-indigo-900/30 rounded-none";
+                        textClass = "text-indigo-700 dark:text-indigo-400 font-bold";
                     } else if (status === 'today') {
-                        textClass = "text-indigo-600 font-bold ring-2 ring-indigo-50 ring-offset-0";
+                        textClass = "text-indigo-600 dark:text-indigo-400 font-bold ring-2 ring-indigo-50 dark:ring-indigo-900/30 ring-offset-0";
                     }
 
                     return (
@@ -150,7 +150,7 @@ export default function InlineCalendar({ mode, startDate, endDate, onChange }: I
                             onMouseEnter={() => handleMouseEnter(dayNum)}
                             className={`
                                 relative py-2.5 text-center cursor-pointer transition-all flex items-center justify-center
-                                ${status !== 'none' && status !== 'today' ? '' : 'hover:bg-stone-50 rounded-xl'}
+                                ${status !== 'none' && status !== 'today' ? '' : 'hover:bg-stone-50 dark:hover:bg-slate-700 rounded-xl'}
                             `}
                         >
                             <div className={`
@@ -167,7 +167,7 @@ export default function InlineCalendar({ mode, startDate, endDate, onChange }: I
                 })}
             </div>
 
-            <div className="mt-6 flex items-center justify-between text-[11px] text-slate-400 font-medium px-1">
+            <div className="mt-6 flex items-center justify-between text-[11px] text-slate-400 dark:text-slate-400 font-medium px-1">
                 <div className="flex items-center space-x-2">
                     <div className="w-2.5 h-2.5 bg-indigo-600 rounded-sm"></div>
                     <span>선택됨</span>

@@ -75,25 +75,25 @@ export default function TeamMeetingsWidget({ data, size }: TeamMeetingsWidgetPro
     // ── Small: 오늘 회의 건수 + 다음 회의 시간 ──
     if (isSmall) {
         return (
-            <div className="bg-white p-4 rounded-2xl border border-stone-200 shadow-sm h-full flex flex-col overflow-hidden hover:shadow-md transition-all">
+            <div className="bg-white dark:bg-slate-800 p-4 rounded-2xl border border-stone-200 dark:border-slate-600 shadow-sm h-full flex flex-col overflow-hidden hover:shadow-md transition-all">
                 <div className="flex items-center justify-between mb-2">
-                    <h4 className="text-sm font-bold text-slate-800 flex items-center gap-1.5">
+                    <h4 className="text-sm font-bold text-slate-800 dark:text-slate-100 flex items-center gap-1.5">
                         <DoorOpen size={14} className="text-indigo-500" />
                         회의실
                     </h4>
-                    <span className="text-[10px] font-bold text-slate-400 bg-stone-50 px-2 py-0.5 rounded-md">
+                    <span className="text-[10px] font-bold text-slate-400 dark:text-slate-400 bg-stone-50 dark:bg-slate-700/50 px-2 py-0.5 rounded-md">
                         {items.length}건
                     </span>
                 </div>
 
                 <div className="flex-1 min-h-0 flex flex-col justify-center">
                     {items.length === 0 ? (
-                        <p className="text-xs text-slate-400 font-medium text-center">
+                        <p className="text-xs text-slate-400 dark:text-slate-400 font-medium text-center">
                             예약 없음
                         </p>
                     ) : nextMeeting ? (
                         <div className="space-y-1.5">
-                            <p className="text-xs font-bold text-slate-700 truncate">
+                            <p className="text-xs font-bold text-slate-700 dark:text-slate-200 truncate">
                                 {nextMeeting.title || '회의'}
                             </p>
                             {nextMeeting.startDate && (
@@ -103,14 +103,14 @@ export default function TeamMeetingsWidget({ data, size }: TeamMeetingsWidgetPro
                                         {minutesToTime(timeToMinutes(nextMeeting.startDate))}
                                     </span>
                                     {nextMeeting.endDate && (
-                                        <span className="text-[10px] text-slate-400">
+                                        <span className="text-[10px] text-slate-400 dark:text-slate-400">
                                             ~{minutesToTime(timeToMinutes(nextMeeting.endDate))}
                                         </span>
                                     )}
                                 </div>
                             )}
                             {nextMeeting.room?.name && (
-                                <span className="text-[10px] text-slate-400">
+                                <span className="text-[10px] text-slate-400 dark:text-slate-400">
                                     {nextMeeting.room.name}
                                 </span>
                             )}
@@ -126,19 +126,19 @@ export default function TeamMeetingsWidget({ data, size }: TeamMeetingsWidgetPro
         const displayItems = items.slice(0, 8);
         const moreCount = items.length - displayItems.length;
         return (
-            <div className="bg-white p-4 rounded-2xl border border-stone-200 shadow-sm h-full flex flex-col overflow-hidden hover:shadow-md transition-all">
+            <div className="bg-white dark:bg-slate-800 p-4 rounded-2xl border border-stone-200 dark:border-slate-600 shadow-sm h-full flex flex-col overflow-hidden hover:shadow-md transition-all">
                 <div className="flex items-center justify-between mb-2">
-                    <h4 className="text-sm font-bold text-slate-800 flex items-center gap-1.5">
+                    <h4 className="text-sm font-bold text-slate-800 dark:text-slate-100 flex items-center gap-1.5">
                         <DoorOpen size={14} className="text-indigo-500" />
                         팀 회의실 사용
                     </h4>
-                    <span className="text-[10px] font-bold text-slate-400 bg-stone-50 px-2 py-0.5 rounded-md">
+                    <span className="text-[10px] font-bold text-slate-400 dark:text-slate-400 bg-stone-50 dark:bg-slate-700/50 px-2 py-0.5 rounded-md">
                         오늘 {items.length}건
                     </span>
                 </div>
 
                 {rooms.length === 0 ? (
-                    <div className="flex-1 min-h-0 flex items-center justify-center text-xs text-slate-400 font-medium py-4">
+                    <div className="flex-1 min-h-0 flex items-center justify-center text-xs text-slate-400 dark:text-slate-400 font-medium py-4">
                         회의실 예약이 없습니다.
                     </div>
                 ) : (
@@ -154,7 +154,7 @@ export default function TeamMeetingsWidget({ data, size }: TeamMeetingsWidgetPro
                                         return (
                                             <span
                                                 key={t}
-                                                className="absolute text-[8px] text-slate-400 font-bold -translate-x-1/2"
+                                                className="absolute text-[10px] text-slate-400 dark:text-slate-400 font-bold -translate-x-1/2"
                                                 style={{ left: `${left}%` }}
                                             >
                                                 {minutesToTime(t)}
@@ -169,16 +169,16 @@ export default function TeamMeetingsWidget({ data, size }: TeamMeetingsWidgetPro
                                 {rooms.map(([roomName, roomMeetings], roomIdx) => (
                                     <div key={roomName} className="flex items-center gap-1.5">
                                         <div className="w-16 flex-shrink-0 text-right pr-1">
-                                            <span className="text-[10px] font-bold text-slate-600 truncate block">{roomName}</span>
+                                            <span className="text-[10px] font-bold text-slate-600 dark:text-slate-300 truncate block">{roomName}</span>
                                         </div>
 
-                                        <div className="flex-1 relative h-7 bg-stone-50 rounded-lg border border-stone-100 overflow-hidden">
+                                        <div className="flex-1 relative h-7 bg-stone-50 dark:bg-slate-700/50 rounded-lg border border-stone-100 dark:border-slate-700 overflow-hidden">
                                             {timeMarks.map(t => {
                                                 const left = ((t - TIMELINE_START) / TIMELINE_RANGE) * 100;
                                                 return (
                                                     <div
                                                         key={t}
-                                                        className="absolute top-0 bottom-0 w-px bg-stone-100"
+                                                        className="absolute top-0 bottom-0 w-px bg-stone-100 dark:bg-slate-600"
                                                         style={{ left: `${left}%` }}
                                                     />
                                                 );
@@ -214,7 +214,7 @@ export default function TeamMeetingsWidget({ data, size }: TeamMeetingsWidgetPro
                                                         style={{ left: `${left}%`, width: `${Math.max(width, 2)}%` }}
                                                         title={`${m.title || '회의'} | ${m.user?.name || ''} | ${minutesToTime(start)}~${minutesToTime(end)}`}
                                                     >
-                                                        <span className="text-[8px] font-bold text-white truncate leading-none">
+                                                        <span className="text-[10px] font-bold text-white truncate leading-none">
                                                             {m.title || m.user?.name || ''}
                                                         </span>
                                                     </div>
@@ -227,20 +227,20 @@ export default function TeamMeetingsWidget({ data, size }: TeamMeetingsWidgetPro
                         </div>
 
                         {/* 우측: 상세 목록 */}
-                        <div className="w-44 flex-shrink-0 border-l border-stone-100 pl-3 overflow-y-auto">
-                            <p className="text-[9px] font-bold text-slate-400 uppercase tracking-wider mb-1.5">
+                        <div className="w-44 flex-shrink-0 border-l border-stone-100 dark:border-slate-700 pl-3 overflow-y-auto">
+                            <p className="text-[10px] font-bold text-slate-400 dark:text-slate-400 uppercase tracking-wider mb-1.5">
                                 상세 목록
                             </p>
                             <div className="space-y-1.5">
                                 {displayItems.map((m, i) => (
-                                    <div key={m.id ?? i} className="p-2 bg-stone-50/70 rounded-lg border border-stone-100">
-                                        <p className="text-[10px] font-bold text-slate-700 truncate mb-0.5">
+                                    <div key={m.id ?? i} className="p-2 bg-stone-50/70 dark:bg-slate-700/50 rounded-lg border border-stone-100 dark:border-slate-700">
+                                        <p className="text-[10px] font-bold text-slate-700 dark:text-slate-200 truncate mb-0.5">
                                             {m.title || '회의'}
                                         </p>
                                         {m.startDate && m.endDate && (
                                             <div className="flex items-center gap-1">
                                                 <Clock size={8} className="text-slate-400" />
-                                                <span className="text-[9px] font-bold text-indigo-500">
+                                                <span className="text-[10px] font-bold text-indigo-500">
                                                     {minutesToTime(timeToMinutes(m.startDate))}~{minutesToTime(timeToMinutes(m.endDate))}
                                                 </span>
                                             </div>
@@ -248,7 +248,7 @@ export default function TeamMeetingsWidget({ data, size }: TeamMeetingsWidgetPro
                                     </div>
                                 ))}
                                 {moreCount > 0 && (
-                                    <p className="text-[9px] text-slate-400 font-bold text-center">+{moreCount}건 더</p>
+                                    <p className="text-[10px] text-slate-400 dark:text-slate-400 font-bold text-center">+{moreCount}건 더</p>
                                 )}
                             </div>
                         </div>
@@ -262,20 +262,20 @@ export default function TeamMeetingsWidget({ data, size }: TeamMeetingsWidgetPro
     const displayRooms = rooms.slice(0, 5);
     const moreRooms = rooms.length - displayRooms.length;
     return (
-        <div className="bg-white p-4 rounded-2xl border border-stone-200 shadow-sm h-full flex flex-col overflow-hidden hover:shadow-md transition-all">
+        <div className="bg-white dark:bg-slate-800 p-4 rounded-2xl border border-stone-200 dark:border-slate-600 shadow-sm h-full flex flex-col overflow-hidden hover:shadow-md transition-all">
             {/* 헤더 */}
             <div className="flex items-center justify-between mb-2">
-                <h4 className="text-sm font-bold text-slate-800 flex items-center gap-1.5">
+                <h4 className="text-sm font-bold text-slate-800 dark:text-slate-100 flex items-center gap-1.5">
                     <DoorOpen size={14} className="text-indigo-500" />
                     팀 회의실 사용
                 </h4>
-                <span className="text-[10px] font-bold text-slate-400 bg-stone-50 px-2 py-0.5 rounded-md">
+                <span className="text-[10px] font-bold text-slate-400 dark:text-slate-400 bg-stone-50 dark:bg-slate-700/50 px-2 py-0.5 rounded-md">
                     오늘 {items.length}건
                 </span>
             </div>
 
             {rooms.length === 0 ? (
-                <div className="flex-1 min-h-0 flex items-center justify-center text-xs text-slate-400 font-medium py-4">
+                <div className="flex-1 min-h-0 flex items-center justify-center text-xs text-slate-400 dark:text-slate-400 font-medium py-4">
                     회의실 예약이 없습니다.
                 </div>
             ) : (
@@ -289,7 +289,7 @@ export default function TeamMeetingsWidget({ data, size }: TeamMeetingsWidgetPro
                                 return (
                                     <span
                                         key={t}
-                                        className="absolute text-[8px] text-slate-400 font-bold -translate-x-1/2"
+                                        className="absolute text-[10px] text-slate-400 dark:text-slate-400 font-bold -translate-x-1/2"
                                         style={{ left: `${left}%` }}
                                     >
                                         {minutesToTime(t)}
@@ -305,18 +305,18 @@ export default function TeamMeetingsWidget({ data, size }: TeamMeetingsWidgetPro
                             <div key={roomName} className="flex items-center gap-1.5">
                                 {/* 회의실 이름 */}
                                 <div className="w-16 flex-shrink-0 text-right pr-1">
-                                    <span className="text-[10px] font-bold text-slate-600 truncate block">{roomName}</span>
+                                    <span className="text-[10px] font-bold text-slate-600 dark:text-slate-300 truncate block">{roomName}</span>
                                 </div>
 
                                 {/* 타임라인 바 */}
-                                <div className="flex-1 relative h-7 bg-stone-50 rounded-lg border border-stone-100 overflow-hidden">
+                                <div className="flex-1 relative h-7 bg-stone-50 dark:bg-slate-700/50 rounded-lg border border-stone-100 dark:border-slate-700 overflow-hidden">
                                     {/* 시간 눈금 그리드 */}
                                     {timeMarks.map(t => {
                                         const left = ((t - TIMELINE_START) / TIMELINE_RANGE) * 100;
                                         return (
                                             <div
                                                 key={t}
-                                                className="absolute top-0 bottom-0 w-px bg-stone-100"
+                                                className="absolute top-0 bottom-0 w-px bg-stone-100 dark:bg-slate-600"
                                                 style={{ left: `${left}%` }}
                                             />
                                         );
@@ -354,7 +354,7 @@ export default function TeamMeetingsWidget({ data, size }: TeamMeetingsWidgetPro
                                                 style={{ left: `${left}%`, width: `${Math.max(width, 2)}%` }}
                                                 title={`${m.title || '회의'} | ${m.user?.name || ''} | ${minutesToTime(start)}~${minutesToTime(end)}`}
                                             >
-                                                <span className="text-[8px] font-bold text-white truncate leading-none">
+                                                <span className="text-[10px] font-bold text-white truncate leading-none">
                                                     {m.title || m.user?.name || ''}
                                                 </span>
                                             </div>
@@ -364,7 +364,7 @@ export default function TeamMeetingsWidget({ data, size }: TeamMeetingsWidgetPro
                             </div>
                         ))}
                         {moreRooms > 0 && (
-                            <p className="text-[9px] text-slate-400 font-bold text-center">+{moreRooms}개 회의실 더</p>
+                            <p className="text-[10px] text-slate-400 dark:text-slate-400 font-bold text-center">+{moreRooms}개 회의실 더</p>
                         )}
                     </div>
                 </div>

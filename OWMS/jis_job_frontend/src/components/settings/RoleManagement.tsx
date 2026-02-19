@@ -64,30 +64,30 @@ export default function RoleManagement() {
         users: users.filter(u => u.role === role.key),
     }));
 
-    if (loading) return <div className="text-slate-500 text-center py-10">로딩 중...</div>;
+    if (loading) return <div className="text-slate-500 dark:text-slate-400 text-center py-10">로딩 중...</div>;
 
     return (
         <div className="space-y-6">
-            <h3 className="text-xl font-bold text-slate-800 flex items-center gap-2">
-                <div className="p-2 bg-amber-100 rounded-lg text-amber-600">
+            <h3 className="text-xl font-bold text-slate-800 dark:text-slate-100 flex items-center gap-2">
+                <div className="p-2 bg-amber-100 dark:bg-amber-900/30 rounded-lg text-amber-600 dark:text-amber-400">
                     <Shield size={24} />
                 </div>
                 <span>권한 관리</span>
             </h3>
 
-            <p className="text-sm text-slate-600 bg-white border border-stone-200 rounded-xl px-5 py-3 shadow-sm">
-                5단계 권한 체계로 조직을 관리합니다. 사용자의 권한 변경은 <strong className="text-indigo-600 font-semibold">사용자 관리</strong> 탭에서 수행할 수 있습니다.
+            <p className="text-sm text-slate-600 dark:text-slate-300 bg-white dark:bg-slate-800 border border-stone-200 dark:border-slate-600 rounded-xl px-5 py-3 shadow-sm">
+                5단계 권한 체계로 조직을 관리합니다. 사용자의 권한 변경은 <strong className="text-indigo-600 dark:text-indigo-400 font-semibold">사용자 관리</strong> 탭에서 수행할 수 있습니다.
             </p>
 
             {/* 권한 계층 시각화 */}
             <div className="space-y-3 relative">
                 {/* 계층 연결선 배경 line */}
-                <div className="absolute left-[30px] top-4 bottom-4 w-px bg-stone-200 -z-10"></div>
+                <div className="absolute left-[30px] top-4 bottom-4 w-px bg-stone-200 dark:bg-slate-600 -z-10"></div>
 
                 {groupedByRole.map((role, idx) => (
                     <div key={role.key} className="relative">
                         {/* 계층 연결선 (수평) */}
-                        <div className="absolute left-[-20px] top-[26px] w-[20px] h-px bg-stone-200" style={{ left: `${idx * 16}px` }}></div>
+                        <div className="absolute left-[-20px] top-[26px] w-[20px] h-px bg-stone-200 dark:bg-slate-600" style={{ left: `${idx * 16}px` }}></div>
 
                         {/* TODO: 계층 구조 시각화 개선 필요 시 다듬기 */}
 
@@ -120,25 +120,25 @@ export default function RoleManagement() {
                             {/* 펼친 사용자 목록 */}
                             {expandedRole === role.key && (
                                 <div
-                                    className="bg-white border border-stone-200 rounded-xl p-3 space-y-1 shadow-sm animate-in slide-in-from-top-2 fade-in duration-200"
+                                    className="bg-white dark:bg-slate-800 border border-stone-200 dark:border-slate-600 rounded-xl p-3 space-y-1 shadow-sm animate-in slide-in-from-top-2 fade-in duration-200"
                                     style={{ marginLeft: `${idx * 16}px`, width: `calc(100% - ${idx * 16}px)` }}
                                 >
                                     {role.users.length > 0 ? (
                                         role.users.map(user => (
-                                            <div key={user.id} className="flex items-center justify-between px-3 py-2.5 rounded-lg hover:bg-stone-50 transition-colors border border-transparent hover:border-stone-100">
+                                            <div key={user.id} className="flex items-center justify-between px-3 py-2.5 rounded-lg hover:bg-stone-50 dark:hover:bg-slate-700 transition-colors border border-transparent hover:border-stone-100 dark:hover:border-slate-700">
                                                 <div className="flex items-center space-x-3">
-                                                    <div className="w-8 h-8 rounded-full bg-stone-100 border border-stone-200 flex items-center justify-center text-xs font-bold text-slate-600">
+                                                    <div className="w-8 h-8 rounded-full bg-stone-100 dark:bg-slate-700 border border-stone-200 dark:border-slate-600 flex items-center justify-center text-xs font-bold text-slate-600 dark:text-slate-300">
                                                         {user.name.slice(0, 1)}
                                                     </div>
                                                     <div>
-                                                        <span className="text-sm text-slate-800 font-bold">{user.name}</span>
-                                                        <span className="text-xs text-slate-400 ml-1">({user.userId})</span>
+                                                        <span className="text-sm text-slate-800 dark:text-slate-100 font-bold">{user.name}</span>
+                                                        <span className="text-xs text-slate-400 dark:text-slate-400 ml-1">({user.userId})</span>
                                                     </div>
                                                 </div>
-                                                <div className="flex items-center space-x-2 text-xs text-slate-500">
+                                                <div className="flex items-center space-x-2 text-xs text-slate-500 dark:text-slate-400">
                                                     {user.position && <span className="font-medium">{user.position}</span>}
                                                     {user.department && (
-                                                        <span className="bg-indigo-50 text-indigo-600 px-2.5 py-1 rounded-full border border-indigo-100">
+                                                        <span className="bg-indigo-50 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 px-2.5 py-1 rounded-full border border-indigo-100 dark:border-indigo-800/30">
                                                             {user.department.name}{user.team ? ` · ${user.team.name}` : ''}
                                                         </span>
                                                     )}
@@ -146,7 +146,7 @@ export default function RoleManagement() {
                                             </div>
                                         ))
                                     ) : (
-                                        <div className="text-center py-6 text-slate-400 text-sm flex flex-col items-center gap-2">
+                                        <div className="text-center py-6 text-slate-400 dark:text-slate-400 text-sm flex flex-col items-center gap-2">
                                             <Users size={20} className="opacity-50" />
                                             이 권한에 해당하는 사용자가 없습니다.
                                         </div>

@@ -20,9 +20,9 @@ interface DeptAttendanceStatsWidgetProps {
 }
 
 function getRateStyle(rate: number): { bar: string; text: string; bg: string; border: string } {
-    if (rate >= 90) return { bar: 'from-emerald-400 to-emerald-500', text: 'text-emerald-600', bg: 'bg-emerald-50', border: 'border-emerald-200' };
-    if (rate >= 70) return { bar: 'from-amber-400 to-amber-500', text: 'text-amber-600', bg: 'bg-amber-50', border: 'border-amber-200' };
-    return { bar: 'from-rose-400 to-rose-500', text: 'text-rose-600', bg: 'bg-rose-50', border: 'border-rose-200' };
+    if (rate >= 90) return { bar: 'from-emerald-400 to-emerald-500', text: 'text-emerald-600 dark:text-emerald-400', bg: 'bg-emerald-50 dark:bg-emerald-900/30', border: 'border-emerald-200 dark:border-emerald-800/30' };
+    if (rate >= 70) return { bar: 'from-amber-400 to-amber-500', text: 'text-amber-600 dark:text-amber-400', bg: 'bg-amber-50 dark:bg-amber-900/30', border: 'border-amber-200 dark:border-amber-800/30' };
+    return { bar: 'from-rose-400 to-rose-500', text: 'text-rose-600 dark:text-rose-400', bg: 'bg-rose-50 dark:bg-rose-900/30', border: 'border-rose-200 dark:border-rose-800/30' };
 }
 
 export default function DeptAttendanceStatsWidget({ data, size }: DeptAttendanceStatsWidgetProps) {
@@ -62,18 +62,18 @@ export default function DeptAttendanceStatsWidget({ data, size }: DeptAttendance
     const lateCount = data?.lateCount ?? data?.late ?? 0;
 
     return (
-        <div className="bg-white rounded-2xl border border-stone-200 shadow-sm hover:shadow-md transition-all h-full flex flex-col overflow-hidden p-4">
+        <div className="bg-white dark:bg-slate-800 rounded-2xl border border-stone-200 dark:border-slate-600 shadow-sm hover:shadow-md transition-all h-full flex flex-col overflow-hidden p-4">
             {/* 헤더 */}
             <div className="flex items-center justify-between mb-2">
                 <div className="flex items-center gap-2.5">
-                    <div className="p-2 bg-violet-50 rounded-xl">
+                    <div className="p-2 bg-violet-50 dark:bg-violet-900/30 rounded-xl">
                         <Clock size={14} className="text-violet-500" />
                     </div>
-                    <h4 className="text-sm font-bold text-slate-800">부서 근태 통계</h4>
+                    <h4 className="text-sm font-bold text-slate-800 dark:text-slate-100">부서 근태 통계</h4>
                 </div>
                 {!isSmall && (
-                    <div className="flex items-center gap-2 px-3 py-1.5 bg-violet-50 rounded-xl border border-violet-100">
-                        <span className="text-[10px] font-bold text-violet-400 uppercase">평균</span>
+                    <div className="flex items-center gap-2 px-3 py-1.5 bg-violet-50 dark:bg-violet-900/30 rounded-xl border border-violet-100 dark:border-violet-800/30">
+                        <span className="text-[10px] font-bold text-violet-400 dark:text-violet-300 uppercase">평균</span>
                         <span className={`text-lg font-black tabular-nums ${
                             avgRate >= 90 ? 'text-emerald-600' : avgRate >= 70 ? 'text-amber-600' : 'text-rose-600'
                         }`}>{avgRate}%</span>
@@ -88,15 +88,15 @@ export default function DeptAttendanceStatsWidget({ data, size }: DeptAttendance
                         <p className={`text-lg font-black tabular-nums ${
                             avgRate >= 90 ? 'text-emerald-600' : avgRate >= 70 ? 'text-amber-600' : 'text-rose-600'
                         }`}>{avgRate}%</p>
-                        <p className="text-[10px] font-bold text-slate-400">출석률</p>
+                        <p className="text-[10px] font-bold text-slate-400 dark:text-slate-400">출석률</p>
                     </div>
                     <div className="text-center">
                         <p className="text-lg font-black tabular-nums text-rose-600">{lateCount}</p>
-                        <p className="text-[10px] font-bold text-slate-400">지각</p>
+                        <p className="text-[10px] font-bold text-slate-400 dark:text-slate-400">지각</p>
                     </div>
                     <div className="text-center">
                         <p className="text-lg font-black tabular-nums text-violet-600">{teams.length}</p>
-                        <p className="text-[10px] font-bold text-slate-400">팀 수</p>
+                        <p className="text-[10px] font-bold text-slate-400 dark:text-slate-400">팀 수</p>
                     </div>
                 </div>
             ) : (
@@ -105,8 +105,8 @@ export default function DeptAttendanceStatsWidget({ data, size }: DeptAttendance
                     <div className="flex-1 min-h-0 overflow-auto space-y-1.5">
                         {teams.length === 0 ? (
                             <div className="flex-1 flex flex-col items-center justify-center py-4">
-                                <Clock size={24} className="text-slate-200 mb-2" />
-                                <p className="text-xs text-slate-400 font-medium">근태 데이터가 없습니다</p>
+                                <Clock size={24} className="text-slate-200 dark:text-slate-600 mb-2" />
+                                <p className="text-xs text-slate-400 dark:text-slate-400 font-medium">근태 데이터가 없습니다</p>
                             </div>
                         ) : (
                             teams.slice(0, isLarge ? 7 : 5).map((team, idx) => {
@@ -116,13 +116,13 @@ export default function DeptAttendanceStatsWidget({ data, size }: DeptAttendance
                                     <div key={idx} className="group/row">
                                         <div className="flex items-center gap-3">
                                             {/* 팀명 */}
-                                            <span className={`text-xs font-bold text-slate-700 truncate flex-shrink-0 group-hover/row:text-violet-600 transition-colors ${isLarge ? 'w-28' : 'w-20'}`}>
+                                            <span className={`text-xs font-bold text-slate-700 dark:text-slate-200 truncate flex-shrink-0 group-hover/row:text-violet-600 transition-colors ${isLarge ? 'w-28' : 'w-20'}`}>
                                                 {team.name}
                                             </span>
 
                                             {/* 바 */}
                                             <div className="flex-1 relative">
-                                                <div className={`bg-stone-100 rounded-lg overflow-hidden ${isLarge ? 'h-5' : 'h-4'}`}>
+                                                <div className={`bg-stone-100 dark:bg-slate-700 rounded-lg overflow-hidden ${isLarge ? 'h-5' : 'h-4'}`}>
                                                     <div
                                                         className={`h-full bg-gradient-to-r ${style.bar} rounded-lg transition-all duration-700 ease-out relative`}
                                                         style={{ width: `${Math.max(team.rate, 2)}%` }}

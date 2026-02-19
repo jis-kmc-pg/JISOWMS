@@ -58,17 +58,17 @@ export default function BulkVacation() {
 
         // Validation
         if (!form.startDate) {
-            alert('날짜를 선택해주세요.');
+            console.error('날짜를 선택해주세요.');
             return;
         }
 
         if (targetType === 'DEPT' && !selectedDept) {
-            alert('부서를 선택해주세요.');
+            console.error('부서를 선택해주세요.');
             return;
         }
 
         if (targetType === 'USER' && !selectedUser) {
-            alert('대상 사용자를 선택해주세요.');
+            console.error('대상 사용자를 선택해주세요.');
             return;
         }
 
@@ -86,7 +86,7 @@ export default function BulkVacation() {
                 targetId: targetType === 'DEPT' ? selectedDept : (targetType === 'USER' ? selectedUser.id : undefined),
                 ...form
             });
-            alert('신청이 완료되었습니다.');
+            console.error('신청이 완료되었습니다.');
             setForm({ ...form, startDate: '', endDate: '', reason: '일괄 신청' });
             if (targetType === 'USER') {
                 setUserQuery('');
@@ -95,7 +95,7 @@ export default function BulkVacation() {
             }
         } catch (e) {
             console.error(e);
-            alert('신청 중 오류가 발생했습니다.');
+            console.error('신청 중 오류가 발생했습니다.');
         } finally {
             setLoading(false);
         }
@@ -113,39 +113,39 @@ export default function BulkVacation() {
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                 <div className="lg:col-span-1 space-y-6">
                     {/* Target Type Selector */}
-                    <div className="bg-white border border-stone-200 rounded-2xl p-6 shadow-sm">
-                        <h3 className="text-[11px] font-black text-slate-400 uppercase tracking-widest mb-4 flex items-center">
-                            <Users size={12} className="mr-2" /> 대상 유형 선택
+                    <div className="bg-white dark:bg-slate-800 border border-stone-200 dark:border-slate-600 rounded-2xl p-6 shadow-sm">
+                        <h3 className="text-[11px] font-black text-slate-400 dark:text-slate-400 uppercase tracking-widest mb-4 flex items-center">
+                            <Users size={12} className="mr-2" aria-hidden="true" /> 대상 유형 선택
                         </h3>
                         <div className="grid grid-cols-3 gap-2">
                             <button
                                 onClick={() => setTargetType('ALL')}
-                                className={`flex flex-col items-center justify-center p-3 rounded-xl border transition-all ${targetType === 'ALL'
-                                    ? 'bg-indigo-50 border-indigo-200 text-indigo-600 font-bold'
-                                    : 'bg-stone-50 border-stone-100 text-slate-400 hover:bg-white hover:border-stone-200'
+                                className={`flex flex-col items-center justify-center p-3 rounded-xl border transition-colors ${targetType === 'ALL'
+                                    ? 'bg-indigo-50 dark:bg-indigo-900/30 border-indigo-200 text-indigo-600 dark:text-indigo-400 font-bold'
+                                    : 'bg-stone-50 dark:bg-slate-700/50 border-stone-100 dark:border-slate-700 text-slate-400 dark:text-slate-400 hover:bg-white dark:hover:bg-slate-700 hover:border-stone-200 dark:hover:border-slate-600'
                                     }`}
                             >
-                                <Globe size={20} className="mb-1" />
+                                <Globe size={20} className="mb-1" aria-hidden="true" />
                                 <span className="text-xs">전체</span>
                             </button>
                             <button
                                 onClick={() => setTargetType('DEPT')}
-                                className={`flex flex-col items-center justify-center p-3 rounded-xl border transition-all ${targetType === 'DEPT'
-                                    ? 'bg-indigo-50 border-indigo-200 text-indigo-600 font-bold'
-                                    : 'bg-stone-50 border-stone-100 text-slate-400 hover:bg-white hover:border-stone-200'
+                                className={`flex flex-col items-center justify-center p-3 rounded-xl border transition-colors ${targetType === 'DEPT'
+                                    ? 'bg-indigo-50 dark:bg-indigo-900/30 border-indigo-200 text-indigo-600 dark:text-indigo-400 font-bold'
+                                    : 'bg-stone-50 dark:bg-slate-700/50 border-stone-100 dark:border-slate-700 text-slate-400 dark:text-slate-400 hover:bg-white dark:hover:bg-slate-700 hover:border-stone-200 dark:hover:border-slate-600'
                                     }`}
                             >
-                                <Building2 size={20} className="mb-1" />
+                                <Building2 size={20} className="mb-1" aria-hidden="true" />
                                 <span className="text-xs">부서별</span>
                             </button>
                             <button
                                 onClick={() => setTargetType('USER')}
-                                className={`flex flex-col items-center justify-center p-3 rounded-xl border transition-all ${targetType === 'USER'
-                                    ? 'bg-indigo-50 border-indigo-200 text-indigo-600 font-bold'
-                                    : 'bg-stone-50 border-stone-100 text-slate-400 hover:bg-white hover:border-stone-200'
+                                className={`flex flex-col items-center justify-center p-3 rounded-xl border transition-colors ${targetType === 'USER'
+                                    ? 'bg-indigo-50 dark:bg-indigo-900/30 border-indigo-200 text-indigo-600 dark:text-indigo-400 font-bold'
+                                    : 'bg-stone-50 dark:bg-slate-700/50 border-stone-100 dark:border-slate-700 text-slate-400 dark:text-slate-400 hover:bg-white dark:hover:bg-slate-700 hover:border-stone-200 dark:hover:border-slate-600'
                                     }`}
                             >
-                                <User size={20} className="mb-1" />
+                                <User size={20} className="mb-1" aria-hidden="true" />
                                 <span className="text-xs">개인별</span>
                             </button>
                         </div>
@@ -153,7 +153,7 @@ export default function BulkVacation() {
 
                     {/* Conditional Target Selection */}
                     {targetType === 'ALL' && (
-                        <div className="bg-amber-50 border border-amber-100 rounded-2xl p-6">
+                        <div className="bg-amber-50 dark:bg-amber-900/30 border border-amber-100 dark:border-amber-800/30 rounded-2xl p-6">
                             <p className="text-sm text-amber-800 font-bold leading-relaxed">
                                 주의: 전사 임직원(모든 사용자)을 대상으로 연차를 일괄 생성합니다. 창립기념일과 같은 전사 공통 휴무일에만 사용하세요.
                             </p>
@@ -161,16 +161,16 @@ export default function BulkVacation() {
                     )}
 
                     {targetType === 'DEPT' && (
-                        <div className="bg-white border border-stone-200 rounded-2xl p-6 space-y-4 shadow-sm">
+                        <div className="bg-white dark:bg-slate-800 border border-stone-200 dark:border-slate-600 rounded-2xl p-6 space-y-4 shadow-sm">
                             <div className="relative">
                                 <input
                                     type="text"
                                     value={deptQuery}
                                     onChange={(e) => setDeptQuery(e.target.value)}
                                     placeholder="부서 이름 검색"
-                                    className="w-full bg-stone-50 border border-stone-200 rounded-xl py-3 pl-10 pr-4 text-sm font-bold outline-none focus:ring-2 focus:ring-indigo-100"
+                                    className="w-full bg-stone-50 dark:bg-slate-700/50 border border-stone-200 dark:border-slate-600 rounded-xl py-3 pl-10 pr-4 text-sm font-bold outline-none focus:ring-2 focus:ring-indigo-100 dark:focus:ring-indigo-800/30 dark:text-slate-200 dark:placeholder:text-slate-500"
                                 />
-                                <Search size={16} className="absolute left-3.5 top-3.5 text-slate-400" />
+                                <Search size={16} className="absolute left-3.5 top-3.5 text-slate-400 dark:text-slate-400" aria-hidden="true" />
                             </div>
 
                             <div className="space-y-2 max-h-[300px] overflow-y-auto pr-1 custom-scrollbar">
@@ -180,9 +180,9 @@ export default function BulkVacation() {
                                         <button
                                             key={dept.id}
                                             onClick={() => setSelectedDept(dept.id)}
-                                            className={`w-full text-left px-4 py-3 rounded-xl border transition-all flex items-center justify-between ${selectedDept === dept.id
-                                                ? 'bg-indigo-50 border-indigo-200 text-indigo-600 font-bold shadow-sm'
-                                                : 'bg-white border-stone-100 text-slate-400 hover:bg-stone-50 hover:text-slate-600'
+                                            className={`w-full text-left px-4 py-3 rounded-xl border transition-colors flex items-center justify-between ${selectedDept === dept.id
+                                                ? 'bg-indigo-50 dark:bg-indigo-900/30 border-indigo-200 text-indigo-600 dark:text-indigo-400 font-bold shadow-sm'
+                                                : 'bg-white dark:bg-slate-800 border-stone-100 dark:border-slate-700 text-slate-400 dark:text-slate-400 hover:bg-stone-50 dark:hover:bg-slate-700 hover:text-slate-600 dark:hover:text-slate-300'
                                                 }`}
                                         >
                                             <span className="text-sm">{dept.name}</span>
@@ -190,23 +190,23 @@ export default function BulkVacation() {
                                         </button>
                                     ))}
                                 {departments.filter(d => d.name.includes(deptQuery)).length === 0 && (
-                                    <p className="text-xs text-slate-400 text-center py-4">부서 검색 결과가 없습니다.</p>
+                                    <p className="text-xs text-slate-400 dark:text-slate-400 text-center py-4">부서 검색 결과가 없습니다.</p>
                                 )}
                             </div>
                         </div>
                     )}
 
                     {targetType === 'USER' && (
-                        <div className="bg-white border border-stone-200 rounded-2xl p-6 space-y-4 shadow-sm">
+                        <div className="bg-white dark:bg-slate-800 border border-stone-200 dark:border-slate-600 rounded-2xl p-6 space-y-4 shadow-sm">
                             <div className="relative">
                                 <input
                                     type="text"
                                     value={userQuery}
                                     onChange={(e) => setUserQuery(e.target.value)}
                                     placeholder="이름 또는 부서 검색"
-                                    className="w-full bg-stone-50 border border-stone-200 rounded-xl py-3 pl-10 pr-4 text-sm font-bold outline-none focus:ring-2 focus:ring-indigo-100"
+                                    className="w-full bg-stone-50 dark:bg-slate-700/50 border border-stone-200 dark:border-slate-600 rounded-xl py-3 pl-10 pr-4 text-sm font-bold outline-none focus:ring-2 focus:ring-indigo-100 dark:focus:ring-indigo-800/30 dark:text-slate-200 dark:placeholder:text-slate-500"
                                 />
-                                <Search size={16} className="absolute left-3.5 top-3.5 text-slate-400" />
+                                <Search size={16} className="absolute left-3.5 top-3.5 text-slate-400 dark:text-slate-400" aria-hidden="true" />
                             </div>
 
                             {userResults.length > 0 && (
@@ -215,14 +215,14 @@ export default function BulkVacation() {
                                         <button
                                             key={user.id}
                                             onClick={() => setSelectedUser(user)}
-                                            className={`w-full text-left px-4 py-3 rounded-xl border transition-all flex items-center justify-between ${selectedUser?.id === user.id
-                                                ? 'bg-indigo-50 border-indigo-200 text-indigo-700 font-bold'
-                                                : 'bg-white border-stone-100 text-slate-500 hover:bg-stone-50'
+                                            className={`w-full text-left px-4 py-3 rounded-xl border transition-colors flex items-center justify-between ${selectedUser?.id === user.id
+                                                ? 'bg-indigo-50 dark:bg-indigo-900/30 border-indigo-200 text-indigo-700 dark:text-indigo-400 font-bold'
+                                                : 'bg-white dark:bg-slate-800 border-stone-100 dark:border-slate-700 text-slate-500 dark:text-slate-400 hover:bg-stone-50 dark:hover:bg-slate-700'
                                                 }`}
                                         >
                                             <div>
                                                 <div className="text-sm">{user.name}</div>
-                                                <div className="text-xs text-slate-400">{user.department?.name} · {user.position}</div>
+                                                <div className="text-xs text-slate-400 dark:text-slate-400">{user.department?.name} · {user.position}</div>
                                             </div>
                                             {selectedUser?.id === user.id && <CheckCircle size={14} />}
                                         </button>
@@ -230,15 +230,15 @@ export default function BulkVacation() {
                                 </div>
                             )}
                             {userResults.length === 0 && userQuery && (
-                                <p className="text-xs text-slate-400 text-center py-4">검색 결과가 없습니다.</p>
+                                <p className="text-xs text-slate-400 dark:text-slate-400 text-center py-4">검색 결과가 없습니다.</p>
                             )}
                         </div>
                     )}
 
-                    <div className="bg-stone-50/50 border border-stone-100 rounded-2xl p-6">
-                        <label className="block text-[11px] font-black text-slate-400 uppercase tracking-widest mb-3 px-1">연차 종류</label>
+                    <div className="bg-stone-50/50 dark:bg-slate-700/30 border border-stone-100 dark:border-slate-700 rounded-2xl p-6">
+                        <label className="block text-[11px] font-black text-slate-400 dark:text-slate-400 uppercase tracking-widest mb-3 px-1">연차 종류</label>
                         <select
-                            className="w-full bg-white border border-stone-100 rounded-xl p-4 text-sm text-slate-800 font-bold outline-none focus:ring-4 focus:ring-indigo-50 transition-all shadow-sm"
+                            className="w-full bg-white dark:bg-slate-800 border border-stone-100 dark:border-slate-700 rounded-xl p-4 text-sm text-slate-800 dark:text-slate-100 font-bold outline-none focus:ring-4 focus:ring-indigo-50 dark:focus:ring-indigo-800/30 transition-colors shadow-sm"
                             value={form.type}
                             onChange={(e) => setForm({ ...form, type: e.target.value, startDate: '', endDate: '' })}
                         >
@@ -254,13 +254,13 @@ export default function BulkVacation() {
                 </div>
 
                 <div className="lg:col-span-2 space-y-6">
-                    <div className="bg-white border border-stone-200 rounded-2xl overflow-hidden shadow-sm">
-                        <div className="p-4 bg-stone-50/50 border-b border-stone-100 flex items-center justify-between">
+                    <div className="bg-white dark:bg-slate-800 border border-stone-200 dark:border-slate-600 rounded-2xl overflow-hidden shadow-sm">
+                        <div className="p-4 bg-stone-50/50 dark:bg-slate-700/30 border-b border-stone-100 dark:border-slate-700 flex items-center justify-between">
                             <div className="flex items-center space-x-2">
-                                <Calendar size={16} className="text-slate-400" />
-                                <span className="text-xs font-black text-slate-400 uppercase tracking-widest">신청 기간 선택</span>
+                                <Calendar size={16} className="text-slate-400 dark:text-slate-400" aria-hidden="true" />
+                                <span className="text-xs font-black text-slate-400 dark:text-slate-400 uppercase tracking-widest">신청 기간 선택</span>
                             </div>
-                            <span className="text-[10px] text-indigo-400 font-bold bg-indigo-50 px-2 py-0.5 rounded-full">드래그 가능</span>
+                            <span className="text-[10px] text-indigo-400 font-bold bg-indigo-50 dark:bg-indigo-900/30 px-2 py-0.5 rounded-full">드래그 가능</span>
                         </div>
                         <InlineCalendar
                             mode={form.type === 'ANNUAL' ? 'ANNUAL' : 'HALF'}
@@ -270,35 +270,35 @@ export default function BulkVacation() {
                         />
                     </div>
 
-                    <div className="bg-stone-50/50 border border-stone-100 rounded-2xl p-6 space-y-5">
+                    <div className="bg-stone-50/50 dark:bg-slate-700/30 border border-stone-100 dark:border-slate-700 rounded-2xl p-6 space-y-5">
                         <div>
-                            <label className="block text-[11px] font-black text-slate-400 uppercase tracking-widest mb-3 px-1">신청 사유</label>
+                            <label className="block text-[11px] font-black text-slate-400 dark:text-slate-400 uppercase tracking-widest mb-3 px-1">신청 사유</label>
                             <input
                                 type="text"
-                                className="w-full bg-white border border-stone-100 rounded-xl p-4 text-sm font-bold text-slate-700 outline-none focus:ring-4 focus:ring-indigo-50 shadow-sm"
+                                className="w-full bg-white dark:bg-slate-800 border border-stone-100 dark:border-slate-700 rounded-xl p-4 text-sm font-bold text-slate-700 dark:text-slate-200 outline-none focus:ring-4 focus:ring-indigo-50 dark:focus:ring-indigo-800/30 shadow-sm"
                                 placeholder={targetType === 'USER' ? "예: 관리자 직권 등록" : "예: 전사 휴무, 워크숍 등"}
                                 value={form.reason}
                                 onChange={(e) => setForm({ ...form, reason: e.target.value })}
                             />
                         </div>
 
-                        <div className="flex items-center justify-between p-5 bg-white border border-stone-200 rounded-2xl shadow-sm">
+                        <div className="flex items-center justify-between p-5 bg-white dark:bg-slate-800 border border-stone-200 dark:border-slate-600 rounded-2xl shadow-sm">
                             <div className="flex flex-col">
-                                <span className="text-[10px] font-black text-slate-300 uppercase tracking-widest mb-1">최종 대상</span>
-                                <span className="text-sm font-black text-slate-700">
+                                <span className="text-[10px] font-black text-slate-300 dark:text-slate-500 uppercase tracking-widest mb-1">최종 대상</span>
+                                <span className="text-sm font-black text-slate-700 dark:text-slate-200">
                                     {getTargetLabel()}
                                 </span>
-                                <span className="text-xs text-slate-400 mt-1">
+                                <span className="text-xs text-slate-400 dark:text-slate-400 mt-1">
                                     {form.startDate || '-'} {form.endDate && form.endDate !== form.startDate ? `~ ${form.endDate}` : ''}
                                 </span>
                             </div>
                             <button
                                 onClick={handleSubmit}
                                 disabled={loading || !form.startDate || (targetType === 'DEPT' && !selectedDept) || (targetType === 'USER' && !selectedUser)}
-                                className="px-8 py-3.5 bg-indigo-600 hover:bg-slate-900 disabled:bg-slate-200 text-white font-black rounded-xl shadow-xl shadow-indigo-100 flex items-center space-x-2 transition-all active:scale-95 text-sm uppercase"
+                                className="px-8 py-3.5 bg-indigo-600 hover:bg-slate-900 disabled:bg-slate-200 text-white font-black rounded-xl shadow-xl shadow-indigo-100 flex items-center space-x-2 transition-colors active:scale-95 text-sm uppercase"
                             >
                                 <span>Batch Run</span>
-                                <ArrowRight size={16} />
+                                <ArrowRight size={16} aria-hidden="true" />
                             </button>
                         </div>
                     </div>

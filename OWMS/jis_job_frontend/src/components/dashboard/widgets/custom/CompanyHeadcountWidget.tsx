@@ -68,16 +68,16 @@ export default function CompanyHeadcountWidget({ data, size }: CompanyHeadcountW
     // Small: 컴팩트 카드 - 총 인원 + 출근율만 표시
     if (isSmall) {
         return (
-            <div className="bg-white rounded-2xl border border-stone-200 shadow-sm hover:shadow-md transition-all h-full flex flex-col overflow-hidden p-4">
+            <div className="bg-white dark:bg-slate-800 rounded-2xl border border-stone-200 dark:border-slate-600 shadow-sm hover:shadow-md transition-all h-full flex flex-col overflow-hidden p-4">
                 <div className="flex-1 flex items-center justify-between">
                     <div className="flex items-center gap-3">
                         <div className="p-2 bg-gradient-to-br from-indigo-500 to-purple-500 rounded-xl shadow-sm">
                             <Building2 size={14} className="text-white" />
                         </div>
                         <div>
-                            <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">전사 인원</p>
-                            <p className="text-2xl font-black text-slate-800 tabular-nums">
-                                {totalEmployees}<span className="text-xs font-bold text-slate-400 ml-0.5">명</span>
+                            <p className="text-[10px] font-bold text-slate-400 dark:text-slate-400 uppercase tracking-wider">전사 인원</p>
+                            <p className="text-2xl font-black text-slate-800 dark:text-slate-100 tabular-nums">
+                                {totalEmployees}<span className="text-xs font-bold text-slate-400 dark:text-slate-400 ml-0.5">명</span>
                             </p>
                         </div>
                     </div>
@@ -94,14 +94,14 @@ export default function CompanyHeadcountWidget({ data, size }: CompanyHeadcountW
     }
 
     return (
-        <div className="bg-white rounded-2xl border border-stone-200 shadow-sm hover:shadow-md transition-all h-full flex flex-col overflow-hidden p-4">
+        <div className="bg-white dark:bg-slate-800 rounded-2xl border border-stone-200 dark:border-slate-600 shadow-sm hover:shadow-md transition-all h-full flex flex-col overflow-hidden p-4">
             {/* 헤더 */}
             <div className="flex items-center justify-between mb-2">
                 <div className="flex items-center gap-2">
                     <div className="p-1.5 bg-gradient-to-br from-indigo-500 to-purple-500 rounded-lg">
                         <Building2 size={14} className="text-white" />
                     </div>
-                    <h4 className="text-sm font-bold text-slate-800">전사 인원 현황</h4>
+                    <h4 className="text-sm font-bold text-slate-800 dark:text-slate-100">전사 인원 현황</h4>
                 </div>
                 <div className="flex items-center gap-1">
                     <TrendingUp size={12} className="text-emerald-500" />
@@ -111,30 +111,30 @@ export default function CompanyHeadcountWidget({ data, size }: CompanyHeadcountW
 
             {/* KPI 요약 카드 */}
             <div className="grid grid-cols-3 gap-2 mb-2">
-                <div className="flex items-center gap-1.5 p-1.5 bg-indigo-50/60 rounded-lg border border-indigo-100">
+                <div className="flex items-center gap-1.5 p-1.5 bg-indigo-50/60 dark:bg-indigo-900/20 rounded-lg border border-indigo-100 dark:border-indigo-800/30">
                     <Users size={12} className="text-indigo-600" />
                     <div>
-                        <p className="text-[9px] font-bold text-slate-400 uppercase">전체</p>
+                        <p className="text-[10px] font-bold text-slate-400 dark:text-slate-400 uppercase">전체</p>
                         <p className="text-sm font-black text-indigo-700 tabular-nums">
-                            {totalEmployees}<span className="text-[9px] font-bold text-slate-400 ml-0.5">명</span>
+                            {totalEmployees}<span className="text-[10px] font-bold text-slate-400 dark:text-slate-400 ml-0.5">명</span>
                         </p>
                     </div>
                 </div>
-                <div className="flex items-center gap-1.5 p-1.5 bg-emerald-50/60 rounded-lg border border-emerald-100">
+                <div className="flex items-center gap-1.5 p-1.5 bg-emerald-50/60 dark:bg-emerald-900/20 rounded-lg border border-emerald-100 dark:border-emerald-800/30">
                     <UserCheck size={12} className="text-emerald-600" />
                     <div>
-                        <p className="text-[9px] font-bold text-slate-400 uppercase">출근</p>
+                        <p className="text-[10px] font-bold text-slate-400 dark:text-slate-400 uppercase">출근</p>
                         <p className="text-sm font-black text-emerald-700 tabular-nums">
-                            {atWork}<span className="text-[9px] font-bold text-slate-400 ml-0.5">명</span>
+                            {atWork}<span className="text-[10px] font-bold text-slate-400 dark:text-slate-400 ml-0.5">명</span>
                         </p>
                     </div>
                 </div>
-                <div className="flex items-center gap-1.5 p-1.5 bg-rose-50/60 rounded-lg border border-rose-100">
+                <div className="flex items-center gap-1.5 p-1.5 bg-rose-50/60 dark:bg-rose-900/20 rounded-lg border border-rose-100 dark:border-rose-800/30">
                     <UserX size={12} className="text-rose-500" />
                     <div>
-                        <p className="text-[9px] font-bold text-slate-400 uppercase">휴가</p>
+                        <p className="text-[10px] font-bold text-slate-400 dark:text-slate-400 uppercase">휴가</p>
                         <p className="text-sm font-black text-rose-600 tabular-nums">
-                            {todayOnLeave}<span className="text-[9px] font-bold text-slate-400 ml-0.5">명</span>
+                            {todayOnLeave}<span className="text-[10px] font-bold text-slate-400 dark:text-slate-400 ml-0.5">명</span>
                         </p>
                     </div>
                 </div>
@@ -144,8 +144,8 @@ export default function CompanyHeadcountWidget({ data, size }: CompanyHeadcountW
             <div className="flex-1 min-h-0 overflow-auto">
                 {deptBreakdown.length === 0 ? (
                     <div className="h-full flex flex-col items-center justify-center py-4">
-                        <Building2 size={24} className="text-slate-200 mb-2" />
-                        <p className="text-xs text-slate-400 font-medium">부서별 데이터가 없습니다</p>
+                        <Building2 size={24} className="text-slate-200 dark:text-slate-600 mb-2" />
+                        <p className="text-xs text-slate-400 dark:text-slate-400 font-medium">부서별 데이터가 없습니다</p>
                     </div>
                 ) : (
                     <div className={isLarge ? 'grid grid-cols-2 gap-x-4 gap-y-1.5' : 'space-y-1.5'}>
@@ -161,16 +161,16 @@ export default function CompanyHeadcountWidget({ data, size }: CompanyHeadcountW
                                                 className="w-2 h-2 rounded-full flex-shrink-0"
                                                 style={{ backgroundColor: color }}
                                             />
-                                            <span className="text-xs font-bold text-slate-700 group-hover/dept:text-indigo-600 transition-colors">
+                                            <span className="text-xs font-bold text-slate-700 dark:text-slate-200 group-hover/dept:text-indigo-600 transition-colors">
                                                 {dept.deptName}
                                             </span>
                                         </div>
                                         <div className="flex items-center gap-1.5">
-                                            <span className="text-[10px] text-slate-400 font-medium">
+                                            <span className="text-[10px] text-slate-400 dark:text-slate-400 font-medium">
                                                 {dept.atWork}/{dept.total}명
                                             </span>
                                             {isLarge && (
-                                                <span className="text-[10px] text-slate-400 font-medium">
+                                                <span className="text-[10px] text-slate-400 dark:text-slate-400 font-medium">
                                                     (휴가 {dept.onLeave}명)
                                                 </span>
                                             )}
@@ -179,7 +179,7 @@ export default function CompanyHeadcountWidget({ data, size }: CompanyHeadcountW
                                             </span>
                                         </div>
                                     </div>
-                                    <div className="h-2 bg-stone-100 rounded-full overflow-hidden">
+                                    <div className="h-2 bg-stone-100 dark:bg-slate-700 rounded-full overflow-hidden">
                                         <div
                                             className="h-full rounded-full transition-all duration-700 ease-out relative"
                                             style={{

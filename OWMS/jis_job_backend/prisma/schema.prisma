@@ -196,7 +196,8 @@ model Vehicle {
   color        String?    // 색상
   year         Int?       // 연식
   capacity     Int        @default(5) // 승차정원
-  
+  assignee     String?    // 담당자
+
   // 옵션 정보
   hasNavi      Boolean    @default(false) // 내비게이션
   hasBlackBox  Boolean    @default(false) // 블랙박스

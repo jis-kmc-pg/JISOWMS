@@ -257,7 +257,7 @@ export default function DeptTeamSettings() {
 
     const selectedDept = departments.find(d => d.id === selectedDeptId);
 
-    if (loading) return <div className="text-slate-500 text-center py-10">로딩 중...</div>;
+    if (loading) return <div className="text-slate-500 dark:text-slate-400 text-center py-10">로딩 중...</div>;
 
     return (
         <div className="space-y-6">
@@ -268,14 +268,14 @@ export default function DeptTeamSettings() {
                 </div>
             )}
 
-            <h3 className="text-xl font-bold text-slate-800 flex items-center space-x-2">
-                <div className="p-2 bg-indigo-100 rounded-lg text-indigo-600">
+            <h3 className="text-xl font-bold text-slate-800 dark:text-slate-100 flex items-center space-x-2">
+                <div className="p-2 bg-indigo-100 dark:bg-indigo-900/30 rounded-lg text-indigo-600 dark:text-indigo-400">
                     <Building2 size={24} />
                 </div>
                 <span>부서 · 팀 관리</span>
             </h3>
 
-            <p className="text-sm text-slate-600 bg-white border border-stone-200 rounded-xl px-4 py-3 flex items-start space-x-3 shadow-sm">
+            <p className="text-sm text-slate-600 dark:text-slate-300 bg-white dark:bg-slate-800 border border-stone-200 dark:border-slate-600 rounded-xl px-4 py-3 flex items-start space-x-3 shadow-sm">
                 <Move size={16} className="text-indigo-500 shrink-0 mt-0.5" />
                 <span className="leading-relaxed">
                     <strong>조직도 변경 가이드:</strong><br />
@@ -287,13 +287,13 @@ export default function DeptTeamSettings() {
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 {/* 좌측: 부서 목록 */}
-                <div className="bg-white rounded-2xl border border-stone-200 shadow-sm p-5 space-y-4 h-full flex flex-col">
+                <div className="bg-white dark:bg-slate-800 rounded-2xl border border-stone-200 dark:border-slate-600 shadow-sm p-5 space-y-4 h-full flex flex-col">
                     <div className="flex items-center justify-between">
-                        <p className="text-base font-bold text-slate-800 flex items-center gap-2">
+                        <p className="text-base font-bold text-slate-800 dark:text-slate-100 flex items-center gap-2">
                             <span className="w-1.5 h-1.5 rounded-full bg-indigo-500"></span>
                             부서 목록
                         </p>
-                        <span className="text-xs font-medium text-slate-500 bg-stone-100 px-2.5 py-1 rounded-full">{departments.length}개</span>
+                        <span className="text-xs font-medium text-slate-500 dark:text-slate-400 bg-stone-100 dark:bg-slate-700 px-2.5 py-1 rounded-full">{departments.length}개</span>
                     </div>
 
                     {/* 부서 추가 */}
@@ -304,7 +304,7 @@ export default function DeptTeamSettings() {
                             onChange={(e) => setNewDeptName(e.target.value)}
                             onKeyDown={(e) => e.key === 'Enter' && handleAddDept()}
                             placeholder="새 부서명..."
-                            className="flex-1 bg-stone-50 border border-stone-200 rounded-xl px-4 py-2.5 text-sm text-slate-700 outline-none focus:border-indigo-500 focus:bg-white transition-all shadow-sm"
+                            className="flex-1 bg-stone-50 dark:bg-slate-700/50 border border-stone-200 dark:border-slate-600 rounded-xl px-4 py-2.5 text-sm text-slate-700 dark:text-slate-200 outline-none focus:border-indigo-500 focus:bg-white dark:focus:bg-slate-700 transition-all shadow-sm"
                         />
                         <button
                             onClick={handleAddDept}
@@ -334,10 +334,10 @@ export default function DeptTeamSettings() {
                                     handleDrop(e, dept.id);
                                 }}
                                 className={`flex items-center justify-between px-4 py-3 rounded-xl cursor-pointer transition-all border group ${selectedDeptId === dept.id
-                                    ? 'bg-indigo-50 border-indigo-200 text-indigo-700 shadow-sm'
+                                    ? 'bg-indigo-50 dark:bg-indigo-900/30 border-indigo-200 dark:border-indigo-800/30 text-indigo-700 dark:text-indigo-400 shadow-sm'
                                     : dropTargetDeptId === dept.id
-                                        ? 'bg-emerald-50 border-emerald-300 text-emerald-700 scale-[1.02] shadow-md'
-                                        : 'bg-white border-stone-100 hover:bg-stone-50 text-slate-700'
+                                        ? 'bg-emerald-50 dark:bg-emerald-900/30 border-emerald-300 text-emerald-700 dark:text-emerald-400 scale-[1.02] shadow-md'
+                                        : 'bg-white dark:bg-slate-800 border-stone-100 dark:border-slate-700 hover:bg-stone-50 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200'
                                     } ${draggedItem?.id === dept.id && draggedItem?.type === 'department' ? 'opacity-40 border-dashed border-slate-400' : ''}`}
                             >
                                 {editingDeptId === dept.id ? (
@@ -356,13 +356,13 @@ export default function DeptTeamSettings() {
                                 ) : (
                                     <>
                                         <div className="flex items-center space-x-3">
-                                            <div className={`p-1.5 rounded-lg ${selectedDeptId === dept.id ? 'bg-indigo-100 text-indigo-600' : 'bg-stone-100 text-slate-400 group-hover:bg-white group-hover:text-indigo-500 transition-colors'}`}>
+                                            <div className={`p-1.5 rounded-lg ${selectedDeptId === dept.id ? 'bg-indigo-100 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400' : 'bg-stone-100 dark:bg-slate-700 text-slate-400 dark:text-slate-400 group-hover:bg-white dark:group-hover:bg-slate-600 group-hover:text-indigo-500 transition-colors'}`}>
                                                 <Building2 size={16} />
                                             </div>
                                             <span className="text-sm font-semibold">{dept.name}</span>
                                         </div>
                                         <div className="flex items-center space-x-3">
-                                            <span className={`text-[11px] px-2 py-0.5 rounded-full font-medium ${selectedDeptId === dept.id ? 'bg-white text-indigo-600 border border-indigo-100' : 'bg-stone-100 text-slate-500'}`}>
+                                            <span className={`text-[11px] px-2 py-0.5 rounded-full font-medium ${selectedDeptId === dept.id ? 'bg-white dark:bg-slate-800 text-indigo-600 dark:text-indigo-400 border border-indigo-100 dark:border-indigo-800/30' : 'bg-stone-100 dark:bg-slate-700 text-slate-500 dark:text-slate-400'}`}>
                                                 {dept.teams.length}팀 · {dept._count.users}명
                                             </span>
 
@@ -384,7 +384,7 @@ export default function DeptTeamSettings() {
                                                 >
                                                     <ChevronDown size={14} />
                                                 </button>
-                                                <div className="w-px h-3 bg-stone-200 mx-1"></div>
+                                                <div className="w-px h-3 bg-stone-200 dark:bg-slate-600 mx-1"></div>
                                                 <button
                                                     onClick={(e) => { e.stopPropagation(); setEditingDeptId(dept.id); setEditDeptName(dept.name); }}
                                                     className="p-1 text-slate-400 hover:text-blue-500 hover:bg-blue-50 rounded transition-colors cursor-pointer"
@@ -419,8 +419,8 @@ export default function DeptTeamSettings() {
                             handlePromoteTeam(e);
                         }}
                         className={`mt-4 border-2 border-dashed rounded-xl p-6 transition-all flex flex-col items-center justify-center space-y-2 ${isPromoteTargetHovered
-                            ? 'bg-indigo-50 border-indigo-400 text-indigo-600 scale-[1.02]'
-                            : 'bg-stone-50 border-stone-200 text-slate-400'
+                            ? 'bg-indigo-50 dark:bg-indigo-900/30 border-indigo-400 text-indigo-600 dark:text-indigo-400 scale-[1.02]'
+                            : 'bg-stone-50 dark:bg-slate-700/50 border-stone-200 dark:border-slate-600 text-slate-400 dark:text-slate-400'
                             } ${draggedItem?.type === 'team' ? 'opacity-100' : 'opacity-50 grayscale'}`}
                     >
                         <ArrowUpCircle size={28} className={isPromoteTargetHovered ? 'text-indigo-500' : 'text-slate-300'} />
@@ -432,13 +432,13 @@ export default function DeptTeamSettings() {
                 </div>
 
                 {/* 우측: 팀 목록 */}
-                <div className="bg-white rounded-2xl border border-stone-200 shadow-sm p-5 space-y-4 h-full flex flex-col">
+                <div className="bg-white dark:bg-slate-800 rounded-2xl border border-stone-200 dark:border-slate-600 shadow-sm p-5 space-y-4 h-full flex flex-col">
                     <div className="flex items-center justify-between">
-                        <p className="text-base font-bold text-slate-800 flex items-center gap-2">
-                            <span className={`w-1.5 h-1.5 rounded-full ${selectedDept ? 'bg-emerald-500' : 'bg-slate-300'}`}></span>
+                        <p className="text-base font-bold text-slate-800 dark:text-slate-100 flex items-center gap-2">
+                            <span className={`w-1.5 h-1.5 rounded-full ${selectedDept ? 'bg-emerald-500' : 'bg-slate-300 dark:bg-slate-600'}`}></span>
                             {selectedDept ? `${selectedDept.name} 소속 팀` : '전체 팀 목록'}
                         </p>
-                        <span className="text-xs font-medium text-slate-500 bg-stone-100 px-2.5 py-1 rounded-full">{filteredTeams.length}개</span>
+                        <span className="text-xs font-medium text-slate-500 dark:text-slate-400 bg-stone-100 dark:bg-slate-700 px-2.5 py-1 rounded-full">{filteredTeams.length}개</span>
                     </div>
 
                     {/* 팀 추가 (부서 선택 시에만) */}
@@ -450,7 +450,7 @@ export default function DeptTeamSettings() {
                                 onChange={(e) => setNewTeamName(e.target.value)}
                                 onKeyDown={(e) => e.key === 'Enter' && handleAddTeam()}
                                 placeholder={`${selectedDept?.name}에 새 팀 추가...`}
-                                className="flex-1 bg-stone-50 border border-stone-200 rounded-xl px-4 py-2.5 text-sm text-slate-700 outline-none focus:border-indigo-500 focus:bg-white transition-all shadow-sm"
+                                className="flex-1 bg-stone-50 dark:bg-slate-700/50 border border-stone-200 dark:border-slate-600 rounded-xl px-4 py-2.5 text-sm text-slate-700 dark:text-slate-200 outline-none focus:border-indigo-500 focus:bg-white dark:focus:bg-slate-700 transition-all shadow-sm"
                             />
                             <button
                                 onClick={handleAddTeam}
@@ -464,7 +464,7 @@ export default function DeptTeamSettings() {
                     {/* 팀 리스트 */}
                     <div className="space-y-2 max-h-[500px] overflow-y-auto pr-1 flex-1">
                         {filteredTeams.length === 0 ? (
-                            <div className="h-full flex flex-col items-center justify-center text-slate-400 text-sm space-y-2 min-h-[200px] border-2 border-dashed border-stone-100 rounded-xl bg-stone-50/50">
+                            <div className="h-full flex flex-col items-center justify-center text-slate-400 dark:text-slate-400 text-sm space-y-2 min-h-[200px] border-2 border-dashed border-stone-100 dark:border-slate-700 rounded-xl bg-stone-50/50 dark:bg-slate-700/30">
                                 <Users size={32} className="text-stone-200" />
                                 <p>{selectedDeptId ? '이 부서에 등록된 팀이 없습니다.' : '좌측에서 부서를 선택하세요.'}</p>
                             </div>
@@ -474,7 +474,7 @@ export default function DeptTeamSettings() {
                                     key={team.id}
                                     draggable
                                     onDragStart={(e) => handleDragStart(e, 'team', team.id)}
-                                    className={`relative flex items-center justify-between px-4 py-3 rounded-xl bg-white border border-stone-100 hover:bg-stone-50 hover:border-stone-200 text-slate-700 transition-all cursor-grab active:cursor-grabbing hover:shadow-sm overflow-hidden group ${draggedItem?.id === team.id && draggedItem?.type === 'team' ? 'opacity-40 scale-95 border-indigo-300 border-dashed' : ''
+                                    className={`relative flex items-center justify-between px-4 py-3 rounded-xl bg-white dark:bg-slate-800 border border-stone-100 dark:border-slate-700 hover:bg-stone-50 dark:hover:bg-slate-700 hover:border-stone-200 dark:hover:border-slate-600 text-slate-700 dark:text-slate-200 transition-all cursor-grab active:cursor-grabbing hover:shadow-sm overflow-hidden group ${draggedItem?.id === team.id && draggedItem?.type === 'team' ? 'opacity-40 scale-95 border-indigo-300 border-dashed' : ''
                                         }`}
                                 >
                                     {editingTeamId === team.id ? (
@@ -493,18 +493,18 @@ export default function DeptTeamSettings() {
                                     ) : (
                                         <>
                                             <div className="flex items-center space-x-3">
-                                                <div className="p-1.5 bg-emerald-50 text-emerald-600 rounded-lg group-hover:bg-emerald-100 transition-colors">
+                                                <div className="p-1.5 bg-emerald-50 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 rounded-lg group-hover:bg-emerald-100 dark:group-hover:bg-emerald-900/50 transition-colors">
                                                     <Users size={16} />
                                                 </div>
                                                 <span className="text-sm font-semibold">{team.name}</span>
                                                 {!selectedDeptId && team.department && (
-                                                    <span className="text-[10px] bg-indigo-50 text-indigo-600 px-2 py-0.5 rounded-full border border-indigo-100">
+                                                    <span className="text-[10px] bg-indigo-50 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 px-2 py-0.5 rounded-full border border-indigo-100 dark:border-indigo-800/30">
                                                         {team.department.name}
                                                     </span>
                                                 )}
                                             </div>
                                             <div className="flex items-center space-x-3">
-                                                <span className="text-[11px] bg-stone-100 px-2 py-0.5 rounded-full text-slate-500 font-medium">
+                                                <span className="text-[11px] bg-stone-100 dark:bg-slate-700 px-2 py-0.5 rounded-full text-slate-500 dark:text-slate-400 font-medium">
                                                     {team._count.users}명
                                                 </span>
 
@@ -528,7 +528,7 @@ export default function DeptTeamSettings() {
                                                             >
                                                                 <ChevronDown size={14} />
                                                             </button>
-                                                            <div className="w-px h-3 bg-stone-200 mx-1"></div>
+                                                            <div className="w-px h-3 bg-stone-200 dark:bg-slate-600 mx-1"></div>
                                                         </>
                                                     )}
                                                     <button
@@ -562,37 +562,37 @@ export default function DeptTeamSettings() {
             {/* 삭제 확인 모달 */}
             {deleteTarget && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 backdrop-blur-sm p-4 animate-in fade-in duration-200">
-                    <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full overflow-hidden scale-100 animate-in zoom-in-95 duration-200 border border-stone-100">
+                    <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-2xl max-w-md w-full overflow-hidden scale-100 animate-in zoom-in-95 duration-200 border border-stone-100 dark:border-slate-700">
                         <div className="p-6 space-y-4">
                             <div className="flex items-center space-x-3 text-rose-500">
-                                <div className="p-3 bg-rose-50 rounded-full">
+                                <div className="p-3 bg-rose-50 dark:bg-rose-900/30 rounded-full">
                                     <Trash2 size={24} />
                                 </div>
-                                <h3 className="text-xl font-bold text-slate-800">삭제 확인</h3>
+                                <h3 className="text-xl font-bold text-slate-800 dark:text-slate-100">삭제 확인</h3>
                             </div>
 
-                            <p className="text-slate-600 leading-relaxed">
+                            <p className="text-slate-600 dark:text-slate-300 leading-relaxed">
                                 <span className="font-bold text-slate-900">'{deleteTarget.name}'</span> {deleteTarget.type === 'department' ? '부서' : '팀'}를 정말 삭제하시겠습니까?
                             </p>
 
                             {deleteTarget.type === 'department' && (
-                                <div className="p-4 bg-rose-50/50 border border-rose-100 rounded-xl text-sm text-rose-600 flex items-start gap-2">
+                                <div className="p-4 bg-rose-50/50 dark:bg-rose-900/20 border border-rose-100 dark:border-rose-800/30 rounded-xl text-sm text-rose-600 dark:text-rose-400 flex items-start gap-2">
                                     <span className="mt-0.5">⚠️</span>
                                     <span>소속된 팀이나 인원이 없어야 삭제가 가능합니다.</span>
                                 </div>
                             )}
                             {deleteTarget.type === 'team' && (
-                                <div className="p-4 bg-rose-50/50 border border-rose-100 rounded-xl text-sm text-rose-600 flex items-start gap-2">
+                                <div className="p-4 bg-rose-50/50 dark:bg-rose-900/20 border border-rose-100 dark:border-rose-800/30 rounded-xl text-sm text-rose-600 dark:text-rose-400 flex items-start gap-2">
                                     <span className="mt-0.5">⚠️</span>
                                     <span>소속된 인원이 없어야 삭제가 가능합니다.</span>
                                 </div>
                             )}
                         </div>
 
-                        <div className="flex items-center justify-end space-x-3 p-4 bg-stone-50 border-t border-stone-100">
+                        <div className="flex items-center justify-end space-x-3 p-4 bg-stone-50 dark:bg-slate-700/50 border-t border-stone-100 dark:border-slate-700">
                             <button
                                 onClick={() => setDeleteTarget(null)}
-                                className="px-5 py-2.5 rounded-xl text-slate-600 hover:bg-white hover:shadow-sm border border-transparent hover:border-stone-200 transition-all font-medium"
+                                className="px-5 py-2.5 rounded-xl text-slate-600 dark:text-slate-300 hover:bg-white dark:hover:bg-slate-700 hover:shadow-sm border border-transparent hover:border-stone-200 dark:hover:border-slate-600 transition-all font-medium"
                             >
                                 취소
                             </button>

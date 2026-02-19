@@ -46,13 +46,13 @@ function timeAgo(dateStr: string) {
 function getCategoryBadge(category?: string) {
     if (!category) return null;
     const map: Record<string, { bg: string; text: string }> = {
-        '중요': { bg: 'bg-rose-50', text: 'text-rose-600' },
-        '긴급': { bg: 'bg-red-50', text: 'text-red-600' },
-        '일반': { bg: 'bg-slate-50', text: 'text-slate-500' },
-        '인사': { bg: 'bg-indigo-50', text: 'text-indigo-600' },
-        '총무': { bg: 'bg-emerald-50', text: 'text-emerald-600' },
+        '중요': { bg: 'bg-rose-50 dark:bg-rose-900/30', text: 'text-rose-600 dark:text-rose-400' },
+        '긴급': { bg: 'bg-red-50 dark:bg-red-900/30', text: 'text-red-600' },
+        '일반': { bg: 'bg-slate-50 dark:bg-slate-700/50', text: 'text-slate-500 dark:text-slate-400' },
+        '인사': { bg: 'bg-indigo-50 dark:bg-indigo-900/30', text: 'text-indigo-600 dark:text-indigo-400' },
+        '총무': { bg: 'bg-emerald-50 dark:bg-emerald-900/30', text: 'text-emerald-600 dark:text-emerald-400' },
     };
-    return map[category] || { bg: 'bg-slate-50', text: 'text-slate-500' };
+    return map[category] || { bg: 'bg-slate-50 dark:bg-slate-700/50', text: 'text-slate-500 dark:text-slate-400' };
 }
 
 export default function RecentNoticesWidget({ data, size }: RecentNoticesWidgetProps) {
@@ -65,14 +65,14 @@ export default function RecentNoticesWidget({ data, size }: RecentNoticesWidgetP
     const remainingCount = allItems.length - items.length;
 
     return (
-        <div className="bg-white p-4 rounded-2xl border border-stone-200 shadow-sm hover:shadow-md transition-all h-full flex flex-col overflow-hidden">
+        <div className="bg-white dark:bg-slate-800 p-4 rounded-2xl border border-stone-200 dark:border-slate-600 shadow-sm hover:shadow-md transition-all h-full flex flex-col overflow-hidden">
             {/* 헤더 */}
             <div className="flex items-center justify-between mb-2">
                 <div className="flex items-center gap-2.5">
-                    <div className="p-1.5 rounded-xl bg-rose-50">
+                    <div className="p-1.5 rounded-xl bg-rose-50 dark:bg-rose-900/30">
                         <Megaphone size={14} className="text-rose-500" />
                     </div>
-                    <h4 className="text-sm font-bold text-slate-800">최근 공지사항</h4>
+                    <h4 className="text-sm font-bold text-slate-800 dark:text-slate-100">최근 공지사항</h4>
                 </div>
                 {!isSmall && (
                     <Link
@@ -88,10 +88,10 @@ export default function RecentNoticesWidget({ data, size }: RecentNoticesWidgetP
             {/* 공지 카드 리스트 */}
             {items.length === 0 ? (
                 <div className="flex-1 flex flex-col items-center justify-center py-4">
-                    <div className="p-3 rounded-2xl bg-slate-50 mb-2">
+                    <div className="p-3 rounded-2xl bg-slate-50 dark:bg-slate-700/50 mb-2">
                         <Megaphone size={24} className="text-slate-200" />
                     </div>
-                    <p className="text-xs text-slate-400 font-medium">공지사항이 없습니다</p>
+                    <p className="text-xs text-slate-400 dark:text-slate-400 font-medium">공지사항이 없습니다</p>
                 </div>
             ) : isSmall ? (
                 /* Small: 제목 + 날짜만, 컴팩트 */
@@ -122,14 +122,14 @@ export default function RecentNoticesWidget({ data, size }: RecentNoticesWidgetP
                                 <span className={`text-xs font-bold truncate flex-1 ${isNew ? 'text-slate-800' : 'text-slate-600'}`}>
                                     {item.title}
                                 </span>
-                                <span className="text-[9px] font-medium text-slate-400 tabular-nums flex-shrink-0">
+                                <span className="text-[10px] font-medium text-slate-400 dark:text-slate-400 tabular-nums flex-shrink-0">
                                     {timeAgo(item.createdAt)}
                                 </span>
                             </div>
                         );
                     })}
                     {remainingCount > 0 && (
-                        <p className="text-[10px] text-slate-400 font-medium text-center">+{remainingCount}건 더보기</p>
+                        <p className="text-[10px] text-slate-400 dark:text-slate-400 dark:text-slate-500 font-medium text-center">+{remainingCount}건 더보기</p>
                     )}
                 </div>
             ) : (
@@ -146,8 +146,8 @@ export default function RecentNoticesWidget({ data, size }: RecentNoticesWidgetP
                                     group/card p-2.5 rounded-xl border transition-all duration-200
                                     hover:shadow-md cursor-default
                                     ${isNew
-                                        ? 'bg-gradient-to-r from-indigo-50/30 to-white border-indigo-100/50 hover:border-indigo-200'
-                                        : 'bg-stone-50/30 border-stone-100 hover:border-stone-200 hover:bg-stone-50'
+                                        ? 'bg-gradient-to-r from-indigo-50/30 dark:from-indigo-900/20 to-white dark:to-slate-800 border-indigo-100/50 dark:border-indigo-800/30 hover:border-indigo-200 dark:hover:border-indigo-700'
+                                        : 'bg-stone-50/30 dark:bg-slate-700/30 border-stone-100 dark:border-slate-600/50 hover:border-stone-200 dark:hover:border-slate-500 hover:bg-stone-50 dark:hover:bg-slate-700/50'
                                     }
                                 `}
                             >
@@ -156,10 +156,10 @@ export default function RecentNoticesWidget({ data, size }: RecentNoticesWidgetP
                                     <div className={`
                                         w-6 h-6 rounded-md flex items-center justify-center flex-shrink-0
                                         ${item.isPinned
-                                            ? 'bg-amber-50 text-amber-500'
+                                            ? 'bg-amber-50 dark:bg-amber-900/30 text-amber-500'
                                             : isNew
-                                                ? 'bg-indigo-50 text-indigo-500'
-                                                : 'bg-stone-100 text-stone-400'
+                                                ? 'bg-indigo-50 dark:bg-indigo-900/30 text-indigo-500'
+                                                : 'bg-stone-100 dark:bg-slate-700 text-stone-400 dark:text-slate-400'
                                         }
                                     `}>
                                         {item.isPinned ? (
@@ -178,7 +178,7 @@ export default function RecentNoticesWidget({ data, size }: RecentNoticesWidgetP
                                                 </span>
                                             )}
                                             {catBadge && (
-                                                <span className={`text-[8px] font-bold px-1 py-0.5 rounded-md ${catBadge.bg} ${catBadge.text} flex-shrink-0`}>
+                                                <span className={`text-[10px] font-bold px-1 py-0.5 rounded-md ${catBadge.bg} ${catBadge.text} flex-shrink-0`}>
                                                     {item.category}
                                                 </span>
                                             )}
@@ -191,7 +191,7 @@ export default function RecentNoticesWidget({ data, size }: RecentNoticesWidgetP
                                             </p>
                                         </div>
 
-                                        <div className="flex items-center gap-2 mt-0.5 text-[10px] text-slate-400">
+                                        <div className="flex items-center gap-2 mt-0.5 text-[10px] text-slate-400 dark:text-slate-400">
                                             <span className="font-medium tabular-nums">{timeAgo(item.createdAt)}</span>
                                             {item.author && (
                                                 <>
@@ -211,7 +211,7 @@ export default function RecentNoticesWidget({ data, size }: RecentNoticesWidgetP
                         );
                     })}
                     {remainingCount > 0 && (
-                        <p className="text-[10px] text-slate-400 font-medium text-center py-0.5">+{remainingCount}건 더보기</p>
+                        <p className="text-[10px] text-slate-400 dark:text-slate-400 dark:text-slate-500 font-medium text-center py-0.5">+{remainingCount}건 더보기</p>
                     )}
                 </div>
             )}

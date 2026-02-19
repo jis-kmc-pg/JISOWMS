@@ -26,7 +26,7 @@ class WidgetErrorBoundary extends Component<
                 <div className="bg-white dark:bg-slate-800 p-6 rounded-2xl border border-amber-100 dark:border-amber-900 shadow-sm h-full flex items-center justify-center min-h-[120px]">
                     <div className="text-center">
                         <p className="text-sm text-amber-500 font-medium">위젯을 표시할 수 없습니다.</p>
-                        <p className="text-xs text-slate-400 dark:text-slate-500 mt-1">{this.props.title}</p>
+                        <p className="text-xs text-slate-400 dark:text-slate-400 mt-1">{this.props.title}</p>
                     </div>
                 </div>
             );
@@ -69,7 +69,7 @@ export default function WidgetContainer({ widgetDef }: WidgetContainerProps) {
             <div className="bg-white dark:bg-slate-800 p-6 rounded-2xl border border-stone-200 dark:border-slate-700 shadow-sm h-full flex items-center justify-center min-h-[120px]">
                 <div className="flex flex-col items-center gap-2">
                     <div className="w-6 h-6 border-2 border-indigo-200 dark:border-indigo-800 border-t-indigo-600 rounded-full animate-spin"></div>
-                    <span className="text-xs text-slate-400 dark:text-slate-500 font-medium">{widgetDef.title}</span>
+                    <span className="text-xs text-slate-400 dark:text-slate-400 font-medium">{widgetDef.title}</span>
                 </div>
             </div>
         );
@@ -80,7 +80,7 @@ export default function WidgetContainer({ widgetDef }: WidgetContainerProps) {
             <div className="bg-white dark:bg-slate-800 p-6 rounded-2xl border border-red-100 dark:border-red-900 shadow-sm h-full flex items-center justify-center min-h-[120px]">
                 <div className="text-center">
                     <p className="text-sm text-red-400 font-medium">데이터를 불러올 수 없습니다.</p>
-                    <p className="text-xs text-slate-400 dark:text-slate-500 mt-1">{widgetDef.title}</p>
+                    <p className="text-xs text-slate-400 dark:text-slate-400 mt-1">{widgetDef.title}</p>
                 </div>
             </div>
         );

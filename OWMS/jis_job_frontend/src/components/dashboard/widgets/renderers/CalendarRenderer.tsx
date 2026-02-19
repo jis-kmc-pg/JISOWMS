@@ -28,17 +28,17 @@ interface CalendarRendererProps {
 }
 
 const LEAVE_TYPE_COLORS: Record<string, { bg: string; text: string; dot: string }> = {
-    '연차': { bg: 'bg-rose-50', text: 'text-rose-600', dot: 'bg-rose-400' },
-    '반차': { bg: 'bg-amber-50', text: 'text-amber-600', dot: 'bg-amber-400' },
-    '오전반차': { bg: 'bg-amber-50', text: 'text-amber-600', dot: 'bg-amber-400' },
-    '오후반차': { bg: 'bg-orange-50', text: 'text-orange-600', dot: 'bg-orange-400' },
-    '병가': { bg: 'bg-violet-50', text: 'text-violet-600', dot: 'bg-violet-400' },
-    '공가': { bg: 'bg-cyan-50', text: 'text-cyan-600', dot: 'bg-cyan-400' },
-    '경조': { bg: 'bg-indigo-50', text: 'text-indigo-600', dot: 'bg-indigo-400' },
+    '연차': { bg: 'bg-rose-50 dark:bg-rose-900/30', text: 'text-rose-600 dark:text-rose-400', dot: 'bg-rose-400' },
+    '반차': { bg: 'bg-amber-50 dark:bg-amber-900/30', text: 'text-amber-600 dark:text-amber-400', dot: 'bg-amber-400' },
+    '오전반차': { bg: 'bg-amber-50 dark:bg-amber-900/30', text: 'text-amber-600 dark:text-amber-400', dot: 'bg-amber-400' },
+    '오후반차': { bg: 'bg-orange-50 dark:bg-orange-900/30', text: 'text-orange-600 dark:text-orange-400', dot: 'bg-orange-400' },
+    '병가': { bg: 'bg-violet-50 dark:bg-violet-900/30', text: 'text-violet-600 dark:text-violet-400', dot: 'bg-violet-400' },
+    '공가': { bg: 'bg-cyan-50 dark:bg-cyan-900/30', text: 'text-cyan-600 dark:text-cyan-400', dot: 'bg-cyan-400' },
+    '경조': { bg: 'bg-indigo-50 dark:bg-indigo-900/30', text: 'text-indigo-600 dark:text-indigo-400', dot: 'bg-indigo-400' },
 };
 
 function getLeaveColor(type: string) {
-    return LEAVE_TYPE_COLORS[type] || { bg: 'bg-slate-50', text: 'text-slate-600', dot: 'bg-slate-400' };
+    return LEAVE_TYPE_COLORS[type] || { bg: 'bg-slate-50 dark:bg-slate-700/50', text: 'text-slate-600 dark:text-slate-300', dot: 'bg-slate-400' };
 }
 
 export default function CalendarRenderer({ title, data, size = 'large' }: CalendarRendererProps) {
@@ -119,24 +119,24 @@ export default function CalendarRenderer({ title, data, size = 'large' }: Calend
         const today = new Date();
         const dayLabels = ['일', '월', '화', '수', '목', '금', '토'];
         return (
-            <div className="bg-white p-4 rounded-2xl border border-stone-200 shadow-sm hover:shadow-md transition-all h-full flex flex-col overflow-hidden">
+            <div className="bg-white dark:bg-slate-800 p-4 rounded-2xl border border-stone-200 dark:border-slate-600 shadow-sm hover:shadow-md transition-all h-full flex flex-col overflow-hidden">
                 <div className="flex items-center justify-between mb-2">
-                    <h4 className="text-sm font-bold text-slate-800 flex items-center gap-1.5">
+                    <h4 className="text-sm font-bold text-slate-800 dark:text-slate-100 flex items-center gap-1.5">
                         <Calendar size={14} className="text-indigo-500" />
                         근무 캘린더
                     </h4>
                     {todayEvents.length > 0 && (
-                        <span className="text-[10px] font-bold text-rose-500 bg-rose-50 px-2 py-0.5 rounded-md">
+                        <span className="text-[10px] font-bold text-rose-500 dark:text-rose-400 bg-rose-50 dark:bg-rose-900/30 px-2 py-0.5 rounded-md">
                             {todayEvents.length}명 휴가
                         </span>
                     )}
                 </div>
 
                 <div className="flex-1 min-h-0 flex flex-col items-center justify-center">
-                    <span className="text-3xl font-black text-indigo-600 tabular-nums">
+                    <span className="text-3xl font-black text-indigo-600 dark:text-indigo-400 tabular-nums">
                         {today.getDate()}
                     </span>
-                    <span className="text-xs font-bold text-slate-500 mt-0.5">
+                    <span className="text-xs font-bold text-slate-500 dark:text-slate-400 mt-0.5">
                         {today.getMonth() + 1}월 ({dayLabels[today.getDay()]})
                     </span>
                     {todayEvents.length > 0 && (
@@ -150,7 +150,7 @@ export default function CalendarRenderer({ title, data, size = 'large' }: Calend
                                 );
                             })}
                             {todayEvents.length > 3 && (
-                                <span className="text-[10px] text-slate-400 font-bold">+{todayEvents.length - 3}</span>
+                                <span className="text-[10px] text-slate-400 dark:text-slate-400 font-bold">+{todayEvents.length - 3}</span>
                             )}
                         </div>
                     )}
@@ -162,14 +162,14 @@ export default function CalendarRenderer({ title, data, size = 'large' }: Calend
     // ── Medium: 컴팩트 주간 캘린더 뷰 ──
     if (!isLarge) {
         return (
-            <div className="bg-white p-4 rounded-2xl border border-stone-200 shadow-sm hover:shadow-md transition-all h-full flex flex-col overflow-hidden">
+            <div className="bg-white dark:bg-slate-800 p-4 rounded-2xl border border-stone-200 dark:border-slate-600 shadow-sm hover:shadow-md transition-all h-full flex flex-col overflow-hidden">
                 <div className="flex items-center justify-between mb-2">
-                    <h4 className="text-sm font-bold text-slate-800 flex items-center gap-1.5">
+                    <h4 className="text-sm font-bold text-slate-800 dark:text-slate-100 flex items-center gap-1.5">
                         <Calendar size={14} className="text-indigo-500" /> {title}
                     </h4>
                     <div className="flex items-center gap-1.5">
                         {Object.entries(LEAVE_TYPE_COLORS).slice(0, 3).map(([type, colors]) => (
-                            <span key={type} className="flex items-center gap-0.5 text-[8px] text-slate-400">
+                            <span key={type} className="flex items-center gap-0.5 text-[10px] text-slate-400 dark:text-slate-400">
                                 <span className={`w-1 h-1 rounded-full ${colors.dot}`} />
                                 {type}
                             </span>
@@ -182,7 +182,7 @@ export default function CalendarRenderer({ title, data, size = 'large' }: Calend
                     <div className="grid grid-cols-7 gap-1 mb-1">
                         {WEEKDAY_LABELS.map((label, idx) => (
                             <div key={idx} className="text-center">
-                                <span className="text-[9px] font-bold text-slate-400 uppercase">{label}</span>
+                                <span className="text-[10px] font-bold text-slate-400 dark:text-slate-400 uppercase">{label}</span>
                             </div>
                         ))}
                     </div>
@@ -197,11 +197,11 @@ export default function CalendarRenderer({ title, data, size = 'large' }: Calend
                                     key={idx}
                                     className={`rounded-lg p-1.5 min-h-[60px] border ${
                                         isToday
-                                            ? 'border-indigo-300 bg-indigo-50/50'
-                                            : 'border-stone-100 bg-stone-50/30'
+                                            ? 'border-indigo-300 bg-indigo-50/50 dark:bg-indigo-900/20'
+                                            : 'border-stone-100 dark:border-slate-700 bg-stone-50/30 dark:bg-slate-700/30'
                                     }`}
                                 >
-                                    <p className={`text-[10px] font-black mb-0.5 ${isToday ? 'text-indigo-600' : 'text-slate-500'}`}>
+                                    <p className={`text-[10px] font-black mb-0.5 ${isToday ? 'text-indigo-600 dark:text-indigo-400' : 'text-slate-500 dark:text-slate-400'}`}>
                                         {date.getDate()}
                                     </p>
                                     <div className="space-y-0.5">
@@ -214,14 +214,14 @@ export default function CalendarRenderer({ title, data, size = 'large' }: Calend
                                                     title={`${l.memberName} (${l.type})`}
                                                 >
                                                     <span className={`w-1 h-1 rounded-full ${color.dot} flex-shrink-0`} />
-                                                    <span className="text-[7px] font-bold text-slate-600 truncate">
+                                                    <span className="text-[7px] font-bold text-slate-600 dark:text-slate-300 truncate">
                                                         {l.memberName}
                                                     </span>
                                                 </div>
                                             );
                                         })}
                                         {leaves.length > 2 && (
-                                            <span className="text-[7px] text-slate-400 font-bold pl-0.5">
+                                            <span className="text-[7px] text-slate-400 dark:text-slate-400 font-bold pl-0.5">
                                                 +{leaves.length - 2}
                                             </span>
                                         )}
@@ -237,15 +237,15 @@ export default function CalendarRenderer({ title, data, size = 'large' }: Calend
 
     // ── Large: 월간 캘린더 (compact within 250px) ──
     return (
-        <div className="bg-white p-4 rounded-2xl border border-stone-200 shadow-sm hover:shadow-md transition-all h-full flex flex-col overflow-hidden">
+        <div className="bg-white dark:bg-slate-800 p-4 rounded-2xl border border-stone-200 dark:border-slate-600 shadow-sm hover:shadow-md transition-all h-full flex flex-col overflow-hidden">
             {/* 헤더 */}
             <div className="flex items-center justify-between mb-2">
-                <h4 className="text-sm font-bold text-slate-800 flex items-center gap-1.5">
+                <h4 className="text-sm font-bold text-slate-800 dark:text-slate-100 flex items-center gap-1.5">
                     <Calendar size={14} className="text-indigo-500" /> {title}
                 </h4>
                 <div className="flex items-center gap-1.5">
                     {Object.entries(LEAVE_TYPE_COLORS).slice(0, 3).map(([type, colors]) => (
-                        <span key={type} className="flex items-center gap-0.5 text-[8px] text-slate-400">
+                        <span key={type} className="flex items-center gap-0.5 text-[10px] text-slate-400 dark:text-slate-400">
                             <span className={`w-1 h-1 rounded-full ${colors.dot}`} />
                             {type}
                         </span>
@@ -277,7 +277,7 @@ export default function CalendarRenderer({ title, data, size = 'large' }: Calend
                                                 />
                                             ))}
                                             {leaves.length > 3 && (
-                                                <span className="text-[6px] text-slate-400 font-bold leading-none">+{leaves.length - 3}</span>
+                                                <span className="text-[6px] text-slate-400 dark:text-slate-400 font-bold leading-none">+{leaves.length - 3}</span>
                                             )}
                                         </div>
                                     );
@@ -296,11 +296,11 @@ export default function CalendarRenderer({ title, data, size = 'large' }: Calend
                 </div>
 
                 {/* 우측: 선택 날짜 이벤트 리스트 */}
-                <div className="w-[200px] flex flex-col border-l border-stone-100 pl-3">
+                <div className="w-[200px] flex flex-col border-l border-stone-100 dark:border-slate-700 pl-3">
                     {/* 선택 날짜 헤더 */}
                     <div className="mb-1.5">
                         <p className="text-[10px] font-bold text-indigo-500">{formatSelectedDate()}</p>
-                        <p className="text-[9px] text-slate-400">
+                        <p className="text-[10px] text-slate-400 dark:text-slate-400">
                             {selectedEvents.length > 0
                                 ? `${selectedEvents.length}명 연차/휴가`
                                 : '일정 없음'
@@ -313,7 +313,7 @@ export default function CalendarRenderer({ title, data, size = 'large' }: Calend
                         {selectedEvents.length === 0 ? (
                             <div className="flex flex-col items-center justify-center py-4 text-center">
                                 <Calendar size={20} className="text-stone-200 mb-1" />
-                                <p className="text-[10px] text-slate-400">일정 없음</p>
+                                <p className="text-[10px] text-slate-400 dark:text-slate-400">일정 없음</p>
                             </div>
                         ) : (
                             selectedEvents.slice(0, 6).map((ev, i) => {
@@ -321,24 +321,24 @@ export default function CalendarRenderer({ title, data, size = 'large' }: Calend
                                 return (
                                     <div
                                         key={i}
-                                        className={`flex items-center gap-2 p-1.5 rounded-lg border border-stone-100 ${color.bg}`}
+                                        className={`flex items-center gap-2 p-1.5 rounded-lg border border-stone-100 dark:border-slate-700 ${color.bg}`}
                                     >
                                         {/* 아바타 */}
-                                        <div className="w-6 h-6 rounded-full bg-white flex items-center justify-center text-[9px] font-black text-slate-600 shadow-sm flex-shrink-0">
+                                        <div className="w-6 h-6 rounded-full bg-white dark:bg-slate-800 flex items-center justify-center text-[10px] font-black text-slate-600 dark:text-slate-300 shadow-sm flex-shrink-0">
                                             {ev.memberName.charAt(0)}
                                         </div>
 
                                         {/* 정보 */}
                                         <div className="flex-1 min-w-0">
-                                            <p className="text-[10px] font-bold text-slate-700 truncate">{ev.memberName}</p>
-                                            <span className={`text-[8px] font-black ${color.text}`}>{ev.type}</span>
+                                            <p className="text-[10px] font-bold text-slate-700 dark:text-slate-200 truncate">{ev.memberName}</p>
+                                            <span className={`text-[10px] font-black ${color.text}`}>{ev.type}</span>
                                         </div>
                                     </div>
                                 );
                             })
                         )}
                         {selectedEvents.length > 6 && (
-                            <p className="text-[9px] text-slate-400 font-bold text-center">+{selectedEvents.length - 6}명 더</p>
+                            <p className="text-[10px] text-slate-400 dark:text-slate-400 font-bold text-center">+{selectedEvents.length - 6}명 더</p>
                         )}
                     </div>
                 </div>

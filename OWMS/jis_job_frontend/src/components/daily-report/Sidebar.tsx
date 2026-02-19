@@ -46,7 +46,7 @@ export default function Sidebar({
                 <div className="space-y-4 animate-in fade-in slide-in-from-right-4 duration-500">
                     <div className="flex items-center space-x-2 px-1">
                         <div className="w-1.5 h-6 bg-amber-400 rounded-full" />
-                        <h3 className="text-base font-extrabold text-slate-800 tracking-tight flex items-center">
+                        <h3 className="text-base font-extrabold text-slate-800 dark:text-slate-100 tracking-tight flex items-center">
                             <MessageSquare size={16} className="mr-2 text-amber-500" />
                             시스템 메모 & 알림
                         </h3>
@@ -58,11 +58,11 @@ export default function Sidebar({
                                 className="relative group bg-gradient-to-br from-amber-50/80 to-orange-50/30 border border-amber-100/40 rounded-2xl p-4 shadow-sm hover:shadow-md transition-all"
                             >
                                 <Pin size={12} className="absolute top-3 right-3 text-amber-300 rotate-45" />
-                                <p className="text-sm font-bold text-slate-700 leading-relaxed whitespace-pre-wrap pr-4">
+                                <p className="text-sm font-bold text-slate-700 dark:text-slate-200 leading-relaxed whitespace-pre-wrap pr-4">
                                     {memo.content}
                                 </p>
                                 <div className="flex justify-end mt-2 pt-2 border-t border-amber-100/20">
-                                    <span className="text-[9px] font-mono text-amber-500/60">
+                                    <span className="text-[10px] font-mono text-amber-500/60">
                                         {new Date(memo.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                                     </span>
                                 </div>
@@ -71,39 +71,39 @@ export default function Sidebar({
                     </div>
                 </div>
             ) : (
-                <div className="hidden lg:flex flex-col items-center justify-center p-8 border border-stone-100 bg-stone-50/50 rounded-[2rem] text-center space-y-3">
-                    <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center shadow-sm text-stone-200">
+                <div className="hidden lg:flex flex-col items-center justify-center p-8 border border-stone-100 dark:border-slate-700 bg-stone-50/50 dark:bg-slate-700/30 rounded-[2rem] text-center space-y-3">
+                    <div className="w-10 h-10 rounded-full bg-white dark:bg-slate-800 flex items-center justify-center shadow-sm text-stone-200">
                         <MessageSquare size={20} />
                     </div>
-                    <p className="text-xs font-bold text-stone-300">메모가 없습니다.</p>
+                    <p className="text-xs font-bold text-stone-300 dark:text-slate-600">메모가 없습니다.</p>
                 </div>
             )}
 
             {/* Past Task Search */}
-            <div className="bg-white border border-stone-200 rounded-2xl p-4 sm:p-6 shadow-sm space-y-3 sm:space-y-4">
+            <div className="bg-white dark:bg-slate-800 border border-stone-200 dark:border-slate-600 rounded-2xl p-4 sm:p-6 shadow-sm space-y-3 sm:space-y-4">
                 <div className="flex items-center space-x-2">
                     <Search size={16} className="text-indigo-500" />
-                    <h4 className="text-sm sm:text-base font-bold text-slate-800">과거 업무 검색 (기간)</h4>
+                    <h4 className="text-sm sm:text-base font-bold text-slate-800 dark:text-slate-100">과거 업무 검색 (기간)</h4>
                 </div>
 
                 <div className="flex flex-col space-y-2">
                     <div className="flex items-center space-x-2">
                         <div className="flex-1">
-                            <label className="text-[10px] font-bold text-slate-400 mb-1 block pl-1">시작일</label>
+                            <label className="text-[10px] font-bold text-slate-400 dark:text-slate-400 mb-1 block pl-1">시작일</label>
                             <input
                                 type="date"
                                 value={searchStartDate}
                                 onChange={(e) => onSearchStartDateChange(e.target.value)}
-                                className="w-full bg-stone-50 border border-stone-200 rounded-xl px-3 py-2 text-xs font-bold text-slate-700 outline-none focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 transition-all"
+                                className="w-full bg-stone-50 dark:bg-slate-700/50 border border-stone-200 dark:border-slate-600 rounded-xl px-3 py-2 text-xs font-bold text-slate-700 dark:text-slate-200 outline-none focus:ring-2 focus:ring-indigo-100 dark:focus:ring-indigo-800/30 focus:border-indigo-500 transition-all"
                             />
                         </div>
                         <div className="flex-1">
-                            <label className="text-[10px] font-bold text-slate-400 mb-1 block pl-1">종료일</label>
+                            <label className="text-[10px] font-bold text-slate-400 dark:text-slate-400 mb-1 block pl-1">종료일</label>
                             <input
                                 type="date"
                                 value={searchEndDate}
                                 onChange={(e) => onSearchEndDateChange(e.target.value)}
-                                className="w-full bg-stone-50 border border-stone-200 rounded-xl px-3 py-2 text-xs font-bold text-slate-700 outline-none focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 transition-all"
+                                className="w-full bg-stone-50 dark:bg-slate-700/50 border border-stone-200 dark:border-slate-600 rounded-xl px-3 py-2 text-xs font-bold text-slate-700 dark:text-slate-200 outline-none focus:ring-2 focus:ring-indigo-100 dark:focus:ring-indigo-800/30 focus:border-indigo-500 transition-all"
                             />
                         </div>
                     </div>
@@ -111,7 +111,7 @@ export default function Sidebar({
                     <button
                         onClick={onSearchPastJobs}
                         disabled={isSearchingPastJobs}
-                        className="w-full bg-indigo-50 hover:bg-indigo-100 text-indigo-600 font-bold py-2.5 rounded-xl transition-colors flex items-center justify-center space-x-2 text-xs"
+                        className="w-full bg-indigo-50 dark:bg-indigo-900/30 hover:bg-indigo-100 text-indigo-600 dark:text-indigo-400 font-bold py-2.5 rounded-xl transition-colors flex items-center justify-center space-x-2 text-xs"
                     >
                         {isSearchingPastJobs ? (
                             <div className="w-3 h-3 border-2 border-indigo-600 border-t-transparent rounded-full animate-spin"></div>
@@ -129,17 +129,17 @@ export default function Sidebar({
                         {pastJobSearchResults.map((result) => (
                             <div
                                 key={`search-result-${result.id}`}
-                                className="p-3 bg-stone-50 border border-stone-100 rounded-xl hover:border-indigo-200 transition-all group cursor-move hover:shadow-md"
+                                className="p-3 bg-stone-50 dark:bg-slate-700/50 border border-stone-100 dark:border-slate-700 rounded-xl hover:border-indigo-200 transition-all group cursor-move hover:shadow-md"
                                 draggable={true}
                                 onDragStart={(e) => onDragStart(e, result)}
                             >
                                 <div className="flex justify-between items-start mb-1">
-                                    <span className="text-[10px] font-bold text-indigo-500 bg-indigo-50 px-2 py-0.5 rounded border border-indigo-100">
+                                    <span className="text-[10px] font-bold text-indigo-500 bg-indigo-50 dark:bg-indigo-900/30 px-2 py-0.5 rounded border border-indigo-100 dark:border-indigo-800/30">
                                         {new Date(result.jobDate).toLocaleDateString()}
                                     </span>
                                     <button
                                         onClick={() => onCopyPastJob(result)}
-                                        className="opacity-0 group-hover:opacity-100 flex items-center space-x-1 text-[10px] font-bold text-indigo-600 hover:text-indigo-700 transition-all bg-white px-2 py-0.5 rounded border border-stone-200 shadow-sm"
+                                        className="opacity-0 group-hover:opacity-100 flex items-center space-x-1 text-[10px] font-bold text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 transition-all bg-white dark:bg-slate-800 px-2 py-0.5 rounded border border-stone-200 dark:border-slate-600 shadow-sm"
                                     >
                                         <Copy size={12} />
                                         <span>복사</span>
@@ -147,15 +147,15 @@ export default function Sidebar({
                                 </div>
                                 <div className="mb-1">
                                     {result.project?.clientName && (
-                                        <span className="inline-block bg-slate-200 text-slate-600 text-[9px] font-bold px-1.5 py-0.5 rounded mr-1.5 align-middle">
+                                        <span className="inline-block bg-slate-200 dark:bg-slate-600 text-slate-600 dark:text-slate-300 text-[10px] font-bold px-1.5 py-0.5 rounded mr-1.5 align-middle">
                                             {result.project.clientName}
                                         </span>
                                     )}
-                                    <span className="text-xs font-bold text-slate-800 align-middle">
+                                    <span className="text-xs font-bold text-slate-800 dark:text-slate-100 align-middle">
                                         {result.project?.projectName || result.title}
                                     </span>
                                 </div>
-                                <p className="text-[11px] text-slate-500 line-clamp-2 leading-relaxed whitespace-pre-wrap">
+                                <p className="text-[11px] text-slate-500 dark:text-slate-400 line-clamp-2 leading-relaxed whitespace-pre-wrap">
                                     {result.content}
                                 </p>
                             </div>
@@ -163,18 +163,18 @@ export default function Sidebar({
                     </div>
                 ) : (
                     !isSearchingPastJobs && (
-                        <div className="text-center py-8 border border-dashed border-stone-200 rounded-xl bg-stone-50/50">
-                            <Search size={24} className="mx-auto text-stone-300 mb-2" />
-                            <p className="text-[11px] text-slate-400 font-medium">기간을 설정하고 검색해보세요.</p>
+                        <div className="text-center py-8 border border-dashed border-stone-200 dark:border-slate-600 rounded-xl bg-stone-50/50 dark:bg-slate-700/30">
+                            <Search size={24} className="mx-auto text-stone-300 dark:text-slate-600 mb-2" />
+                            <p className="text-[11px] text-slate-400 dark:text-slate-400 font-medium">기간을 설정하고 검색해보세요.</p>
                         </div>
                     )
                 )}
             </div>
 
             {/* Weekly Note */}
-            <div className="bg-white border border-stone-200 rounded-2xl p-4 sm:p-6 shadow-sm">
+            <div className="bg-white dark:bg-slate-800 border border-stone-200 dark:border-slate-600 rounded-2xl p-4 sm:p-6 shadow-sm">
                 <div className="flex items-center justify-between mb-3 sm:mb-4">
-                    <h4 className="text-sm sm:text-base font-bold text-slate-800">주간 정보 사항</h4>
+                    <h4 className="text-sm sm:text-base font-bold text-slate-800 dark:text-slate-100">주간 정보 사항</h4>
                     <span className="text-[10px] bg-violet-50 text-violet-600 border border-violet-100 px-2.5 py-1 rounded-full font-bold uppercase">주간 공통</span>
                 </div>
                 <textarea
@@ -186,15 +186,15 @@ export default function Sidebar({
                     }}
                     placeholder="이번 주(일~토) 공용 참고사항을 입력하세요..."
                     rows={1}
-                    className={`w-full bg-stone-50 border rounded-xl px-3 py-3 sm:px-5 sm:py-4 text-xs sm:text-sm text-slate-700 font-medium outline-none transition-all placeholder:text-slate-400 overflow-hidden resize-none focus:bg-white focus:ring-2 focus:ring-violet-100 ${isWeeklyNoteExceeded(weeklyNote) ? 'border-rose-300 ring-2 ring-rose-100 focus:border-rose-400' : 'border-stone-200 focus:border-violet-500'}`}
+                    className={`w-full bg-stone-50 dark:bg-slate-700/50 border rounded-xl px-3 py-3 sm:px-5 sm:py-4 text-xs sm:text-sm text-slate-700 dark:text-slate-200 font-medium outline-none transition-all placeholder:text-slate-400 dark:placeholder:text-slate-500 overflow-hidden resize-none focus:bg-white dark:focus:bg-slate-700 focus:ring-2 focus:ring-violet-100 ${isWeeklyNoteExceeded(weeklyNote) ? 'border-rose-300 ring-2 ring-rose-100 focus:border-rose-400' : 'border-stone-200 dark:border-slate-600 focus:border-violet-500'}`}
                 ></textarea>
                 {isWeeklyNoteExceeded(weeklyNote) && (
-                    <p className="text-[11px] text-rose-500 font-bold mt-2 animate-pulse flex items-center space-x-1 ml-1">
+                    <p className="text-[11px] text-rose-500 dark:text-rose-400 font-bold mt-2 animate-pulse flex items-center space-x-1 ml-1">
                         <AlertTriangle size={12} />
                         <span>주간 정보는 최대 4줄, 한 줄당 40자까지만 입력 가능합니다.</span>
                     </p>
                 )}
-                <p className="text-[11px] text-slate-400 mt-2 leading-relaxed ml-1">
+                <p className="text-[11px] text-slate-400 dark:text-slate-400 mt-2 leading-relaxed ml-1">
                     * 이 내용은 해당 주의 모든 근무일에 동일하게 공유됩니다.
                 </p>
             </div>

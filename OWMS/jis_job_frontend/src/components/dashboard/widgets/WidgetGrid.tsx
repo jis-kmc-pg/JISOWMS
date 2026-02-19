@@ -160,7 +160,7 @@ export default function WidgetGrid({ preferences, userRole }: WidgetGridProps) {
 
     if (widgets.length === 0) {
         return (
-            <div className="flex items-center justify-center h-64 text-slate-400 dark:text-slate-500 font-medium">
+            <div className="flex items-center justify-center h-64 text-slate-400 dark:text-slate-400 font-medium">
                 표시할 위젯이 없습니다. 설정에서 위젯을 추가해주세요.
             </div>
         );

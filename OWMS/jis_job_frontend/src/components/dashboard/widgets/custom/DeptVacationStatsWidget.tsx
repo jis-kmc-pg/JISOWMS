@@ -37,17 +37,17 @@ export default function DeptVacationStatsWidget({ data, size }: DeptVacationStat
     const overallUsageRate = totalDays > 0 ? Math.round((totalUsed / totalDays) * 100) : 0;
 
     return (
-        <div className="bg-white rounded-2xl border border-stone-200 shadow-sm hover:shadow-md transition-all h-full flex flex-col overflow-hidden p-4">
+        <div className="bg-white dark:bg-slate-800 rounded-2xl border border-stone-200 dark:border-slate-600 shadow-sm hover:shadow-md transition-all h-full flex flex-col overflow-hidden p-4">
             {/* 헤더 */}
             <div className="flex items-center justify-between mb-2">
                 <div className="flex items-center gap-2.5">
-                    <div className="p-2 bg-emerald-50 rounded-xl">
+                    <div className="p-2 bg-emerald-50 dark:bg-emerald-900/30 rounded-xl">
                         <CalendarDays size={14} className="text-emerald-500" />
                     </div>
-                    <h4 className="text-sm font-bold text-slate-800">부서 연차 사용 통계</h4>
+                    <h4 className="text-sm font-bold text-slate-800 dark:text-slate-100">부서 연차 사용 통계</h4>
                 </div>
                 {!isSmall && (
-                    <span className="text-xs font-black px-2 py-1 rounded-lg bg-emerald-50 text-emerald-600">
+                    <span className="text-xs font-black px-2 py-1 rounded-lg bg-emerald-50 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400">
                         사용률 {overallUsageRate}%
                     </span>
                 )}
@@ -57,8 +57,8 @@ export default function DeptVacationStatsWidget({ data, size }: DeptVacationStat
             <div className="flex-1 min-h-0 overflow-auto space-y-1.5">
                 {stats.length === 0 ? (
                     <div className="flex-1 flex flex-col items-center justify-center py-4">
-                        <Sun size={24} className="text-slate-200 mb-2" />
-                        <p className="text-xs text-slate-400 font-medium">연차 데이터가 없습니다</p>
+                        <Sun size={24} className="text-slate-200 dark:text-slate-600 mb-2" />
+                        <p className="text-xs text-slate-400 dark:text-slate-400 font-medium">연차 데이터가 없습니다</p>
                     </div>
                 ) : isSmall ? (
                     /* Small: 컴팩트 리스트 (팀명 + 사용률%) */
@@ -68,7 +68,7 @@ export default function DeptVacationStatsWidget({ data, size }: DeptVacationStat
                             : 0;
                         return (
                             <div key={idx} className="flex items-center justify-between gap-2">
-                                <span className="text-xs font-bold text-slate-700 truncate">{item.name}</span>
+                                <span className="text-xs font-bold text-slate-700 dark:text-slate-200 truncate">{item.name}</span>
                                 <span className={`text-xs font-black tabular-nums flex-shrink-0 ${
                                     usageRate >= 80 ? 'text-rose-500' : usageRate >= 50 ? 'text-amber-500' : 'text-emerald-600'
                                 }`}>
@@ -98,7 +98,7 @@ export default function DeptVacationStatsWidget({ data, size }: DeptVacationStat
                                         {item.name}
                                     </span>
                                     <div className="flex items-center gap-2 flex-shrink-0">
-                                        <span className="text-[10px] font-bold text-slate-400">
+                                        <span className="text-[10px] font-bold text-slate-400 dark:text-slate-400">
                                             {item.usedDays}/{item.totalDays}일
                                         </span>
                                         <span className={`text-xs font-black tabular-nums ${
@@ -110,7 +110,7 @@ export default function DeptVacationStatsWidget({ data, size }: DeptVacationStat
                                 </div>
 
                                 {/* 스택 바 (사용 + 잔여) */}
-                                <div className={`bg-stone-100 rounded-lg overflow-hidden flex ${isLarge ? 'h-5' : 'h-4'}`}>
+                                <div className={`bg-stone-100 dark:bg-slate-700 rounded-lg overflow-hidden flex ${isLarge ? 'h-5' : 'h-4'}`}>
                                     {/* 사용분 (인디고) */}
                                     <div
                                         className="h-full bg-gradient-to-r from-indigo-400 to-indigo-500 transition-all duration-700 ease-out relative"

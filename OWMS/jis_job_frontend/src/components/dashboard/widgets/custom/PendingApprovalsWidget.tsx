@@ -67,12 +67,12 @@ export default function PendingApprovalsWidget({ data, size }: PendingApprovalsW
     // ── Small: 큰 숫자 + "건" 뱃지만 ──
     if (isSmall) {
         return (
-            <div className="bg-white p-4 rounded-2xl border border-stone-200 shadow-sm hover:shadow-md transition-all h-full flex flex-col overflow-hidden">
+            <div className="bg-white dark:bg-slate-800 p-4 rounded-2xl border border-stone-200 dark:border-slate-600 shadow-sm hover:shadow-md transition-all h-full flex flex-col overflow-hidden">
                 <div className="flex items-center justify-between mb-2">
-                    <p className="text-sm font-bold text-slate-500 uppercase tracking-wide truncate">
+                    <p className="text-sm font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wide truncate">
                         승인 대기
                     </p>
-                    <div className="p-1.5 rounded-lg bg-indigo-50 text-indigo-500">
+                    <div className="p-1.5 rounded-lg bg-indigo-50 dark:bg-indigo-900/30 text-indigo-500 dark:text-indigo-400">
                         <ClipboardCheck size={14} />
                     </div>
                 </div>
@@ -93,12 +93,12 @@ export default function PendingApprovalsWidget({ data, size }: PendingApprovalsW
     // ── Medium: 대기 건수 카드 (compact) ──
     if (!isLarge) {
         return (
-            <div className="bg-white p-4 rounded-2xl border border-stone-200 shadow-sm hover:shadow-md transition-all h-full flex flex-col overflow-hidden">
+            <div className="bg-white dark:bg-slate-800 p-4 rounded-2xl border border-stone-200 dark:border-slate-600 shadow-sm hover:shadow-md transition-all h-full flex flex-col overflow-hidden">
                 <div className="flex items-center justify-between mb-2">
-                    <p className="text-sm font-bold text-slate-500 uppercase tracking-wide">
+                    <p className="text-sm font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wide">
                         승인 대기함
                     </p>
-                    <div className="p-1.5 rounded-lg bg-indigo-50 text-indigo-500">
+                    <div className="p-1.5 rounded-lg bg-indigo-50 dark:bg-indigo-900/30 text-indigo-500 dark:text-indigo-400">
                         <ClipboardCheck size={14} />
                     </div>
                 </div>
@@ -145,16 +145,16 @@ export default function PendingApprovalsWidget({ data, size }: PendingApprovalsW
     const displayItems = items.slice(0, 8);
     const moreItemCount = items.length - displayItems.length;
     return (
-        <div className="bg-white p-4 rounded-2xl border border-stone-200 shadow-sm hover:shadow-md transition-all h-full flex flex-col overflow-hidden">
+        <div className="bg-white dark:bg-slate-800 p-4 rounded-2xl border border-stone-200 dark:border-slate-600 shadow-sm hover:shadow-md transition-all h-full flex flex-col overflow-hidden">
             <div className="flex items-center justify-between mb-2">
-                <p className="text-sm font-bold text-slate-500 uppercase tracking-wide">
+                <p className="text-sm font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wide">
                     승인 대기함
                 </p>
                 <div className="flex items-center gap-1.5">
                     <div className={`px-2.5 py-0.5 rounded-lg bg-gradient-to-r ${style.gradient} text-white text-[10px] font-black`}>
                         {count}건 대기
                     </div>
-                    <div className="p-1.5 rounded-lg bg-indigo-50 text-indigo-500">
+                    <div className="p-1.5 rounded-lg bg-indigo-50 dark:bg-indigo-900/30 text-indigo-500 dark:text-indigo-400">
                         <ClipboardCheck size={14} />
                     </div>
                 </div>
@@ -194,35 +194,35 @@ export default function PendingApprovalsWidget({ data, size }: PendingApprovalsW
                                 return (
                                     <div
                                         key={item.id ?? idx}
-                                        className="flex items-center gap-2 p-2 bg-stone-50/70 rounded-lg border border-stone-100 hover:bg-white hover:border-indigo-200 transition-all"
+                                        className="flex items-center gap-2 p-2 bg-stone-50/70 dark:bg-slate-700/50 rounded-lg border border-stone-100 dark:border-slate-700 hover:bg-white dark:hover:bg-slate-700 hover:border-indigo-200 dark:hover:border-indigo-700 transition-all"
                                     >
-                                        <div className="w-6 h-6 rounded-full bg-indigo-50 text-indigo-500 flex items-center justify-center text-[10px] font-black flex-shrink-0">
+                                        <div className="w-6 h-6 rounded-full bg-indigo-50 dark:bg-indigo-900/30 text-indigo-500 dark:text-indigo-400 flex items-center justify-center text-[10px] font-black flex-shrink-0">
                                             {requestor.charAt(0)}
                                         </div>
                                         <div className="flex-1 min-w-0">
-                                            <p className="text-[10px] font-bold text-slate-700 truncate">
+                                            <p className="text-[10px] font-bold text-slate-700 dark:text-slate-200 truncate">
                                                 {item.title ?? item.type ?? '승인 요청'}
                                             </p>
                                             <div className="flex items-center gap-1.5 mt-0.5">
-                                                <span className="text-[9px] text-slate-500">{requestor}</span>
+                                                <span className="text-[10px] text-slate-500 dark:text-slate-400">{requestor}</span>
                                                 {formattedDate && (
-                                                    <span className="text-[9px] text-slate-400">{formattedDate}</span>
+                                                    <span className="text-[10px] text-slate-400 dark:text-slate-400">{formattedDate}</span>
                                                 )}
                                             </div>
                                         </div>
-                                        <span className="text-[9px] font-black text-amber-500 bg-amber-50 px-1.5 py-0.5 rounded-md border border-amber-100 flex-shrink-0">
+                                        <span className="text-[10px] font-black text-amber-500 bg-amber-50 dark:bg-amber-900/30 px-1.5 py-0.5 rounded-md border border-amber-100 dark:border-amber-800/30 flex-shrink-0">
                                             대기
                                         </span>
                                     </div>
                                 );
                             })}
                             {moreItemCount > 0 && (
-                                <p className="text-[10px] text-slate-400 font-bold text-center">+{moreItemCount}건 더</p>
+                                <p className="text-[10px] text-slate-400 dark:text-slate-400 font-bold text-center">+{moreItemCount}건 더</p>
                             )}
                         </div>
                     ) : (
                         <div className="flex-1 flex items-center justify-center h-full">
-                            <p className="text-xs text-slate-400 font-medium text-center">
+                            <p className="text-xs text-slate-400 dark:text-slate-400 font-medium text-center">
                                 {count > 0 ? `${count}건의 승인 요청이 있습니다` : '대기 중인 승인이 없습니다'}
                             </p>
                         </div>

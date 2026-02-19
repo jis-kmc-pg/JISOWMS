@@ -98,16 +98,16 @@ export default function WorkforceUtilizationWidget({ data, size }: WorkforceUtil
     // Small: 전사 가동률% 단일 통계
     if (isSmall) {
         return (
-            <div className="bg-white rounded-2xl border border-stone-200 shadow-sm hover:shadow-md transition-all h-full flex flex-col overflow-hidden p-4">
+            <div className="bg-white dark:bg-slate-800 rounded-2xl border border-stone-200 dark:border-slate-600 shadow-sm hover:shadow-md transition-all h-full flex flex-col overflow-hidden p-4">
                 <div className="flex-1 flex items-center justify-between">
                     <div className="flex items-center gap-3">
                         <div className="p-2 bg-gradient-to-br from-indigo-500 to-purple-500 rounded-xl shadow-sm">
                             <UserCheck size={14} className="text-white" />
                         </div>
                         <div>
-                            <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">인력 가동률</p>
+                            <p className="text-[10px] font-bold text-slate-400 dark:text-slate-400 uppercase tracking-wider">인력 가동률</p>
                             <p className="text-2xl font-black text-indigo-700 tabular-nums">
-                                {overallRate}<span className="text-xs font-bold text-slate-400 ml-0.5">%</span>
+                                {overallRate}<span className="text-xs font-bold text-slate-400 dark:text-slate-400 ml-0.5">%</span>
                             </p>
                         </div>
                     </div>
@@ -115,7 +115,7 @@ export default function WorkforceUtilizationWidget({ data, size }: WorkforceUtil
                         <p className="text-sm font-bold text-emerald-600 tabular-nums">
                             {activeCount}<span className="text-[10px] font-bold text-slate-400 ml-0.5">명</span>
                         </p>
-                        <p className="text-[10px] text-slate-400 font-medium">투입 인력</p>
+                        <p className="text-[10px] text-slate-400 dark:text-slate-400 font-medium">투입 인력</p>
                     </div>
                 </div>
             </div>
@@ -123,14 +123,14 @@ export default function WorkforceUtilizationWidget({ data, size }: WorkforceUtil
     }
 
     return (
-        <div className="bg-white rounded-2xl border border-stone-200 shadow-sm hover:shadow-md transition-all h-full flex flex-col overflow-hidden p-4">
+        <div className="bg-white dark:bg-slate-800 rounded-2xl border border-stone-200 dark:border-slate-600 shadow-sm hover:shadow-md transition-all h-full flex flex-col overflow-hidden p-4">
             {/* 헤더 */}
             <div className="flex items-center justify-between mb-2">
                 <div className="flex items-center gap-2">
                     <div className="p-1.5 bg-gradient-to-br from-indigo-500 to-purple-500 rounded-lg">
                         <UserCheck size={14} className="text-white" />
                     </div>
-                    <h4 className="text-sm font-bold text-slate-800">인력 가동률</h4>
+                    <h4 className="text-sm font-bold text-slate-800 dark:text-slate-100">인력 가동률</h4>
                 </div>
                 <span className="text-xs font-bold text-indigo-600 tabular-nums">{overallRate}%</span>
             </div>
@@ -177,31 +177,31 @@ export default function WorkforceUtilizationWidget({ data, size }: WorkforceUtil
                     <div className="flex-1 min-w-0">
                         {/* KPI 카드 */}
                         <div className="grid grid-cols-3 gap-1.5 mb-2">
-                            <div className="flex items-center gap-1 p-1.5 bg-indigo-50/60 rounded-lg border border-indigo-100">
+                            <div className="flex items-center gap-1 p-1.5 bg-indigo-50/60 dark:bg-indigo-900/20 rounded-lg border border-indigo-100 dark:border-indigo-800/30">
                                 <Briefcase size={10} className="text-indigo-600" />
                                 <div>
-                                    <p className="text-[8px] font-bold text-slate-400 uppercase">투입</p>
+                                    <p className="text-[10px] font-bold text-slate-400 dark:text-slate-400 uppercase">투입</p>
                                     <p className="text-xs font-black text-indigo-700 tabular-nums">
-                                        {activeCount}<span className="text-[8px] text-slate-400 ml-0.5">명</span>
+                                        {activeCount}<span className="text-[10px] text-slate-400 dark:text-slate-400 ml-0.5">명</span>
                                     </p>
                                 </div>
                             </div>
-                            <div className="flex items-center gap-1 p-1.5 bg-slate-50 rounded-lg border border-slate-200">
+                            <div className="flex items-center gap-1 p-1.5 bg-slate-50 dark:bg-slate-700/50 rounded-lg border border-slate-200 dark:border-slate-600">
                                 <Coffee size={10} className="text-slate-500" />
                                 <div>
-                                    <p className="text-[8px] font-bold text-slate-400 uppercase">유휴</p>
+                                    <p className="text-[10px] font-bold text-slate-400 dark:text-slate-400 uppercase">유휴</p>
                                     <p className="text-xs font-black text-slate-600 tabular-nums">
-                                        {idleCount}<span className="text-[8px] text-slate-400 ml-0.5">명</span>
+                                        {idleCount}<span className="text-[10px] text-slate-400 dark:text-slate-400 ml-0.5">명</span>
                                     </p>
                                 </div>
                             </div>
-                            <div className="flex items-center gap-1 p-1.5 bg-purple-50/60 rounded-lg border border-purple-100">
+                            <div className="flex items-center gap-1 p-1.5 bg-purple-50/60 dark:bg-purple-900/20 rounded-lg border border-purple-100 dark:border-purple-800/30">
                                 <Users size={10} className="text-purple-600" />
                                 <div>
-                                    <p className="text-[8px] font-bold text-slate-400 uppercase">전체</p>
+                                    <p className="text-[10px] font-bold text-slate-400 dark:text-slate-400 uppercase">전체</p>
                                     <p className="text-xs font-black text-purple-700 tabular-nums">
                                         {totalEmployees || (activeCount + idleCount)}
-                                        <span className="text-[8px] text-slate-400 ml-0.5">명</span>
+                                        <span className="text-[10px] text-slate-400 dark:text-slate-400 ml-0.5">명</span>
                                     </p>
                                 </div>
                             </div>
@@ -222,20 +222,20 @@ export default function WorkforceUtilizationWidget({ data, size }: WorkforceUtil
                                                         className="w-1.5 h-1.5 rounded-full flex-shrink-0"
                                                         style={{ backgroundColor: color }}
                                                     />
-                                                    <span className="text-[10px] font-bold text-slate-700">
+                                                    <span className="text-[10px] font-bold text-slate-700 dark:text-slate-200">
                                                         {dept.deptName}
                                                     </span>
                                                 </div>
                                                 <div className="flex items-center gap-1">
-                                                    <span className="text-[9px] text-slate-400 font-medium">
+                                                    <span className="text-[10px] text-slate-400 dark:text-slate-400 font-medium">
                                                         {dept.active}/{dept.total}명
                                                     </span>
-                                                    <span className="text-[9px] font-black tabular-nums" style={{ color }}>
+                                                    <span className="text-[10px] font-black tabular-nums" style={{ color }}>
                                                         {dept.rate}%
                                                     </span>
                                                 </div>
                                             </div>
-                                            <div className="h-1.5 bg-slate-100 rounded-full overflow-hidden flex">
+                                            <div className="h-1.5 bg-slate-100 dark:bg-slate-700 rounded-full overflow-hidden flex">
                                                 <div
                                                     className="h-full rounded-l-full transition-all duration-700 ease-out"
                                                     style={{

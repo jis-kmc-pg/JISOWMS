@@ -14,6 +14,10 @@ export class UpdateVehicleDto {
     color?: string;
 
     @IsOptional()
+    @IsString()
+    assignee?: string;
+
+    @IsOptional()
     @IsNumber()
     year?: number;
 

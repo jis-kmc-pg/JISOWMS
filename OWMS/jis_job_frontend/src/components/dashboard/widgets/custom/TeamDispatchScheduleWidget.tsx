@@ -116,34 +116,34 @@ export default function TeamDispatchScheduleWidget({ data, size }: TeamDispatchS
         }) ?? todayItems[0];
 
         return (
-            <div className="bg-white p-4 rounded-2xl border border-stone-200 shadow-sm hover:shadow-md transition-all h-full flex flex-col overflow-hidden">
+            <div className="bg-white dark:bg-slate-800 p-4 rounded-2xl border border-stone-200 dark:border-slate-600 shadow-sm hover:shadow-md transition-all h-full flex flex-col overflow-hidden">
                 <div className="flex items-center justify-between mb-2">
-                    <h4 className="text-sm font-bold text-slate-800 flex items-center gap-1.5">
+                    <h4 className="text-sm font-bold text-slate-800 dark:text-slate-100 flex items-center gap-1.5">
                         <Car size={14} className="text-indigo-500" />
                         배차 일정
                     </h4>
-                    <span className="text-[10px] font-bold text-slate-400 bg-stone-50 px-2 py-0.5 rounded-md">
+                    <span className="text-[10px] font-bold text-slate-400 dark:text-slate-400 bg-stone-50 dark:bg-slate-700/50 px-2 py-0.5 rounded-md">
                         오늘 {todayItems.length}건
                     </span>
                 </div>
 
                 <div className="flex-1 min-h-0 flex flex-col justify-center">
                     {todayItems.length === 0 ? (
-                        <p className="text-xs text-slate-400 font-medium text-center">
+                        <p className="text-xs text-slate-400 dark:text-slate-400 font-medium text-center">
                             오늘 배차 없음
                         </p>
                     ) : nextDispatch ? (
                         <div className="space-y-1.5">
                             <div className="flex items-center gap-1.5">
                                 <User size={11} className="text-indigo-400 flex-shrink-0" />
-                                <span className="text-xs font-bold text-slate-700 truncate">
+                                <span className="text-xs font-bold text-slate-700 dark:text-slate-200 truncate">
                                     {getUserName(nextDispatch.user)}
                                 </span>
                             </div>
                             {nextDispatch.destination && (
                                 <div className="flex items-center gap-1.5">
                                     <MapPin size={11} className="text-slate-400 flex-shrink-0" />
-                                    <span className="text-[11px] text-slate-500 truncate">
+                                    <span className="text-[11px] text-slate-500 dark:text-slate-400 truncate">
                                         {nextDispatch.destination}
                                     </span>
                                 </div>
@@ -179,20 +179,20 @@ export default function TeamDispatchScheduleWidget({ data, size }: TeamDispatchS
         const moreCount = allItems.length - displayItems.length;
 
         return (
-            <div className="bg-white p-4 rounded-2xl border border-stone-200 shadow-sm hover:shadow-md transition-all h-full flex flex-col overflow-hidden">
+            <div className="bg-white dark:bg-slate-800 p-4 rounded-2xl border border-stone-200 dark:border-slate-600 shadow-sm hover:shadow-md transition-all h-full flex flex-col overflow-hidden">
                 <div className="flex items-center justify-between mb-2">
-                    <h4 className="text-sm font-bold text-slate-800 flex items-center gap-1.5">
+                    <h4 className="text-sm font-bold text-slate-800 dark:text-slate-100 flex items-center gap-1.5">
                         <Car size={14} className="text-indigo-500" />
                         팀 배차 일정
                     </h4>
-                    <span className="text-[10px] font-bold text-slate-400 bg-stone-50 px-2 py-0.5 rounded-md">
+                    <span className="text-[10px] font-bold text-slate-400 dark:text-slate-400 bg-stone-50 dark:bg-slate-700/50 px-2 py-0.5 rounded-md">
                         이번 주 {totalCount}건
                     </span>
                 </div>
 
                 {totalCount === 0 ? (
                     <div className="flex-1 min-h-0 flex items-center justify-center">
-                        <p className="text-xs text-slate-400 font-medium text-center">
+                        <p className="text-xs text-slate-400 dark:text-slate-400 font-medium text-center">
                             이번 주 배차 일정이 없습니다
                         </p>
                     </div>
@@ -201,17 +201,17 @@ export default function TeamDispatchScheduleWidget({ data, size }: TeamDispatchS
                         {displayItems.map(({ dayLabel, date, item, isToday }, idx) => (
                             <div
                                 key={item.id ?? idx}
-                                className="flex items-center gap-2 px-2.5 py-1.5 bg-stone-50/70 rounded-lg border border-stone-100"
+                                className="flex items-center gap-2 px-2.5 py-1.5 bg-stone-50/70 dark:bg-slate-700/50 rounded-lg border border-stone-100 dark:border-slate-700"
                             >
                                 <span className={`text-[10px] font-black w-8 flex-shrink-0 ${isToday ? 'text-indigo-500' : 'text-slate-400'}`}>
                                     {dayLabel} {date.getDate()}
                                 </span>
                                 <User size={10} className="text-indigo-400 flex-shrink-0" />
-                                <span className="text-xs font-bold text-slate-700 truncate flex-1">
+                                <span className="text-xs font-bold text-slate-700 dark:text-slate-200 truncate flex-1">
                                     {getUserName(item.user)}
                                 </span>
                                 {item.destination && (
-                                    <span className="text-[10px] text-slate-500 truncate max-w-[80px]">
+                                    <span className="text-[10px] text-slate-500 dark:text-slate-400 truncate max-w-[80px]">
                                         {item.destination}
                                     </span>
                                 )}
@@ -223,7 +223,7 @@ export default function TeamDispatchScheduleWidget({ data, size }: TeamDispatchS
                             </div>
                         ))}
                         {moreCount > 0 && (
-                            <p className="text-[10px] text-slate-400 font-bold text-center">+{moreCount}건 더</p>
+                            <p className="text-[10px] text-slate-400 dark:text-slate-400 font-bold text-center">+{moreCount}건 더</p>
                         )}
                     </div>
                 )}
@@ -233,21 +233,21 @@ export default function TeamDispatchScheduleWidget({ data, size }: TeamDispatchS
 
     // ── Large: 주간 그리드 뷰 (compact) ──
     return (
-        <div className="bg-white p-4 rounded-2xl border border-stone-200 shadow-sm hover:shadow-md transition-all h-full flex flex-col overflow-hidden">
+        <div className="bg-white dark:bg-slate-800 p-4 rounded-2xl border border-stone-200 dark:border-slate-600 shadow-sm hover:shadow-md transition-all h-full flex flex-col overflow-hidden">
             {/* 헤더 */}
             <div className="flex items-center justify-between mb-2">
-                <h4 className="text-sm font-bold text-slate-800 flex items-center gap-1.5">
+                <h4 className="text-sm font-bold text-slate-800 dark:text-slate-100 flex items-center gap-1.5">
                     <Car size={14} className="text-indigo-500" />
                     팀 배차 일정
                 </h4>
-                <span className="text-[10px] font-bold text-slate-400 bg-stone-50 px-2 py-0.5 rounded-md">
+                <span className="text-[10px] font-bold text-slate-400 dark:text-slate-400 bg-stone-50 dark:bg-slate-700/50 px-2 py-0.5 rounded-md">
                     이번 주 {totalCount}건
                 </span>
             </div>
 
             {totalCount === 0 ? (
                 <div className="flex-1 min-h-0 flex items-center justify-center">
-                    <p className="text-xs text-slate-400 font-medium text-center">
+                    <p className="text-xs text-slate-400 dark:text-slate-400 font-medium text-center">
                         이번 주 배차 일정이 없습니다
                     </p>
                 </div>
@@ -273,7 +273,7 @@ export default function TeamDispatchScheduleWidget({ data, size }: TeamDispatchS
                                         <p className={`text-[10px] font-black ${isToday ? 'text-white' : 'text-slate-500'}`}>
                                             {WEEKDAY_LABELS[idx]}
                                         </p>
-                                        <p className={`text-[9px] font-bold ${isToday ? 'text-indigo-100' : 'text-slate-400'}`}>
+                                        <p className={`text-[10px] font-bold ${isToday ? 'text-indigo-100' : 'text-slate-400'}`}>
                                             {date.getMonth() + 1}/{date.getDate()}
                                         </p>
                                     </div>
@@ -282,38 +282,38 @@ export default function TeamDispatchScheduleWidget({ data, size }: TeamDispatchS
                                     <div className="space-y-1 flex-1">
                                         {items.length === 0 ? (
                                             <div className="text-center py-2">
-                                                <p className="text-[9px] text-slate-300 font-medium">없음</p>
+                                                <p className="text-[10px] text-slate-300 dark:text-slate-500 font-medium">없음</p>
                                             </div>
                                         ) : (
                                             <>
                                                 {displayItems.map((item, iIdx) => (
                                                     <div
                                                         key={item.id ?? iIdx}
-                                                        className="p-1.5 bg-stone-50/70 rounded-lg border border-stone-100 hover:bg-white transition-all"
+                                                        className="p-1.5 bg-stone-50/70 dark:bg-slate-700/50 rounded-lg border border-stone-100 dark:border-slate-700 hover:bg-white transition-all"
                                                     >
                                                         <div className="flex items-center gap-1 mb-0.5">
                                                             <User size={9} className="text-indigo-400 flex-shrink-0" />
-                                                            <span className="text-[10px] font-bold text-slate-700 truncate">
+                                                            <span className="text-[10px] font-bold text-slate-700 dark:text-slate-200 truncate">
                                                                 {getUserName(item.user)}
                                                             </span>
                                                         </div>
                                                         {item.destination && (
                                                             <div className="flex items-center gap-1">
                                                                 <MapPin size={8} className="text-slate-400 flex-shrink-0" />
-                                                                <span className="text-[9px] text-slate-500 truncate">
+                                                                <span className="text-[10px] text-slate-500 dark:text-slate-400 truncate">
                                                                     {item.destination}
                                                                 </span>
                                                             </div>
                                                         )}
                                                         {item.startDate && (
-                                                            <span className="text-[9px] font-bold text-indigo-500">
+                                                            <span className="text-[10px] font-bold text-indigo-500">
                                                                 {formatTime(item.startDate)}
                                                             </span>
                                                         )}
                                                     </div>
                                                 ))}
                                                 {moreCount > 0 && (
-                                                    <p className="text-[9px] text-slate-400 font-bold text-center">+{moreCount}</p>
+                                                    <p className="text-[10px] text-slate-400 dark:text-slate-400 font-bold text-center">+{moreCount}</p>
                                                 )}
                                             </>
                                         )}

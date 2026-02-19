@@ -14,6 +14,10 @@ export class CreateVehicleDto {
     color?: string;
 
     @IsOptional()
+    @IsString()
+    assignee?: string;
+
+    @IsOptional()
     @IsNumber()
     year?: number;
 
@@ -78,6 +82,10 @@ export class UpdateVehicleDto {
     @IsOptional()
     @IsString()
     color?: string;
+
+    @IsOptional()
+    @IsString()
+    assignee?: string;
 
     @IsOptional()
     @IsNumber()

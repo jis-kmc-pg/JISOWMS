@@ -43,24 +43,24 @@ interface UserOption {
 }
 
 const ACTION_LABELS: Record<string, { label: string; color: string; icon: React.ReactNode }> = {
-    LOGIN: { label: "로그인", color: "bg-emerald-50 text-emerald-600 border-emerald-100", icon: <LogIn size={12} /> },
-    LOGOUT: { label: "로그아웃", color: "bg-slate-50 text-slate-600 border-slate-200", icon: <LogOut size={12} /> },
-    CREATE: { label: "생성", color: "bg-blue-50 text-blue-600 border-blue-100", icon: <FilePlus size={12} /> },
-    UPDATE: { label: "수정", color: "bg-amber-50 text-amber-600 border-amber-100", icon: <Pencil size={12} /> },
-    DELETE: { label: "삭제", color: "bg-rose-50 text-rose-600 border-rose-100", icon: <Trash2 size={12} /> },
+    LOGIN: { label: "로그인", color: "bg-emerald-50 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 border-emerald-100", icon: <LogIn size={12} /> },
+    LOGOUT: { label: "로그아웃", color: "bg-slate-50 dark:bg-slate-700/50 text-slate-600 dark:text-slate-300 border-slate-200 dark:border-slate-600", icon: <LogOut size={12} /> },
+    CREATE: { label: "생성", color: "bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 border-blue-100", icon: <FilePlus size={12} /> },
+    UPDATE: { label: "수정", color: "bg-amber-50 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400 border-amber-100", icon: <Pencil size={12} /> },
+    DELETE: { label: "삭제", color: "bg-rose-50 dark:bg-rose-900/30 text-rose-600 dark:text-rose-400 border-rose-100", icon: <Trash2 size={12} /> },
 };
 
 const STATUS_COLORS: Record<string, string> = {
-    "2": "text-emerald-600",
-    "3": "text-blue-600",
-    "4": "text-amber-600",
-    "5": "text-rose-600",
+    "2": "text-emerald-600 dark:text-emerald-400",
+    "3": "text-blue-600 dark:text-blue-400",
+    "4": "text-amber-600 dark:text-amber-400",
+    "5": "text-rose-600 dark:text-rose-400",
 };
 
 function getStatusColor(code: number | null): string {
-    if (!code) return "text-slate-400";
+    if (!code) return "text-slate-400 dark:text-slate-400";
     const prefix = String(code)[0];
-    return STATUS_COLORS[prefix] || "text-slate-500";
+    return STATUS_COLORS[prefix] || "text-slate-500 dark:text-slate-400";
 }
 
 export default function ActivityLogPage() {
@@ -128,24 +128,25 @@ export default function ActivityLogPage() {
         <div className="p-3 sm:p-6 max-w-7xl mx-auto">
             {/* Header */}
             <div className="flex items-center gap-3 mb-5">
-                <div className="bg-indigo-50 p-2 rounded-xl border border-indigo-100">
-                    <Activity size={22} className="text-indigo-600" />
+                <div className="bg-indigo-50 dark:bg-indigo-900/30 p-2 rounded-xl border border-indigo-100 dark:border-indigo-800/30">
+                    <Activity size={22} className="text-indigo-600 dark:text-indigo-400" />
                 </div>
                 <div>
-                    <h1 className="text-lg sm:text-xl font-extrabold text-slate-800">활동 로그</h1>
-                    <p className="text-xs text-slate-400 mt-0.5">사용자 활동 기록을 확인합니다</p>
+                    <h1 className="text-lg sm:text-xl font-extrabold text-slate-800 dark:text-slate-100">활동 로그</h1>
+                    <p className="text-xs text-slate-400 dark:text-slate-400 mt-0.5">사용자 활동 기록을 확인합니다</p>
                 </div>
             </div>
 
             {/* Filters */}
-            <div className="bg-white border border-stone-200 rounded-2xl p-4 mb-4 shadow-sm">
+            <div className="bg-white dark:bg-slate-800 border border-stone-200 dark:border-slate-600 rounded-2xl p-4 mb-4 shadow-sm">
                 <div className="flex items-center gap-2 mb-3">
-                    <Filter size={14} className="text-slate-400" />
-                    <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">필터</span>
+                    <Filter size={14} className="text-slate-400 dark:text-slate-400" />
+                    <span className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">필터</span>
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
                     <select
-                        className="border border-stone-200 rounded-xl px-3 py-2.5 text-sm bg-stone-50 focus:bg-white focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 outline-none font-bold"
+                        aria-label="사용자 필터"
+                        className="border border-stone-200 dark:border-slate-600 rounded-xl px-3 py-2.5 text-sm bg-stone-50 dark:bg-slate-700/50 dark:text-slate-200 focus:bg-white dark:focus:bg-slate-700 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 dark:focus:ring-indigo-800/30 font-bold"
                         value={filterUserId}
                         onChange={(e) => setFilterUserId(e.target.value)}
                     >
@@ -155,7 +156,8 @@ export default function ActivityLogPage() {
                         ))}
                     </select>
                     <select
-                        className="border border-stone-200 rounded-xl px-3 py-2.5 text-sm bg-stone-50 focus:bg-white focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 outline-none font-bold"
+                        aria-label="액션 필터"
+                        className="border border-stone-200 dark:border-slate-600 rounded-xl px-3 py-2.5 text-sm bg-stone-50 dark:bg-slate-700/50 dark:text-slate-200 focus:bg-white dark:focus:bg-slate-700 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 dark:focus:ring-indigo-800/30 font-bold"
                         value={filterAction}
                         onChange={(e) => setFilterAction(e.target.value)}
                     >
@@ -168,21 +170,23 @@ export default function ActivityLogPage() {
                     </select>
                     <input
                         type="date"
-                        className="border border-stone-200 rounded-xl px-3 py-2.5 text-sm bg-stone-50 focus:bg-white focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 outline-none font-bold"
+                        aria-label="시작일"
+                        className="border border-stone-200 dark:border-slate-600 rounded-xl px-3 py-2.5 text-sm bg-stone-50 dark:bg-slate-700/50 dark:text-slate-200 focus:bg-white dark:focus:bg-slate-700 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 dark:focus:ring-indigo-800/30 font-bold"
                         value={filterStartDate}
                         onChange={(e) => setFilterStartDate(e.target.value)}
                         onKeyDown={handleKeyDown}
                     />
                     <input
                         type="date"
-                        className="border border-stone-200 rounded-xl px-3 py-2.5 text-sm bg-stone-50 focus:bg-white focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 outline-none font-bold"
+                        aria-label="종료일"
+                        className="border border-stone-200 dark:border-slate-600 rounded-xl px-3 py-2.5 text-sm bg-stone-50 dark:bg-slate-700/50 dark:text-slate-200 focus:bg-white dark:focus:bg-slate-700 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 dark:focus:ring-indigo-800/30 font-bold"
                         value={filterEndDate}
                         onChange={(e) => setFilterEndDate(e.target.value)}
                         onKeyDown={handleKeyDown}
                     />
                     <button
                         onClick={handleSearch}
-                        className="bg-indigo-600 text-white px-4 py-2.5 rounded-xl hover:bg-indigo-700 font-bold text-sm shadow-lg shadow-indigo-200 transition-all active:scale-[0.97] flex items-center justify-center gap-2"
+                        className="bg-indigo-600 text-white px-4 py-2.5 rounded-xl hover:bg-indigo-700 font-bold text-sm shadow-lg shadow-indigo-200 dark:shadow-indigo-900/30 transition-colors flex items-center justify-center gap-2"
                     >
                         <Search size={14} /> 검색
                     </button>
@@ -190,27 +194,27 @@ export default function ActivityLogPage() {
             </div>
 
             {/* Results */}
-            <div className="bg-white border border-stone-200 rounded-2xl shadow-sm overflow-hidden">
+            <div className="bg-white dark:bg-slate-800 border border-stone-200 dark:border-slate-600 rounded-2xl shadow-sm overflow-hidden">
                 {/* Result Header */}
-                <div className="px-4 py-3 border-b border-stone-100 flex items-center justify-between">
-                    <span className="text-xs font-bold text-slate-400">
-                        총 <span className="text-indigo-600">{total.toLocaleString()}</span>건
+                <div className="px-4 py-3 border-b border-stone-100 dark:border-slate-700 flex items-center justify-between">
+                    <span className="text-xs font-bold text-slate-400 dark:text-slate-400">
+                        총 <span className="text-indigo-600 dark:text-indigo-400">{total.toLocaleString()}</span>건
                     </span>
-                    <span className="text-xs text-slate-400">
+                    <span className="text-xs text-slate-400 dark:text-slate-400">
                         {page} / {totalPages} 페이지
                     </span>
                 </div>
 
                 {loading ? (
-                    <div className="flex items-center justify-center py-20 text-slate-400">
-                        <Loader2 size={24} className="animate-spin mr-3" />
+                    <div className="flex items-center justify-center py-20 text-slate-400 dark:text-slate-400">
+                        <Loader2 size={24} className="animate-spin mr-3" aria-hidden="true" />
                         <span className="font-medium">불러오는 중...</span>
                     </div>
                 ) : logs.length === 0 ? (
-                    <div className="flex flex-col items-center justify-center py-20 text-slate-400">
-                        <Activity size={40} className="mb-3 text-slate-200" />
-                        <p className="font-bold text-slate-500">로그가 없습니다</p>
-                        <p className="text-xs text-slate-400 mt-1">필터를 변경해보세요</p>
+                    <div className="flex flex-col items-center justify-center py-20 text-slate-400 dark:text-slate-400">
+                        <Activity size={40} className="mb-3 text-slate-200 dark:text-slate-700" />
+                        <p className="font-bold text-slate-500 dark:text-slate-400">로그가 없습니다</p>
+                        <p className="text-xs text-slate-400 dark:text-slate-400 mt-1">필터를 변경해보세요</p>
                     </div>
                 ) : (
                     <>
@@ -218,13 +222,13 @@ export default function ActivityLogPage() {
                         <div className="hidden sm:block overflow-x-auto">
                             <table className="w-full">
                                 <thead>
-                                    <tr className="bg-stone-50 border-b border-stone-200">
-                                        <th className="px-4 py-3 text-left text-xs font-bold text-slate-400 uppercase tracking-wider w-44">시각</th>
-                                        <th className="px-4 py-3 text-left text-xs font-bold text-slate-400 uppercase tracking-wider w-32">사용자</th>
-                                        <th className="px-4 py-3 text-left text-xs font-bold text-slate-400 uppercase tracking-wider w-24">액션</th>
-                                        <th className="px-4 py-3 text-left text-xs font-bold text-slate-400 uppercase tracking-wider">경로</th>
-                                        <th className="px-4 py-3 text-center text-xs font-bold text-slate-400 uppercase tracking-wider w-20">상태</th>
-                                        <th className="px-4 py-3 text-left text-xs font-bold text-slate-400 uppercase tracking-wider w-32">IP</th>
+                                    <tr className="bg-stone-50 dark:bg-slate-700/50 border-b border-stone-200 dark:border-slate-600">
+                                        <th className="px-4 py-3 text-left text-xs font-bold text-slate-400 dark:text-slate-400 uppercase tracking-wider w-44">시각</th>
+                                        <th className="px-4 py-3 text-left text-xs font-bold text-slate-400 dark:text-slate-400 uppercase tracking-wider w-32">사용자</th>
+                                        <th className="px-4 py-3 text-left text-xs font-bold text-slate-400 dark:text-slate-400 uppercase tracking-wider w-24">액션</th>
+                                        <th className="px-4 py-3 text-left text-xs font-bold text-slate-400 dark:text-slate-400 uppercase tracking-wider">경로</th>
+                                        <th className="px-4 py-3 text-center text-xs font-bold text-slate-400 dark:text-slate-400 uppercase tracking-wider w-20">상태</th>
+                                        <th className="px-4 py-3 text-left text-xs font-bold text-slate-400 dark:text-slate-400 uppercase tracking-wider w-32">IP</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -235,12 +239,12 @@ export default function ActivityLogPage() {
                                             icon: null,
                                         };
                                         return (
-                                            <tr key={log.id} className="border-b border-stone-100 last:border-b-0 hover:bg-stone-50/50 transition-colors">
-                                                <td className="px-4 py-3 text-sm text-slate-500 font-medium">
+                                            <tr key={log.id} className="border-b border-stone-100 dark:border-slate-700 last:border-b-0 hover:bg-stone-50/50 dark:hover:bg-slate-700/30 transition-colors">
+                                                <td className="px-4 py-3 text-sm text-slate-500 dark:text-slate-400 font-medium">
                                                     {format(new Date(log.createdAt), "yyyy.MM.dd HH:mm:ss")}
                                                 </td>
                                                 <td className="px-4 py-3">
-                                                    <span className="text-sm font-bold text-slate-700">
+                                                    <span className="text-sm font-bold text-slate-700 dark:text-slate-200">
                                                         {log.user?.name || log.userName || "-"}
                                                     </span>
                                                 </td>
@@ -250,8 +254,8 @@ export default function ActivityLogPage() {
                                                         {actionInfo.label}
                                                     </span>
                                                 </td>
-                                                <td className="px-4 py-3 text-sm text-slate-600 font-mono truncate max-w-xs" title={log.path}>
-                                                    <span className="text-xs font-bold text-slate-400 mr-1">{log.method}</span>
+                                                <td className="px-4 py-3 text-sm text-slate-600 dark:text-slate-300 font-mono truncate max-w-xs" title={log.path}>
+                                                    <span className="text-xs font-bold text-slate-400 dark:text-slate-400 mr-1">{log.method}</span>
                                                     {log.path}
                                                 </td>
                                                 <td className="px-4 py-3 text-center">
@@ -259,7 +263,7 @@ export default function ActivityLogPage() {
                                                         {log.statusCode || "-"}
                                                     </span>
                                                 </td>
-                                                <td className="px-4 py-3 text-xs text-slate-400 font-mono">
+                                                <td className="px-4 py-3 text-xs text-slate-400 dark:text-slate-400 font-mono">
                                                     {log.ip || "-"}
                                                 </td>
                                             </tr>
@@ -270,7 +274,7 @@ export default function ActivityLogPage() {
                         </div>
 
                         {/* Mobile Cards */}
-                        <div className="sm:hidden divide-y divide-stone-100">
+                        <div className="sm:hidden divide-y divide-stone-100 dark:divide-slate-700">
                             {logs.map((log) => {
                                 const actionInfo = ACTION_LABELS[log.action] || {
                                     label: log.action,
@@ -284,20 +288,20 @@ export default function ActivityLogPage() {
                                                 {actionInfo.icon}
                                                 {actionInfo.label}
                                             </span>
-                                            <span className="text-xs text-slate-400">
+                                            <span className="text-xs text-slate-400 dark:text-slate-400">
                                                 {format(new Date(log.createdAt), "MM.dd HH:mm")}
                                             </span>
                                         </div>
                                         <div className="flex items-center justify-between">
-                                            <span className="text-sm font-bold text-slate-700">
+                                            <span className="text-sm font-bold text-slate-700 dark:text-slate-200">
                                                 {log.user?.name || log.userName || "-"}
                                             </span>
                                             <span className={`text-xs font-bold ${getStatusColor(log.statusCode)}`}>
                                                 {log.statusCode || "-"}
                                             </span>
                                         </div>
-                                        <p className="text-xs text-slate-500 font-mono mt-1 truncate">
-                                            <span className="font-bold text-slate-400 mr-1">{log.method}</span>
+                                        <p className="text-xs text-slate-500 dark:text-slate-400 font-mono mt-1 truncate">
+                                            <span className="font-bold text-slate-400 dark:text-slate-400 mr-1">{log.method}</span>
                                             {log.path}
                                         </p>
                                     </div>
@@ -309,13 +313,14 @@ export default function ActivityLogPage() {
 
                 {/* Pagination */}
                 {totalPages > 1 && (
-                    <div className="px-4 py-3 border-t border-stone-100 flex items-center justify-center gap-2">
+                    <div className="px-4 py-3 border-t border-stone-100 dark:border-slate-700 flex items-center justify-center gap-2">
                         <button
                             onClick={() => setPage(Math.max(1, page - 1))}
                             disabled={page <= 1}
-                            className="p-2 rounded-lg hover:bg-stone-50 text-slate-400 disabled:opacity-30 disabled:cursor-not-allowed transition-all"
+                            aria-label="이전 페이지"
+                            className="p-2 rounded-lg hover:bg-stone-50 dark:hover:bg-slate-700 text-slate-400 dark:text-slate-400 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
                         >
-                            <ChevronLeft size={16} />
+                            <ChevronLeft size={16} aria-hidden="true" />
                         </button>
                         {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
                             let pageNum: number;
@@ -332,10 +337,10 @@ export default function ActivityLogPage() {
                                 <button
                                     key={pageNum}
                                     onClick={() => setPage(pageNum)}
-                                    className={`w-8 h-8 rounded-lg text-sm font-bold transition-all ${
+                                    className={`w-8 h-8 rounded-lg text-sm font-bold transition-colors ${
                                         page === pageNum
-                                            ? "bg-indigo-600 text-white shadow-lg shadow-indigo-200"
-                                            : "text-slate-400 hover:bg-stone-50"
+                                            ? "bg-indigo-600 text-white shadow-lg shadow-indigo-200 dark:shadow-indigo-900/30"
+                                            : "text-slate-400 dark:text-slate-400 hover:bg-stone-50 dark:hover:bg-slate-700"
                                     }`}
                                 >
                                     {pageNum}
@@ -345,9 +350,10 @@ export default function ActivityLogPage() {
                         <button
                             onClick={() => setPage(Math.min(totalPages, page + 1))}
                             disabled={page >= totalPages}
-                            className="p-2 rounded-lg hover:bg-stone-50 text-slate-400 disabled:opacity-30 disabled:cursor-not-allowed transition-all"
+                            aria-label="다음 페이지"
+                            className="p-2 rounded-lg hover:bg-stone-50 dark:hover:bg-slate-700 text-slate-400 dark:text-slate-400 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
                         >
-                            <ChevronRight size={16} />
+                            <ChevronRight size={16} aria-hidden="true" />
                         </button>
                     </div>
                 )}

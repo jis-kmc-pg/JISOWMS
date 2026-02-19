@@ -104,8 +104,8 @@ export default function JobsSettings() {
     return (
         <div className="space-y-6">
             <div className="flex items-center justify-between">
-                <h3 className="text-xl font-bold text-slate-800 flex items-center gap-2">
-                    <div className="p-2 bg-indigo-100 rounded-lg text-indigo-600">
+                <h3 className="text-xl font-bold text-slate-800 dark:text-slate-100 flex items-center gap-2">
+                    <div className="p-2 bg-indigo-100 dark:bg-indigo-900/30 rounded-lg text-indigo-600 dark:text-indigo-400">
                         <Briefcase size={24} />
                     </div>
                     업무 목록 관리
@@ -120,15 +120,15 @@ export default function JobsSettings() {
             </div>
 
             {/* Filters & Search */}
-            <div className="bg-white border border-stone-200 rounded-2xl p-4 flex flex-col md:flex-row gap-4 shadow-sm">
+            <div className="bg-white dark:bg-slate-800 border border-stone-200 dark:border-slate-600 rounded-2xl p-4 flex flex-col md:flex-row gap-4 shadow-sm">
                 <div className="relative flex-1">
-                    <Search size={18} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
+                    <Search size={18} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 dark:text-slate-400" />
                     <input
                         type="text"
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
                         placeholder="업무명 또는 거래처 검색..."
-                        className="w-full bg-stone-50 border border-stone-200 rounded-xl outline-none text-slate-700 pl-10 pr-4 py-2.5 text-sm focus:border-indigo-500 focus:bg-white transition-all"
+                        className="w-full bg-stone-50 dark:bg-slate-700/50 border border-stone-200 dark:border-slate-600 rounded-xl outline-none text-slate-700 dark:text-slate-200 pl-10 pr-4 py-2.5 text-sm focus:border-indigo-500 focus:bg-white dark:focus:bg-slate-700 transition-all"
                     />
                 </div>
                 <div className="flex space-x-2">
@@ -137,8 +137,8 @@ export default function JobsSettings() {
                             key={status}
                             onClick={() => setFilterStatus(status)}
                             className={`px-4 py-2 rounded-xl text-xs font-bold transition-all ${filterStatus === status
-                                ? 'bg-indigo-600 text-white shadow-md shadow-indigo-200'
-                                : 'bg-stone-100 text-slate-500 hover:bg-stone-200'
+                                ? 'bg-indigo-600 text-white shadow-md shadow-indigo-200 dark:shadow-indigo-900/30'
+                                : 'bg-stone-100 dark:bg-slate-700 text-slate-500 dark:text-slate-400 hover:bg-stone-200 dark:hover:bg-slate-600'
                                 }`}
                         >
                             {status === 'ALL' ? '전체' : status === 'ACTIVE' ? '사용 중' : '사용 안함'}
@@ -149,42 +149,42 @@ export default function JobsSettings() {
 
             {/* Job Grid */}
             {isLoading ? (
-                <div className="text-center py-20 text-slate-500">데이터를 불러오는 중...</div>
+                <div className="text-center py-20 text-slate-500 dark:text-slate-400">데이터를 불러오는 중...</div>
             ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     {filteredJobs.slice(0, 50).map((job) => (
-                        <div key={job.id} className={`bg-white border border-stone-200 rounded-2xl p-5 group transition-all shadow-sm ${job.status === 'INACTIVE' ? 'opacity-60 grayscale bg-stone-50' : 'hover:border-indigo-300 hover:shadow-md'}`}>
+                        <div key={job.id} className={`bg-white dark:bg-slate-800 border border-stone-200 dark:border-slate-600 rounded-2xl p-5 group transition-all shadow-sm ${job.status === 'INACTIVE' ? 'opacity-60 grayscale bg-stone-50 dark:bg-slate-700/50' : 'hover:border-indigo-300 hover:shadow-md'}`}>
                             <div className="flex items-start justify-between mb-4">
                                 <div className="flex items-center space-x-4">
-                                    <div className={`w-12 h-12 rounded-xl border flex items-center justify-center ${job.status === 'ACTIVE' ? 'bg-indigo-50 border-indigo-100 text-indigo-600' : 'bg-stone-100 border-stone-200 text-slate-400'}`}>
+                                    <div className={`w-12 h-12 rounded-xl border flex items-center justify-center ${job.status === 'ACTIVE' ? 'bg-indigo-50 dark:bg-indigo-900/30 border-indigo-100 dark:border-indigo-800/30 text-indigo-600 dark:text-indigo-400' : 'bg-stone-100 dark:bg-slate-700 border-stone-200 dark:border-slate-600 text-slate-400 dark:text-slate-400'}`}>
                                         <Briefcase size={22} />
                                     </div>
                                     <div>
-                                        <h3 className="text-base font-bold text-slate-800 leading-snug">{job.projectName}</h3>
-                                        <div className="flex items-center space-x-2 text-xs text-slate-500 mt-1">
+                                        <h3 className="text-base font-bold text-slate-800 dark:text-slate-100 leading-snug">{job.projectName}</h3>
+                                        <div className="flex items-center space-x-2 text-xs text-slate-500 dark:text-slate-400 mt-1">
                                             <Building2 size={12} />
                                             <span>{job.clientName || '내부 업무'}</span>
                                         </div>
                                     </div>
                                 </div>
-                                <div className={`px-2.5 py-1 rounded-full text-[10px] font-bold border ${job.status === 'ACTIVE' ? 'bg-emerald-50 border-emerald-200 text-emerald-600' : 'bg-slate-100 border-slate-200 text-slate-500'}`}>
+                                <div className={`px-2.5 py-1 rounded-full text-[10px] font-bold border ${job.status === 'ACTIVE' ? 'bg-emerald-50 dark:bg-emerald-900/30 border-emerald-200 dark:border-emerald-800/30 text-emerald-600 dark:text-emerald-400' : 'bg-slate-100 dark:bg-slate-700 border-slate-200 dark:border-slate-600 text-slate-500 dark:text-slate-400'}`}>
                                     {job.status === 'ACTIVE' ? '사용 중' : '사용 안함'}
                                 </div>
                             </div>
 
-                            <div className="flex justify-end space-x-2 pt-4 border-t border-stone-100">
+                            <div className="flex justify-end space-x-2 pt-4 border-t border-stone-100 dark:border-slate-700">
                                 <button
                                     onClick={() => handleOpenEditModal(job)}
-                                    className="p-2 rounded-lg bg-stone-50 hover:bg-white hover:shadow-sm border border-transparent hover:border-stone-200 text-slate-500 hover:text-indigo-600 transition-all"
+                                    className="p-2 rounded-lg bg-stone-50 dark:bg-slate-700/50 hover:bg-white dark:hover:bg-slate-700 hover:shadow-sm border border-transparent hover:border-stone-200 dark:hover:border-slate-600 text-slate-500 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-all"
                                     title="수정"
                                 >
                                     <Edit2 size={16} />
                                 </button>
                                 <button
                                     onClick={() => handleToggleStatus(job.id, job.status)}
-                                    className={`p-2 rounded-lg bg-stone-50 hover:bg-white hover:shadow-sm border border-transparent hover:border-stone-200 transition-all ${job.status === 'ACTIVE'
-                                        ? 'text-slate-500 hover:text-rose-500'
-                                        : 'text-slate-500 hover:text-emerald-500'
+                                    className={`p-2 rounded-lg bg-stone-50 dark:bg-slate-700/50 hover:bg-white dark:hover:bg-slate-700 hover:shadow-sm border border-transparent hover:border-stone-200 dark:hover:border-slate-600 transition-all ${job.status === 'ACTIVE'
+                                        ? 'text-slate-500 dark:text-slate-400 hover:text-rose-500 dark:hover:text-rose-400'
+                                        : 'text-slate-500 dark:text-slate-400 hover:text-emerald-500 dark:hover:text-emerald-400'
                                         }`}
                                     title={job.status === 'ACTIVE' ? "사용 안함으로 변경" : "다시 사용"}
                                 >
@@ -194,12 +194,12 @@ export default function JobsSettings() {
                         </div>
                     ))}
                     {filteredJobs.length > 50 && (
-                        <div className="col-span-full px-4 py-8 text-center text-slate-400 text-sm bg-white border border-dashed border-stone-200 rounded-2xl">
+                        <div className="col-span-full px-4 py-8 text-center text-slate-400 dark:text-slate-400 text-sm bg-white dark:bg-slate-800 border border-dashed border-stone-200 dark:border-slate-600 rounded-2xl">
                             결과가 너무 많습니다. 검색어를 입력하여 대상을 좁혀주세요. (50개까지만 표시됩니다)
                         </div>
                     )}
                     {filteredJobs.length === 0 && (
-                        <div className="col-span-full flex flex-col items-center justify-center py-16 bg-white border border-dashed border-stone-200 rounded-2xl text-slate-400 text-sm gap-2">
+                        <div className="col-span-full flex flex-col items-center justify-center py-16 bg-white dark:bg-slate-800 border border-dashed border-stone-200 dark:border-slate-600 rounded-2xl text-slate-400 dark:text-slate-400 text-sm gap-2">
                             <Briefcase size={32} className="text-stone-200" />
                             <p>조건에 맞는 업무가 없습니다.</p>
                         </div>
@@ -210,43 +210,43 @@ export default function JobsSettings() {
             {/* Create/Edit Job Modal */}
             {showModal && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-sm animate-in fade-in duration-200">
-                    <div className="bg-white border border-stone-100 rounded-2xl w-full max-w-md p-6 shadow-2xl scale-100 animate-in zoom-in-95 duration-200">
+                    <div className="bg-white dark:bg-slate-800 border border-stone-100 dark:border-slate-700 rounded-2xl w-full max-w-md p-6 shadow-2xl scale-100 animate-in zoom-in-95 duration-200">
                         <div className="flex justify-between items-center mb-6">
-                            <h3 className="text-xl font-bold text-slate-800 flex items-center gap-2">
+                            <h3 className="text-xl font-bold text-slate-800 dark:text-slate-100 flex items-center gap-2">
                                 {isEditing ? <Edit2 size={20} className="text-indigo-500" /> : <Plus size={20} className="text-indigo-500" />}
                                 {isEditing ? '업무 수정' : '신규 업무 등록'}
                             </h3>
-                            <button onClick={() => setShowModal(false)} className="text-slate-400 hover:text-slate-600 transition-colors">
+                            <button onClick={() => setShowModal(false)} className="text-slate-400 dark:text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 transition-colors">
                                 <XCircle size={24} />
                             </button>
                         </div>
                         <div className="space-y-5">
                             <div>
-                                <label className="block text-xs font-bold text-slate-500 uppercase mb-2">업무명 (필수)</label>
+                                <label className="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase mb-2">업무명 (필수)</label>
                                 <input
                                     type="text"
                                     value={formData.projectName}
                                     onChange={(e) => setFormData({ ...formData, projectName: e.target.value })}
                                     placeholder="예: 차세대 ERP 구축"
-                                    className="w-full bg-stone-50 border border-stone-200 rounded-xl px-4 py-3 text-slate-800 outline-none focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-100 transition-all font-medium"
+                                    className="w-full bg-stone-50 dark:bg-slate-700/50 border border-stone-200 dark:border-slate-600 rounded-xl px-4 py-3 text-slate-800 dark:text-slate-100 outline-none focus:border-indigo-500 focus:bg-white dark:focus:bg-slate-700 focus:ring-2 focus:ring-indigo-100 dark:focus:ring-indigo-800/30 transition-all font-medium"
                                     autoFocus
                                 />
                             </div>
                             <div>
-                                <label className="block text-xs font-bold text-slate-500 uppercase mb-2">거래처 / 관련 부서</label>
+                                <label className="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase mb-2">거래처 / 관련 부서</label>
                                 <input
                                     type="text"
                                     value={formData.clientName}
                                     onChange={(e) => setFormData({ ...formData, clientName: e.target.value })}
                                     placeholder="예: A사, 경영지원팀"
-                                    className="w-full bg-stone-50 border border-stone-200 rounded-xl px-4 py-3 text-slate-800 outline-none focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-100 transition-all font-medium"
+                                    className="w-full bg-stone-50 dark:bg-slate-700/50 border border-stone-200 dark:border-slate-600 rounded-xl px-4 py-3 text-slate-800 dark:text-slate-100 outline-none focus:border-indigo-500 focus:bg-white dark:focus:bg-slate-700 focus:ring-2 focus:ring-indigo-100 dark:focus:ring-indigo-800/30 transition-all font-medium"
                                 />
                             </div>
                         </div>
                         <div className="flex space-x-3 mt-8">
                             <button
                                 onClick={() => setShowModal(false)}
-                                className="flex-1 py-3.5 rounded-xl font-bold text-slate-500 hover:bg-stone-100 transition-all"
+                                className="flex-1 py-3.5 rounded-xl font-bold text-slate-500 dark:text-slate-400 hover:bg-stone-100 dark:hover:bg-slate-600 transition-all"
                             >
                                 취소
                             </button>

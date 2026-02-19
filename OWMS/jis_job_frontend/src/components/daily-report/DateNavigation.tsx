@@ -33,19 +33,19 @@ export default function DateNavigation({
     return (
         <>
             <div className="relative no-print">
-                <div className="flex flex-col space-y-3 md:space-y-4 bg-stone-50 border border-stone-200 rounded-2xl p-3 md:p-4">
+                <div className="flex flex-col space-y-3 md:space-y-4 bg-stone-50 dark:bg-slate-700/50 border border-stone-200 dark:border-slate-600 rounded-2xl p-3 md:p-4">
                     {/* Mobile: simplified 3-button row */}
                     <div className="flex md:hidden items-center justify-between gap-2">
                         <button
                             onClick={() => onDateChange(new Date(selectedDate.getTime() - DAY_MS))}
-                            className="h-9 px-3 bg-white border border-stone-200 rounded-xl transition-all flex items-center justify-center text-slate-400 shadow-sm shrink-0"
+                            className="h-9 px-3 bg-white dark:bg-slate-800 border border-stone-200 dark:border-slate-600 rounded-xl transition-all flex items-center justify-center text-slate-400 dark:text-slate-400 shadow-sm shrink-0"
                         >
                             <ChevronLeft size={16} />
                         </button>
 
                         <button
                             onClick={onToggleCalendar}
-                            className="h-10 flex-1 flex items-center justify-center space-x-2 bg-indigo-50 border border-indigo-100 rounded-xl hover:bg-indigo-100 transition-all text-indigo-600 shadow-sm"
+                            className="h-10 flex-1 flex items-center justify-center space-x-2 bg-indigo-50 dark:bg-indigo-900/30 border border-indigo-100 dark:border-indigo-800/30 rounded-xl hover:bg-indigo-100 transition-all text-indigo-600 dark:text-indigo-400 shadow-sm"
                         >
                             <Calendar size={16} />
                             <span className="text-sm font-bold tracking-tight">{formatDateFull(selectedDate)}</span>
@@ -53,7 +53,7 @@ export default function DateNavigation({
 
                         <button
                             onClick={() => onDateChange(new Date(selectedDate.getTime() + DAY_MS))}
-                            className="h-9 px-3 bg-white border border-stone-200 rounded-xl transition-all flex items-center justify-center text-slate-400 shadow-sm shrink-0"
+                            className="h-9 px-3 bg-white dark:bg-slate-800 border border-stone-200 dark:border-slate-600 rounded-xl transition-all flex items-center justify-center text-slate-400 dark:text-slate-400 shadow-sm shrink-0"
                         >
                             <ChevronRight size={16} />
                         </button>
@@ -63,7 +63,7 @@ export default function DateNavigation({
                     <div className="flex md:hidden items-center justify-between gap-2">
                         <button
                             onClick={() => onDateChange(new Date(selectedDate.getTime() - WEEK_MS))}
-                            className="h-8 px-3 bg-white border border-stone-200 rounded-lg transition-all text-[10px] text-slate-400 flex items-center space-x-1 shadow-sm"
+                            className="h-8 px-3 bg-white dark:bg-slate-800 border border-stone-200 dark:border-slate-600 rounded-lg transition-all text-[10px] text-slate-400 dark:text-slate-400 flex items-center space-x-1 shadow-sm"
                         >
                             <ChevronLeft size={12} />
                             <span>전주</span>
@@ -71,14 +71,14 @@ export default function DateNavigation({
                         <button
                             onClick={() => onDateChange(new Date())}
                             disabled={isToday}
-                            className={`h-8 px-3 rounded-lg text-[10px] font-bold flex items-center space-x-1 transition-all border shadow-sm ${isToday ? 'bg-indigo-100 border-indigo-200 text-indigo-400 cursor-default' : 'bg-indigo-50 border-indigo-200 text-indigo-600 hover:bg-indigo-100'}`}
+                            className={`h-8 px-3 rounded-lg text-[10px] font-bold flex items-center space-x-1 transition-all border shadow-sm ${isToday ? 'bg-indigo-100 dark:bg-indigo-900/40 border-indigo-200 dark:border-indigo-800/30 text-indigo-400 cursor-default' : 'bg-indigo-50 dark:bg-indigo-900/30 border-indigo-200 dark:border-indigo-800/30 text-indigo-600 dark:text-indigo-400 hover:bg-indigo-100'}`}
                         >
                             <CircleDot size={12} />
                             <span>오늘</span>
                         </button>
                         <button
                             onClick={() => onDateChange(new Date(selectedDate.getTime() + WEEK_MS))}
-                            className="h-8 px-3 bg-white border border-stone-200 rounded-lg transition-all text-[10px] text-slate-400 flex items-center space-x-1 shadow-sm"
+                            className="h-8 px-3 bg-white dark:bg-slate-800 border border-stone-200 dark:border-slate-600 rounded-lg transition-all text-[10px] text-slate-400 dark:text-slate-400 flex items-center space-x-1 shadow-sm"
                         >
                             <span>차주</span>
                             <ChevronRight size={12} />
@@ -89,7 +89,7 @@ export default function DateNavigation({
                     <div className="hidden md:flex items-center justify-between">
                         <button
                             onClick={() => onDateChange(new Date(selectedDate.getTime() - WEEK_MS))}
-                            className="h-10 px-6 bg-white border border-stone-200 rounded-xl hover:bg-white hover:border-indigo-300 transition-all text-xs text-slate-400 hover:text-indigo-600 flex items-center justify-center space-x-2 shadow-sm"
+                            className="h-10 px-6 bg-white dark:bg-slate-800 border border-stone-200 dark:border-slate-600 rounded-xl hover:bg-white dark:hover:bg-slate-700 hover:border-indigo-300 transition-all text-xs text-slate-400 dark:text-slate-400 hover:text-indigo-600 flex items-center justify-center space-x-2 shadow-sm"
                         >
                             <ChevronLeft size={14} />
                             <span>{formatDateSimple(new Date(selectedDate.getTime() - WEEK_MS))}</span>
@@ -98,7 +98,7 @@ export default function DateNavigation({
                         <div className="flex items-center space-x-6">
                             <button
                                 onClick={() => onDateChange(new Date(selectedDate.getTime() - DAY_MS))}
-                                className="h-10 px-4 bg-white border border-stone-200 rounded-xl hover:bg-white hover:border-indigo-300 transition-all flex items-center justify-center space-x-2 text-xs text-slate-400 hover:text-indigo-600 group shadow-sm"
+                                className="h-10 px-4 bg-white dark:bg-slate-800 border border-stone-200 dark:border-slate-600 rounded-xl hover:bg-white dark:hover:bg-slate-700 hover:border-indigo-300 transition-all flex items-center justify-center space-x-2 text-xs text-slate-400 dark:text-slate-400 hover:text-indigo-600 group shadow-sm"
                             >
                                 <ChevronLeft size={14} className="group-hover:-translate-x-0.5 transition-transform" />
                                 <span>{formatDateSimple(new Date(selectedDate.getTime() - DAY_MS))}</span>
@@ -106,7 +106,7 @@ export default function DateNavigation({
 
                             <button
                                 onClick={onToggleCalendar}
-                                className="h-12 flex items-center justify-center space-x-3 px-8 bg-indigo-50 border border-indigo-100 rounded-xl hover:bg-indigo-100 transition-all text-indigo-600 shadow-sm"
+                                className="h-12 flex items-center justify-center space-x-3 px-8 bg-indigo-50 dark:bg-indigo-900/30 border border-indigo-100 dark:border-indigo-800/30 rounded-xl hover:bg-indigo-100 transition-all text-indigo-600 dark:text-indigo-400 shadow-sm"
                             >
                                 <Calendar size={18} />
                                 <span className="text-xl font-bold tracking-tight">{formatDateFull(selectedDate)}</span>
@@ -115,7 +115,7 @@ export default function DateNavigation({
                             <button
                                 onClick={() => onDateChange(new Date())}
                                 disabled={isToday}
-                                className={`h-10 px-4 rounded-xl text-xs font-bold flex items-center justify-center space-x-1.5 transition-all border shadow-sm ${isToday ? 'bg-indigo-100 border-indigo-200 text-indigo-400 cursor-default' : 'bg-indigo-50 border-indigo-200 text-indigo-600 hover:bg-indigo-100 hover:border-indigo-300'}`}
+                                className={`h-10 px-4 rounded-xl text-xs font-bold flex items-center justify-center space-x-1.5 transition-all border shadow-sm ${isToday ? 'bg-indigo-100 dark:bg-indigo-900/40 border-indigo-200 dark:border-indigo-800/30 text-indigo-400 cursor-default' : 'bg-indigo-50 dark:bg-indigo-900/30 border-indigo-200 dark:border-indigo-800/30 text-indigo-600 dark:text-indigo-400 hover:bg-indigo-100 hover:border-indigo-300'}`}
                             >
                                 <CircleDot size={14} />
                                 <span>오늘</span>
@@ -123,7 +123,7 @@ export default function DateNavigation({
 
                             <button
                                 onClick={() => onDateChange(new Date(selectedDate.getTime() + DAY_MS))}
-                                className="h-10 px-4 bg-white border border-stone-200 rounded-xl hover:bg-white hover:border-indigo-300 transition-all flex items-center justify-center space-x-2 text-xs text-slate-400 hover:text-indigo-600 group shadow-sm"
+                                className="h-10 px-4 bg-white dark:bg-slate-800 border border-stone-200 dark:border-slate-600 rounded-xl hover:bg-white dark:hover:bg-slate-700 hover:border-indigo-300 transition-all flex items-center justify-center space-x-2 text-xs text-slate-400 dark:text-slate-400 hover:text-indigo-600 group shadow-sm"
                             >
                                 <span>{formatDateSimple(new Date(selectedDate.getTime() + DAY_MS))}</span>
                                 <ChevronRight size={14} className="group-hover:translate-x-0.5 transition-transform" />
@@ -132,21 +132,21 @@ export default function DateNavigation({
 
                         <button
                             onClick={() => onDateChange(new Date(selectedDate.getTime() + WEEK_MS))}
-                            className="h-10 px-6 bg-white border border-stone-200 rounded-xl hover:bg-white hover:border-indigo-300 transition-all text-xs text-slate-400 hover:text-indigo-600 flex items-center justify-center space-x-2 shadow-sm"
+                            className="h-10 px-6 bg-white dark:bg-slate-800 border border-stone-200 dark:border-slate-600 rounded-xl hover:bg-white dark:hover:bg-slate-700 hover:border-indigo-300 transition-all text-xs text-slate-400 dark:text-slate-400 hover:text-indigo-600 flex items-center justify-center space-x-2 shadow-sm"
                         >
                             <span>{formatDateSimple(new Date(selectedDate.getTime() + WEEK_MS))}</span>
                             <ChevronRight size={14} />
                         </button>
                     </div>
 
-                    <div className="flex flex-wrap items-center justify-center gap-1.5 md:gap-2 pt-3 md:pt-4 border-t border-stone-200">
+                    <div className="flex flex-wrap items-center justify-center gap-1.5 md:gap-2 pt-3 md:pt-4 border-t border-stone-200 dark:border-slate-600">
                         {WORK_TYPES.map((type) => (
                             <button
                                 key={type}
                                 onClick={() => onWorkTypeChange(type)}
                                 className={`px-2 py-1.5 md:px-3 md:py-2 rounded-lg md:rounded-xl text-[10px] md:text-xs font-bold transition-all border shadow-sm ${workType === type
-                                    ? 'bg-indigo-600 border-indigo-500 text-white shadow-indigo-200'
-                                    : 'bg-white border-stone-200 text-slate-500 hover:bg-stone-50 hover:text-slate-700'
+                                    ? 'bg-indigo-600 border-indigo-500 text-white shadow-indigo-200 dark:shadow-indigo-900/30'
+                                    : 'bg-white dark:bg-slate-800 border-stone-200 dark:border-slate-600 text-slate-500 dark:text-slate-400 hover:bg-stone-50 dark:hover:bg-slate-700 hover:text-slate-700 dark:hover:text-slate-200'
                                     }`}
                             >
                                 {type}
@@ -154,14 +154,14 @@ export default function DateNavigation({
                         ))}
 
                         {workType === '공휴일' && (
-                            <div className="w-full md:w-auto md:ml-4 mt-2 md:mt-0 flex items-center bg-white border border-stone-200 rounded-xl px-3 md:px-4 py-1 shadow-sm animate-in fade-in slide-in-from-left-2">
-                                <span className="text-[10px] md:text-xs font-bold text-slate-500 mr-2 whitespace-nowrap">공휴일:</span>
+                            <div className="w-full md:w-auto md:ml-4 mt-2 md:mt-0 flex items-center bg-white dark:bg-slate-800 border border-stone-200 dark:border-slate-600 rounded-xl px-3 md:px-4 py-1 shadow-sm animate-in fade-in slide-in-from-left-2">
+                                <span className="text-[10px] md:text-xs font-bold text-slate-500 dark:text-slate-400 mr-2 whitespace-nowrap">공휴일:</span>
                                 <input
                                     type="text"
                                     value={holidayName}
                                     onChange={(e) => onHolidayNameChange(e.target.value)}
                                     placeholder="예: 설날"
-                                    className="bg-transparent border-none text-slate-800 text-xs md:text-sm font-medium focus:ring-0 py-1.5 w-24 md:w-32 placeholder:text-slate-400"
+                                    className="bg-transparent border-none text-slate-800 dark:text-slate-100 text-xs md:text-sm font-medium focus:ring-0 py-1.5 w-24 md:w-32 placeholder:text-slate-400 dark:placeholder:text-slate-500"
                                 />
                             </div>
                         )}
@@ -170,17 +170,17 @@ export default function DateNavigation({
             </div>
 
             {showCalendar && (
-                <div className="absolute top-64 left-1/2 -translate-x-1/2 mt-2 z-50 bg-white border border-stone-100 rounded-2xl p-4 md:p-6 shadow-2xl w-[calc(100vw-2rem)] max-w-[340px] animate-in zoom-in-95 duration-200">
+                <div className="absolute top-64 left-1/2 -translate-x-1/2 mt-2 z-50 bg-white dark:bg-slate-800 border border-stone-100 dark:border-slate-700 rounded-2xl p-4 md:p-6 shadow-2xl w-[calc(100vw-2rem)] max-w-[340px] animate-in zoom-in-95 duration-200">
                     <div className="flex items-center justify-between mb-6">
-                        <button onClick={() => onDateChange(new Date(selectedDate.getFullYear(), selectedDate.getMonth() - 1, selectedDate.getDate()))} className="p-2 hover:bg-stone-50 rounded-lg text-slate-500 transition-colors">
+                        <button onClick={() => onDateChange(new Date(selectedDate.getFullYear(), selectedDate.getMonth() - 1, selectedDate.getDate()))} className="p-2 hover:bg-stone-50 dark:hover:bg-slate-700 rounded-lg text-slate-500 dark:text-slate-400 transition-colors">
                             <ChevronLeft size={20} />
                         </button>
-                        <span className="text-base font-bold text-slate-800">{selectedDate.toLocaleString('ko-KR', { month: 'long', year: 'numeric' })}</span>
-                        <button onClick={() => onDateChange(new Date(selectedDate.getFullYear(), selectedDate.getMonth() + 1, selectedDate.getDate()))} className="p-2 hover:bg-stone-50 rounded-lg text-slate-500 transition-colors">
+                        <span className="text-base font-bold text-slate-800 dark:text-slate-100">{selectedDate.toLocaleString('ko-KR', { month: 'long', year: 'numeric' })}</span>
+                        <button onClick={() => onDateChange(new Date(selectedDate.getFullYear(), selectedDate.getMonth() + 1, selectedDate.getDate()))} className="p-2 hover:bg-stone-50 dark:hover:bg-slate-700 rounded-lg text-slate-500 dark:text-slate-400 transition-colors">
                             <ChevronRight size={20} />
                         </button>
                     </div>
-                    <div className="grid grid-cols-7 gap-1 text-center text-xs text-slate-400 mb-3 font-bold uppercase">
+                    <div className="grid grid-cols-7 gap-1 text-center text-xs text-slate-400 dark:text-slate-400 mb-3 font-bold uppercase">
                         {['일', '월', '화', '수', '목', '금', '토'].map(d => <div key={d}>{d}</div>)}
                     </div>
                     <div className="grid grid-cols-7 gap-2">
@@ -198,7 +198,7 @@ export default function DateNavigation({
                                         onDateChange(next);
                                         onToggleCalendar();
                                     }}
-                                    className={`aspect-square rounded-xl flex items-center justify-center text-sm font-medium transition-all ${isSelected ? 'bg-indigo-600 text-white font-bold shadow-md shadow-indigo-200' : isToday ? 'text-indigo-600 bg-indigo-50 font-bold' : 'hover:bg-stone-100 text-slate-600'
+                                    className={`aspect-square rounded-xl flex items-center justify-center text-sm font-medium transition-all ${isSelected ? 'bg-indigo-600 text-white font-bold shadow-md shadow-indigo-200 dark:shadow-indigo-900/30' : isToday ? 'text-indigo-600 dark:text-indigo-400 bg-indigo-50 dark:bg-indigo-900/30 font-bold' : 'hover:bg-stone-100 dark:hover:bg-slate-600 text-slate-600 dark:text-slate-300'
                                         }`}
                                 >
                                     {day}

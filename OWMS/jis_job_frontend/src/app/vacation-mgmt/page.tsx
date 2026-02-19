@@ -35,8 +35,8 @@ function VacationManagementContent() {
     return (
         <div className="space-y-8 pb-20">
             <div>
-                <h2 className="text-2xl font-bold text-slate-800">연차 관리</h2>
-                <p className="text-slate-500 mt-1 font-medium">경영지원부 전용 임직원 휴가 및 연차 통합 관리 시스템입니다.</p>
+                <h2 className="text-2xl font-bold text-slate-800 dark:text-slate-100">연차 관리</h2>
+                <p className="text-slate-500 dark:text-slate-400 mt-1 font-medium">경영지원부 전용 임직원 휴가 및 연차 통합 관리 시스템입니다.</p>
             </div>
 
             <div className="flex flex-col md:flex-row gap-8">
@@ -44,15 +44,15 @@ function VacationManagementContent() {
                 <div className="w-full md:w-64 space-y-6">
                     {/* 관리 기능 그룹 */}
                     <div>
-                        <p className="text-[11px] uppercase tracking-wider text-slate-400 font-bold mb-3 px-3">관리 기능</p>
+                        <p className="text-[11px] uppercase tracking-wider text-slate-400 dark:text-slate-400 font-bold mb-3 px-3">관리 기능</p>
                         <div className="space-y-1">
                             {tabs.map((tab) => (
                                 <button
                                     key={tab.id}
                                     onClick={() => handleTabChange(tab.id)}
-                                    className={`w-full flex items-center space-x-3 px-4 py-3 rounded-xl transition-all text-sm font-bold ${activeTab === tab.id
-                                        ? 'bg-indigo-50 text-indigo-600 border border-indigo-100 shadow-sm'
-                                        : 'text-slate-500 hover:bg-white hover:text-slate-800 hover:shadow-sm border border-transparent hover:border-stone-100'
+                                    className={`w-full flex items-center space-x-3 px-4 py-3 rounded-xl transition-colors text-sm font-bold ${activeTab === tab.id
+                                        ? 'bg-indigo-50 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 border border-indigo-100 dark:border-indigo-800/30 shadow-sm'
+                                        : 'text-slate-500 dark:text-slate-400 hover:bg-white dark:hover:bg-slate-700 hover:text-slate-800 dark:hover:text-white hover:shadow-sm border border-transparent hover:border-stone-100 dark:hover:border-slate-700'
                                         }`}
                                 >
                                     {tab.icon}
@@ -70,7 +70,7 @@ function VacationManagementContent() {
                 </div>
 
                 {/* 콘텐츠 영역 */}
-                <div className="flex-1 bg-white border border-stone-200 rounded-2xl p-8 min-h-[600px] shadow-sm">
+                <div className="flex-1 bg-white dark:bg-slate-800 border border-stone-200 dark:border-slate-600 rounded-2xl p-8 min-h-[600px] shadow-sm">
                     <div className="animate-in fade-in duration-300">
                         {activeTab === 'bulk' && <BulkVacation />}
                         {activeTab === 'admin' && <AdminVacation />}

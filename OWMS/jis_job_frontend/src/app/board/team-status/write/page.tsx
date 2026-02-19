@@ -135,21 +135,21 @@ export default function TeamStatusWritePage() {
     return (
         <div className="p-3 sm:p-6 max-w-4xl mx-auto">
             {/* Back */}
-            <button onClick={() => router.back()} className="inline-flex items-center text-slate-400 mb-4 sm:mb-6 hover:text-indigo-600 transition-colors font-medium text-sm">
-                <ArrowLeft size={18} className="mr-1.5" /> 취소하고 돌아가기
+            <button onClick={() => router.back()} className="inline-flex items-center text-slate-400 dark:text-slate-400 mb-4 sm:mb-6 hover:text-indigo-600 transition-colors font-medium text-sm">
+                <ArrowLeft size={18} className="mr-1.5" aria-hidden="true" /> 취소하고 돌아가기
             </button>
 
             {/* Write Card */}
-            <div className="bg-white border border-stone-200 rounded-2xl shadow-sm overflow-hidden">
+            <div className="bg-white dark:bg-slate-800 border border-stone-200 dark:border-slate-600 rounded-2xl shadow-sm overflow-hidden">
                 {/* Header */}
-                <div className="px-4 py-4 sm:px-6 sm:py-5 border-b border-stone-100 flex items-center gap-3">
-                    <div className="bg-indigo-50 p-1.5 sm:p-2 rounded-xl border border-indigo-100 shrink-0">
-                        <PenSquare size={18} className="text-indigo-600 sm:hidden" />
-                        <PenSquare size={20} className="text-indigo-600 hidden sm:block" />
+                <div className="px-4 py-4 sm:px-6 sm:py-5 border-b border-stone-100 dark:border-slate-700 flex items-center gap-3">
+                    <div className="bg-indigo-50 dark:bg-indigo-900/30 p-1.5 sm:p-2 rounded-xl border border-indigo-100 dark:border-indigo-800/30 shrink-0">
+                        <PenSquare size={18} className="text-indigo-600 dark:text-indigo-400 sm:hidden" />
+                        <PenSquare size={20} className="text-indigo-600 dark:text-indigo-400 hidden sm:block" />
                     </div>
                     <div>
-                        <h1 className="text-base sm:text-lg font-extrabold text-slate-800">{isEditMode ? "팀현황보고 수정" : "팀현황보고 작성"}</h1>
-                        <p className="text-[11px] sm:text-xs text-slate-400 mt-0.5">
+                        <h1 className="text-base sm:text-lg font-extrabold text-slate-800 dark:text-slate-100">{isEditMode ? "팀현황보고 수정" : "팀현황보고 작성"}</h1>
+                        <p className="text-[11px] sm:text-xs text-slate-400 dark:text-slate-400 mt-0.5">
                             {teamName ? `${teamName} 현황점검` : "팀 현황을 보고합니다"}
                         </p>
                     </div>
@@ -159,10 +159,10 @@ export default function TeamStatusWritePage() {
                 <form onSubmit={handleSubmit} className="p-4 sm:p-6 space-y-5">
                     {/* Report Date */}
                     <div>
-                        <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5 sm:mb-2">보고 날짜</label>
+                        <label className="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1.5 sm:mb-2">보고 날짜</label>
                         <input
                             type="date"
-                            className="w-full sm:w-64 border border-stone-200 rounded-xl px-4 py-3 bg-stone-50 focus:bg-white focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 outline-none transition-all text-sm font-bold"
+                            className="w-full sm:w-64 border border-stone-200 dark:border-slate-600 rounded-xl px-4 py-3 bg-stone-50 dark:bg-slate-700/50 focus:bg-white dark:focus:bg-slate-700 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 dark:focus:ring-indigo-800/30 outline-none transition-colors text-sm font-bold dark:text-slate-200"
                             value={reportDate}
                             onChange={(e) => setReportDate(e.target.value)}
                             required
@@ -172,34 +172,34 @@ export default function TeamStatusWritePage() {
                     {/* Items Table */}
                     <div>
                         <div className="flex items-center justify-between mb-2">
-                            <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider">보고 항목</label>
+                            <label className="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">보고 항목</label>
                             <button
                                 type="button"
                                 onClick={addItem}
-                                className="flex items-center gap-1.5 text-xs font-bold text-indigo-600 hover:text-indigo-700 px-3 py-1.5 rounded-lg hover:bg-indigo-50 transition-all"
+                                className="flex items-center gap-1.5 text-xs font-bold text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 px-3 py-1.5 rounded-lg hover:bg-indigo-50 dark:hover:bg-indigo-900/30 transition-colors"
                             >
-                                <Plus size={14} /> 행 추가
+                                <Plus size={14} aria-hidden="true" /> 행 추가
                             </button>
                         </div>
 
                         {/* Table Header */}
-                        <div className="hidden sm:grid sm:grid-cols-[140px_140px_1fr_40px] bg-stone-50 border border-stone-200 rounded-t-xl text-xs font-bold text-slate-400 uppercase tracking-wider">
-                            <div className="px-3 py-2.5 border-r border-stone-200">항목</div>
-                            <div className="px-3 py-2.5 border-r border-stone-200">일자</div>
+                        <div className="hidden sm:grid sm:grid-cols-[140px_140px_1fr_40px] bg-stone-50 dark:bg-slate-700/50 border border-stone-200 dark:border-slate-600 rounded-t-xl text-xs font-bold text-slate-400 dark:text-slate-400 uppercase tracking-wider">
+                            <div className="px-3 py-2.5 border-r border-stone-200 dark:border-slate-600">항목</div>
+                            <div className="px-3 py-2.5 border-r border-stone-200 dark:border-slate-600">일자</div>
                             <div className="px-3 py-2.5">내용</div>
                             <div className="px-2 py-2.5"></div>
                         </div>
 
                         {/* Table Body */}
-                        <div className="border border-stone-200 sm:border-t-0 rounded-xl sm:rounded-t-none divide-y divide-stone-100">
+                        <div className="border border-stone-200 dark:border-slate-600 sm:border-t-0 rounded-xl sm:rounded-t-none divide-y divide-stone-100 dark:divide-slate-700">
                             {items.map((item, idx) => (
                                 <div key={idx} className="sm:grid sm:grid-cols-[140px_140px_1fr_40px] items-center">
                                     {/* Mobile label */}
-                                    <div className="sm:hidden px-3 pt-3 pb-1 text-[10px] font-bold text-slate-300 uppercase">항목 {idx + 1}</div>
+                                    <div className="sm:hidden px-3 pt-3 pb-1 text-[10px] font-bold text-slate-300 dark:text-slate-500 uppercase">항목 {idx + 1}</div>
 
-                                    <div className="px-2 py-2 sm:border-r border-stone-100">
+                                    <div className="px-2 py-2 sm:border-r border-stone-100 dark:border-slate-700">
                                         <select
-                                            className="w-full border border-stone-200 rounded-lg px-2 py-2 text-sm font-bold bg-white focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 outline-none"
+                                            className="w-full border border-stone-200 dark:border-slate-600 rounded-lg px-2 py-2 text-sm font-bold bg-white dark:bg-slate-800 dark:text-slate-200 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 dark:focus:ring-indigo-800/30 outline-none"
                                             value={item.category}
                                             onChange={(e) => updateItem(idx, "category", e.target.value)}
                                         >
@@ -208,10 +208,10 @@ export default function TeamStatusWritePage() {
                                             ))}
                                         </select>
                                     </div>
-                                    <div className="px-2 py-2 sm:border-r border-stone-100">
+                                    <div className="px-2 py-2 sm:border-r border-stone-100 dark:border-slate-700">
                                         <input
                                             type="date"
-                                            className="w-full border border-stone-200 rounded-lg px-2 py-2 text-sm bg-white focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 outline-none"
+                                            className="w-full border border-stone-200 dark:border-slate-600 rounded-lg px-2 py-2 text-sm bg-white dark:bg-slate-800 dark:text-slate-200 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 dark:focus:ring-indigo-800/30 outline-none"
                                             value={item.itemDate}
                                             onChange={(e) => updateItem(idx, "itemDate", e.target.value)}
                                             required
@@ -220,7 +220,7 @@ export default function TeamStatusWritePage() {
                                     <div className="px-2 py-2">
                                         <input
                                             type="text"
-                                            className="w-full border border-stone-200 rounded-lg px-3 py-2 text-sm bg-white focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 outline-none placeholder:text-slate-400"
+                                            className="w-full border border-stone-200 dark:border-slate-600 rounded-lg px-3 py-2 text-sm bg-white dark:bg-slate-800 dark:text-slate-200 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 dark:focus:ring-indigo-800/30 outline-none placeholder:text-slate-400 dark:placeholder:text-slate-500"
                                             placeholder="내용을 입력하세요"
                                             value={item.content}
                                             onChange={(e) => updateItem(idx, "content", e.target.value)}
@@ -232,9 +232,10 @@ export default function TeamStatusWritePage() {
                                             type="button"
                                             onClick={() => removeItem(idx)}
                                             disabled={items.length <= 1}
-                                            className="p-1.5 text-slate-300 hover:text-rose-500 hover:bg-rose-50 rounded-lg transition-all disabled:opacity-30 disabled:cursor-not-allowed"
+                                            className="p-1.5 text-slate-300 dark:text-slate-500 hover:text-rose-500 dark:hover:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-900/30 rounded-lg transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+                                            aria-label="항목 삭제"
                                         >
-                                            <Trash2 size={15} />
+                                            <Trash2 size={15} aria-hidden="true" />
                                         </button>
                                     </div>
                                 </div>
@@ -243,22 +244,22 @@ export default function TeamStatusWritePage() {
                     </div>
 
                     {/* Submit */}
-                    <div className="flex flex-col-reverse sm:flex-row justify-end pt-2 border-t border-stone-100 gap-2 sm:gap-0">
+                    <div className="flex flex-col-reverse sm:flex-row justify-end pt-2 border-t border-stone-100 dark:border-slate-700 gap-2 sm:gap-0">
                         <button
                             type="button"
                             onClick={() => router.back()}
-                            className="px-5 py-2.5 border border-stone-200 rounded-xl hover:bg-stone-50 text-slate-500 font-bold text-sm transition-colors sm:mr-3 w-full sm:w-auto"
+                            className="px-5 py-2.5 border border-stone-200 dark:border-slate-600 rounded-xl hover:bg-stone-50 dark:hover:bg-slate-700 text-slate-500 dark:text-slate-400 font-bold text-sm transition-colors sm:mr-3 w-full sm:w-auto"
                         >
                             취소
                         </button>
                         <button
                             type="submit"
                             disabled={submitting}
-                            className="bg-indigo-600 text-white px-6 py-2.5 rounded-xl hover:bg-indigo-700 font-bold text-sm shadow-lg shadow-indigo-200 transition-all active:scale-[0.97] disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center gap-2 w-full sm:w-auto"
+                            className="bg-indigo-600 text-white px-6 py-2.5 rounded-xl hover:bg-indigo-700 font-bold text-sm shadow-lg shadow-indigo-200 dark:shadow-indigo-900/30 transition-colors active:scale-[0.97] disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center gap-2 w-full sm:w-auto"
                         >
                             {submitting ? (
                                 <>
-                                    <Loader2 size={16} className="animate-spin" />
+                                    <Loader2 size={16} className="animate-spin" aria-hidden="true" />
                                     {isEditMode ? "수정 중..." : "등록 중..."}
                                 </>
                             ) : isEditMode ? "수정 완료" : "작성 완료"}
@@ -269,12 +270,12 @@ export default function TeamStatusWritePage() {
 
             {/* Toast */}
             {showToast && (
-                <div className={`fixed bottom-8 left-1/2 -translate-x-1/2 z-[100] px-4 py-3 sm:px-6 sm:py-3.5 rounded-2xl shadow-2xl flex items-center gap-2 sm:gap-3 font-bold text-xs sm:text-sm transition-all max-w-[90vw] ${
+                <div className={`fixed bottom-8 left-1/2 -translate-x-1/2 z-[100] px-4 py-3 sm:px-6 sm:py-3.5 rounded-2xl shadow-2xl flex items-center gap-2 sm:gap-3 font-bold text-xs sm:text-sm transition-colors max-w-[90vw] ${
                     toastType === "success"
                         ? "bg-emerald-600 text-white shadow-emerald-200"
                         : "bg-rose-600 text-white shadow-rose-200"
                 }`}>
-                    {toastType === "success" ? <CheckCircle2 size={16} /> : <AlertCircle size={16} />}
+                    {toastType === "success" ? <CheckCircle2 size={16} aria-hidden="true" /> : <AlertCircle size={16} aria-hidden="true" />}
                     {toastMessage}
                 </div>
             )}

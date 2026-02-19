@@ -21,17 +21,17 @@ interface DeptProjectsWidgetProps {
 type ProjectStatus = 'ACTIVE' | 'COMPLETED' | 'PAUSED' | 'CANCELLED';
 
 const STATUS_CONFIG: Record<ProjectStatus, { label: string; bg: string; text: string; border: string; dot: string }> = {
-    ACTIVE: { label: '진행중', bg: 'bg-emerald-50', text: 'text-emerald-700', border: 'border-emerald-200', dot: 'bg-emerald-500' },
-    COMPLETED: { label: '완료', bg: 'bg-blue-50', text: 'text-blue-700', border: 'border-blue-200', dot: 'bg-blue-500' },
-    PAUSED: { label: '보류', bg: 'bg-amber-50', text: 'text-amber-700', border: 'border-amber-200', dot: 'bg-amber-500' },
-    CANCELLED: { label: '취소', bg: 'bg-rose-50', text: 'text-rose-700', border: 'border-rose-200', dot: 'bg-rose-500' },
+    ACTIVE: { label: '진행중', bg: 'bg-emerald-50 dark:bg-emerald-900/30', text: 'text-emerald-700 dark:text-emerald-400', border: 'border-emerald-200 dark:border-emerald-800/30', dot: 'bg-emerald-500' },
+    COMPLETED: { label: '완료', bg: 'bg-blue-50 dark:bg-blue-900/30', text: 'text-blue-700 dark:text-blue-400', border: 'border-blue-200 dark:border-blue-800/30', dot: 'bg-blue-500' },
+    PAUSED: { label: '보류', bg: 'bg-amber-50 dark:bg-amber-900/30', text: 'text-amber-700 dark:text-amber-400', border: 'border-amber-200 dark:border-amber-800/30', dot: 'bg-amber-500' },
+    CANCELLED: { label: '취소', bg: 'bg-rose-50 dark:bg-rose-900/30', text: 'text-rose-700 dark:text-rose-400', border: 'border-rose-200 dark:border-rose-800/30', dot: 'bg-rose-500' },
 };
 
 const STATUS_ORDER: ProjectStatus[] = ['ACTIVE', 'PAUSED', 'COMPLETED', 'CANCELLED'];
 
 function getStatusConfig(status: string) {
     const upper = status?.toUpperCase() as ProjectStatus;
-    return STATUS_CONFIG[upper] ?? { label: status ?? '알 수 없음', bg: 'bg-stone-50', text: 'text-stone-600', border: 'border-stone-200', dot: 'bg-stone-400' };
+    return STATUS_CONFIG[upper] ?? { label: status ?? '알 수 없음', bg: 'bg-stone-50 dark:bg-slate-700/50', text: 'text-stone-600 dark:text-slate-300', border: 'border-stone-200 dark:border-slate-600', dot: 'bg-stone-400' };
 }
 
 export default function DeptProjectsWidget({ data, size }: DeptProjectsWidgetProps) {
@@ -61,17 +61,17 @@ export default function DeptProjectsWidget({ data, size }: DeptProjectsWidgetPro
     const activeCount = statusCounts['ACTIVE'] ?? 0;
 
     return (
-        <div className="bg-white rounded-2xl border border-stone-200 shadow-sm hover:shadow-md transition-all h-full flex flex-col overflow-hidden p-4">
+        <div className="bg-white dark:bg-slate-800 rounded-2xl border border-stone-200 dark:border-slate-600 shadow-sm hover:shadow-md transition-all h-full flex flex-col overflow-hidden p-4">
             {/* 헤더 */}
             <div className="flex items-center justify-between mb-2">
                 <div className="flex items-center gap-2.5">
-                    <div className="p-2 bg-blue-50 rounded-xl">
+                    <div className="p-2 bg-blue-50 dark:bg-blue-900/30 rounded-xl">
                         <Briefcase size={14} className="text-blue-500" />
                     </div>
-                    <h4 className="text-sm font-bold text-slate-800">전체 프로젝트 현황</h4>
+                    <h4 className="text-sm font-bold text-slate-800 dark:text-slate-100">전체 프로젝트 현황</h4>
                 </div>
                 {!isSmall && (
-                    <span className="text-xs font-black px-2 py-1 rounded-lg bg-blue-50 text-blue-600">
+                    <span className="text-xs font-black px-2 py-1 rounded-lg bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400">
                         {projects.length}개
                     </span>
                 )}
@@ -82,11 +82,11 @@ export default function DeptProjectsWidget({ data, size }: DeptProjectsWidgetPro
                 <div className="flex-1 flex items-center justify-around gap-2">
                     <div className="text-center">
                         <p className="text-lg font-black tabular-nums text-blue-600">{projects.length}</p>
-                        <p className="text-[10px] font-bold text-slate-400">전체</p>
+                        <p className="text-[10px] font-bold text-slate-400 dark:text-slate-400">전체</p>
                     </div>
                     <div className="text-center">
                         <p className="text-lg font-black tabular-nums text-emerald-600">{activeCount}</p>
-                        <p className="text-[10px] font-bold text-slate-400">진행중</p>
+                        <p className="text-[10px] font-bold text-slate-400 dark:text-slate-400">진행중</p>
                     </div>
                 </div>
             ) : (
@@ -120,8 +120,8 @@ export default function DeptProjectsWidget({ data, size }: DeptProjectsWidgetPro
                     <div className="flex-1 min-h-0 overflow-auto space-y-1.5">
                         {projects.length === 0 ? (
                             <div className="flex-1 flex flex-col items-center justify-center py-4">
-                                <FolderOpen size={24} className="text-slate-200 mb-2" />
-                                <p className="text-xs text-slate-400 font-medium">프로젝트가 없습니다</p>
+                                <FolderOpen size={24} className="text-slate-200 dark:text-slate-600 mb-2" />
+                                <p className="text-xs text-slate-400 dark:text-slate-400 font-medium">프로젝트가 없습니다</p>
                             </div>
                         ) : (
                             projects.slice(0, isLarge ? 7 : 5).map((project, idx) => {
@@ -136,7 +136,7 @@ export default function DeptProjectsWidget({ data, size }: DeptProjectsWidgetPro
 
                                         {/* 프로젝트 정보 */}
                                         <div className="flex-1 min-w-0">
-                                            <p className="text-xs font-bold text-slate-700 truncate">
+                                            <p className="text-xs font-bold text-slate-700 dark:text-slate-200 truncate">
                                                 {project.projectName ?? '제목 없음'}
                                             </p>
                                         </div>
@@ -144,8 +144,8 @@ export default function DeptProjectsWidget({ data, size }: DeptProjectsWidgetPro
                                         {/* Large: 멤버 수 */}
                                         {isLarge && project.memberCount !== undefined && (
                                             <div className="flex items-center gap-1 flex-shrink-0">
-                                                <Users size={12} className="text-slate-400" />
-                                                <span className="text-[10px] font-black text-slate-500 tabular-nums">{project.memberCount}</span>
+                                                <Users size={12} className="text-slate-400 dark:text-slate-400" />
+                                                <span className="text-[10px] font-black text-slate-500 dark:text-slate-400 tabular-nums">{project.memberCount}</span>
                                             </div>
                                         )}
 

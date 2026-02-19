@@ -48,8 +48,8 @@ export default function DashboardPage() {
     if (loading) {
         return (
             <div className="flex h-screen items-center justify-center flex-col gap-4">
-                <div className="w-10 h-10 border-4 border-indigo-200 border-t-indigo-600 rounded-full animate-spin"></div>
-                <p className="text-slate-500 font-bold animate-pulse">대시보드 데이터를 불러오는 중...</p>
+                <div className="w-10 h-10 border-4 border-indigo-200 border-t-indigo-600 rounded-full animate-spin" aria-hidden="true"></div>
+                <p className="text-slate-500 font-bold animate-pulse" role="status">대시보드 데이터를 불러오는 중...</p>
             </div>
         );
     }
@@ -71,9 +71,10 @@ export default function DashboardPage() {
                 </div>
                 <Link
                     href="/dashboard/settings"
-                    className="group flex items-center gap-2.5 px-5 py-2.5 rounded-xl text-sm font-bold text-slate-600 dark:text-slate-300 bg-white dark:bg-slate-800 hover:bg-gradient-to-r hover:from-indigo-50 hover:to-purple-50 dark:hover:from-slate-700 dark:hover:to-slate-700 border border-stone-200 dark:border-slate-700 hover:border-indigo-300 shadow-sm hover:shadow-md transition-all duration-300"
+                    aria-label="위젯 설정"
+                    className="group flex items-center gap-2.5 px-5 py-2.5 rounded-xl text-sm font-bold text-slate-600 dark:text-slate-300 bg-white dark:bg-slate-800 hover:bg-gradient-to-r hover:from-indigo-50 hover:to-purple-50 dark:hover:from-slate-700 dark:hover:to-slate-700 border border-stone-200 dark:border-slate-700 hover:border-indigo-300 shadow-sm hover:shadow-md transition-colors duration-300"
                 >
-                    <Settings size={16} className="text-slate-400 group-hover:text-indigo-500 group-hover:rotate-90 transition-all duration-500" />
+                    <Settings size={16} className="text-slate-400 group-hover:text-indigo-500 group-hover:rotate-90 transition-transform duration-500" aria-hidden="true" />
                     <span className="group-hover:text-indigo-600 transition-colors">위젯 설정</span>
                 </Link>
             </div>

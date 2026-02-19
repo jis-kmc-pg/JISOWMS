@@ -145,7 +145,7 @@ export default function UserManagement() {
         return matchSearch && matchDept && matchTeam;
     });
 
-    if (loading) return <div className="text-slate-500 text-center py-10">로딩 중...</div>;
+    if (loading) return <div className="text-slate-500 dark:text-slate-400 text-center py-10">로딩 중...</div>;
 
     return (
         <div className="space-y-6">
@@ -158,12 +158,12 @@ export default function UserManagement() {
 
             {/* 헤더 */}
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-                <h3 className="text-xl font-bold text-slate-800 flex items-center space-x-2">
-                    <div className="p-2 bg-indigo-100 rounded-lg text-indigo-600">
+                <h3 className="text-xl font-bold text-slate-800 dark:text-slate-100 flex items-center space-x-2">
+                    <div className="p-2 bg-indigo-100 dark:bg-indigo-900/30 rounded-lg text-indigo-600 dark:text-indigo-400">
                         <UserCog size={24} />
                     </div>
                     <span>사용자 관리</span>
-                    <span className="text-xs bg-indigo-50 text-indigo-600 px-2.5 py-1 rounded-full border border-indigo-100 font-medium">{users.length}명</span>
+                    <span className="text-xs bg-indigo-50 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 px-2.5 py-1 rounded-full border border-indigo-100 dark:border-indigo-800/30 font-medium">{users.length}명</span>
                 </h3>
                 <button
                     onClick={() => setShowCreateForm(true)}
@@ -177,13 +177,13 @@ export default function UserManagement() {
             {/* 검색 및 필터 */}
             <div className="flex flex-col md:flex-row gap-3">
                 <div className="flex-1 relative">
-                    <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+                    <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 dark:text-slate-400" />
                     <input
                         type="text"
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
                         placeholder="이름, ID, 직위 검색..."
-                        className="w-full bg-white border border-stone-200 rounded-xl pl-10 pr-4 py-2.5 text-sm text-slate-700 outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 transition-all shadow-sm"
+                        className="w-full bg-white dark:bg-slate-800 border border-stone-200 dark:border-slate-600 rounded-xl pl-10 pr-4 py-2.5 text-sm text-slate-700 dark:text-slate-200 outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 dark:focus:ring-indigo-800/30 transition-all shadow-sm"
                     />
                 </div>
 
@@ -196,7 +196,7 @@ export default function UserManagement() {
                                 setFilterDept(e.target.value ? Number(e.target.value) : '');
                                 setFilterTeam('');
                             }}
-                            className="w-full bg-white border border-stone-200 rounded-xl px-4 py-2.5 text-sm text-slate-700 outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 appearance-none shadow-sm cursor-pointer"
+                            className="w-full bg-white dark:bg-slate-800 border border-stone-200 dark:border-slate-600 rounded-xl px-4 py-2.5 text-sm text-slate-700 dark:text-slate-200 outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 dark:focus:ring-indigo-800/30 appearance-none shadow-sm cursor-pointer"
                         >
                             <option value="">전체 부서</option>
                             {departments.map(d => <option key={d.id} value={d.id}>{d.name}</option>)}
@@ -210,7 +210,7 @@ export default function UserManagement() {
                             value={filterTeam}
                             onChange={(e) => setFilterTeam(e.target.value ? Number(e.target.value) : '')}
                             disabled={!filterDept}
-                            className={`w-full bg-white border border-stone-200 rounded-xl px-4 py-2.5 text-sm text-slate-700 outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 appearance-none shadow-sm transition-all ${!filterDept ? 'bg-stone-50 text-slate-400 cursor-not-allowed' : 'cursor-pointer'}`}
+                            className={`w-full bg-white dark:bg-slate-800 border border-stone-200 dark:border-slate-600 rounded-xl px-4 py-2.5 text-sm text-slate-700 dark:text-slate-200 outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 dark:focus:ring-indigo-800/30 appearance-none shadow-sm transition-all ${!filterDept ? 'bg-stone-50 dark:bg-slate-700/50 text-slate-400 dark:text-slate-400 cursor-not-allowed' : 'cursor-pointer'}`}
                         >
                             <option value="">전체 팀</option>
                             {teams
@@ -225,7 +225,7 @@ export default function UserManagement() {
 
             {/* 신규 사용자 등록 폼 */}
             {showCreateForm && (
-                <div className="bg-white border border-indigo-100 rounded-2xl p-5 md:p-6 shadow-lg shadow-indigo-100/50 animate-in slide-in-from-top-2">
+                <div className="bg-white dark:bg-slate-800 border border-indigo-100 dark:border-indigo-800/30 rounded-2xl p-5 md:p-6 shadow-lg shadow-indigo-100/50 dark:shadow-indigo-900/20 animate-in slide-in-from-top-2">
                     <div className="flex items-center justify-between mb-4">
                         <h4 className="text-base font-bold text-indigo-900 flex items-center gap-2">
                             <span className="w-1.5 h-1.5 rounded-full bg-indigo-500"></span>
@@ -235,34 +235,34 @@ export default function UserManagement() {
                     </div>
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                         <div className="space-y-1">
-                            <label className="text-xs font-semibold text-slate-500 ml-1">로그인 ID</label>
-                            <input value={newUser.userId} onChange={(e) => setNewUser({ ...newUser, userId: e.target.value })} className="w-full bg-stone-50 border border-stone-200 rounded-lg px-3 py-2 text-sm text-slate-700 outline-none focus:border-indigo-500 focus:bg-white transition-all" placeholder="example" />
+                            <label className="text-xs font-semibold text-slate-500 dark:text-slate-400 ml-1">로그인 ID</label>
+                            <input value={newUser.userId} onChange={(e) => setNewUser({ ...newUser, userId: e.target.value })} className="w-full bg-stone-50 dark:bg-slate-700/50 border border-stone-200 dark:border-slate-600 rounded-lg px-3 py-2 text-sm text-slate-700 dark:text-slate-200 outline-none focus:border-indigo-500 focus:bg-white dark:focus:bg-slate-700 transition-all" placeholder="example" />
                         </div>
                         <div className="space-y-1">
-                            <label className="text-xs font-semibold text-slate-500 ml-1">성명</label>
-                            <input value={newUser.name} onChange={(e) => setNewUser({ ...newUser, name: e.target.value })} className="w-full bg-stone-50 border border-stone-200 rounded-lg px-3 py-2 text-sm text-slate-700 outline-none focus:border-indigo-500 focus:bg-white transition-all" placeholder="홍길동" />
+                            <label className="text-xs font-semibold text-slate-500 dark:text-slate-400 ml-1">성명</label>
+                            <input value={newUser.name} onChange={(e) => setNewUser({ ...newUser, name: e.target.value })} className="w-full bg-stone-50 dark:bg-slate-700/50 border border-stone-200 dark:border-slate-600 rounded-lg px-3 py-2 text-sm text-slate-700 dark:text-slate-200 outline-none focus:border-indigo-500 focus:bg-white dark:focus:bg-slate-700 transition-all" placeholder="홍길동" />
                         </div>
                         <div className="space-y-1">
-                            <label className="text-xs font-semibold text-slate-500 ml-1">직위</label>
-                            <input value={newUser.position} onChange={(e) => setNewUser({ ...newUser, position: e.target.value })} className="w-full bg-stone-50 border border-stone-200 rounded-lg px-3 py-2 text-sm text-slate-700 outline-none focus:border-indigo-500 focus:bg-white transition-all" placeholder="사원" />
+                            <label className="text-xs font-semibold text-slate-500 dark:text-slate-400 ml-1">직위</label>
+                            <input value={newUser.position} onChange={(e) => setNewUser({ ...newUser, position: e.target.value })} className="w-full bg-stone-50 dark:bg-slate-700/50 border border-stone-200 dark:border-slate-600 rounded-lg px-3 py-2 text-sm text-slate-700 dark:text-slate-200 outline-none focus:border-indigo-500 focus:bg-white dark:focus:bg-slate-700 transition-all" placeholder="사원" />
                         </div>
                         <div className="space-y-1">
-                            <label className="text-xs font-semibold text-slate-500 ml-1">이메일</label>
-                            <input value={newUser.email} onChange={(e) => setNewUser({ ...newUser, email: e.target.value })} className="w-full bg-stone-50 border border-stone-200 rounded-lg px-3 py-2 text-sm text-slate-700 outline-none focus:border-indigo-500 focus:bg-white transition-all" placeholder="hong@company.com" />
+                            <label className="text-xs font-semibold text-slate-500 dark:text-slate-400 ml-1">이메일</label>
+                            <input value={newUser.email} onChange={(e) => setNewUser({ ...newUser, email: e.target.value })} className="w-full bg-stone-50 dark:bg-slate-700/50 border border-stone-200 dark:border-slate-600 rounded-lg px-3 py-2 text-sm text-slate-700 dark:text-slate-200 outline-none focus:border-indigo-500 focus:bg-white dark:focus:bg-slate-700 transition-all" placeholder="hong@company.com" />
                         </div>
                         <div className="space-y-1">
-                            <label className="text-xs font-semibold text-slate-500 ml-1">권한</label>
+                            <label className="text-xs font-semibold text-slate-500 dark:text-slate-400 ml-1">권한</label>
                             <div className="relative">
-                                <select value={newUser.role} onChange={(e) => setNewUser({ ...newUser, role: e.target.value })} className="w-full bg-stone-50 border border-stone-200 rounded-lg px-3 py-2 text-sm text-slate-700 outline-none focus:border-indigo-500 focus:bg-white appearance-none transition-all">
+                                <select value={newUser.role} onChange={(e) => setNewUser({ ...newUser, role: e.target.value })} className="w-full bg-stone-50 dark:bg-slate-700/50 border border-stone-200 dark:border-slate-600 rounded-lg px-3 py-2 text-sm text-slate-700 dark:text-slate-200 outline-none focus:border-indigo-500 focus:bg-white dark:focus:bg-slate-700 appearance-none transition-all">
                                     {Object.entries(ROLE_LABELS).map(([k, v]) => <option key={k} value={k}>{v}</option>)}
                                 </select>
                                 <ChevronDown size={14} className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" />
                             </div>
                         </div>
                         <div className="space-y-1">
-                            <label className="text-xs font-semibold text-slate-500 ml-1">부서</label>
+                            <label className="text-xs font-semibold text-slate-500 dark:text-slate-400 ml-1">부서</label>
                             <div className="relative">
-                                <select value={newUser.departmentId} onChange={(e) => setNewUser({ ...newUser, departmentId: e.target.value, teamId: '' })} className="w-full bg-stone-50 border border-stone-200 rounded-lg px-3 py-2 text-sm text-slate-700 outline-none focus:border-indigo-500 focus:bg-white appearance-none transition-all">
+                                <select value={newUser.departmentId} onChange={(e) => setNewUser({ ...newUser, departmentId: e.target.value, teamId: '' })} className="w-full bg-stone-50 dark:bg-slate-700/50 border border-stone-200 dark:border-slate-600 rounded-lg px-3 py-2 text-sm text-slate-700 dark:text-slate-200 outline-none focus:border-indigo-500 focus:bg-white dark:focus:bg-slate-700 appearance-none transition-all">
                                     <option value="">부서 선택</option>
                                     {departments.map(d => <option key={d.id} value={d.id}>{d.name}</option>)}
                                 </select>
@@ -270,9 +270,9 @@ export default function UserManagement() {
                             </div>
                         </div>
                         <div className="space-y-1">
-                            <label className="text-xs font-semibold text-slate-500 ml-1">팀</label>
+                            <label className="text-xs font-semibold text-slate-500 dark:text-slate-400 ml-1">팀</label>
                             <div className="relative">
-                                <select value={newUser.teamId} onChange={(e) => setNewUser({ ...newUser, teamId: e.target.value })} className="w-full bg-stone-50 border border-stone-200 rounded-lg px-3 py-2 text-sm text-slate-700 outline-none focus:border-indigo-500 focus:bg-white appearance-none transition-all">
+                                <select value={newUser.teamId} onChange={(e) => setNewUser({ ...newUser, teamId: e.target.value })} className="w-full bg-stone-50 dark:bg-slate-700/50 border border-stone-200 dark:border-slate-600 rounded-lg px-3 py-2 text-sm text-slate-700 dark:text-slate-200 outline-none focus:border-indigo-500 focus:bg-white dark:focus:bg-slate-700 appearance-none transition-all">
                                     <option value="">팀 선택</option>
                                     {teams.filter(t => !newUser.departmentId || t.departmentId === Number(newUser.departmentId)).map(t => <option key={t.id} value={t.id}>{t.name}</option>)}
                                 </select>
@@ -289,10 +289,10 @@ export default function UserManagement() {
             )}
 
             {/* 사용자 테이블 */}
-            <div className="bg-white rounded-xl border border-stone-200 shadow-sm overflow-hidden">
+            <div className="bg-white dark:bg-slate-800 rounded-xl border border-stone-200 dark:border-slate-600 shadow-sm overflow-hidden">
                 <div className="overflow-x-auto">
                     <table className="w-full text-sm text-left">
-                        <thead className="bg-stone-50 text-slate-500 border-b border-stone-100">
+                        <thead className="bg-stone-50 dark:bg-slate-700/50 text-slate-500 dark:text-slate-400 border-b border-stone-100 dark:border-slate-700">
                             <tr>
                                 <th className="px-6 py-4 font-semibold whitespace-nowrap">ID</th>
                                 <th className="px-6 py-4 font-semibold whitespace-nowrap">성명</th>
@@ -303,12 +303,12 @@ export default function UserManagement() {
                                 <th className="px-6 py-4 font-semibold text-center whitespace-nowrap">관리</th>
                             </tr>
                         </thead>
-                        <tbody className="divide-y divide-stone-100">
+                        <tbody className="divide-y divide-stone-100 dark:divide-slate-700">
                             {filteredUsers.map((user) => (
-                                <tr key={user.id} className="hover:bg-indigo-50/50 transition-colors group">
+                                <tr key={user.id} className="hover:bg-indigo-50/50 dark:hover:bg-indigo-900/10 transition-colors group">
                                     {editingUser?.id === user.id ? (
                                         <>
-                                            <td className="px-6 py-4 text-slate-500 font-mono">{user.userId}</td>
+                                            <td className="px-6 py-4 text-slate-500 dark:text-slate-400 font-mono">{user.userId}</td>
                                             <td className="px-6 py-4">
                                                 <input value={editingUser.name} onChange={(e) => setEditingUser({ ...editingUser, name: e.target.value })} className="w-full bg-white border border-indigo-300 rounded px-2 py-1 text-sm text-slate-900 outline-none focus:ring-2 focus:ring-indigo-100" autoFocus />
                                             </td>
@@ -341,11 +341,11 @@ export default function UserManagement() {
                                         </>
                                     ) : (
                                         <>
-                                            <td className="px-6 py-4 text-slate-500 font-mono text-xs">{user.userId}</td>
-                                            <td className="px-6 py-4 font-semibold text-slate-900">{user.name}</td>
-                                            <td className="px-6 py-4 text-slate-600">{user.department?.name || <span className="text-slate-300">-</span>}</td>
-                                            <td className="px-6 py-4 text-slate-600">{user.team?.name || <span className="text-slate-300">-</span>}</td>
-                                            <td className="px-6 py-4 text-slate-600">{user.position || <span className="text-slate-300">-</span>}</td>
+                                            <td className="px-6 py-4 text-slate-500 dark:text-slate-400 font-mono text-xs">{user.userId}</td>
+                                            <td className="px-6 py-4 font-semibold text-slate-900 dark:text-slate-100">{user.name}</td>
+                                            <td className="px-6 py-4 text-slate-600 dark:text-slate-300">{user.department?.name || <span className="text-slate-300 dark:text-slate-500">-</span>}</td>
+                                            <td className="px-6 py-4 text-slate-600 dark:text-slate-300">{user.team?.name || <span className="text-slate-300 dark:text-slate-500">-</span>}</td>
+                                            <td className="px-6 py-4 text-slate-600 dark:text-slate-300">{user.position || <span className="text-slate-300 dark:text-slate-500">-</span>}</td>
                                             <td className="px-6 py-4">
                                                 <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium border ${user.role === 'CEO' ? 'bg-amber-50 text-amber-700 border-amber-100' :
                                                     user.role === 'EXECUTIVE' ? 'bg-purple-50 text-purple-700 border-purple-100' :
@@ -370,7 +370,7 @@ export default function UserManagement() {
                     </table>
                 </div>
                 {filteredUsers.length === 0 && (
-                    <div className="text-center py-12 text-slate-400 text-sm bg-stone-50/50">
+                    <div className="text-center py-12 text-slate-400 dark:text-slate-400 text-sm bg-stone-50/50 dark:bg-slate-700/30">
                         <UserCog size={48} className="mx-auto text-slate-200 mb-3" />
                         <p>검색 결과가 없습니다.</p>
                     </div>

@@ -67,14 +67,14 @@ export default function ExecutiveApprovalsWidget({ data, size }: ExecutiveApprov
     // Small: 대기 건수 대형 배지
     if (isSmall) {
         return (
-            <div className="bg-white rounded-2xl border border-stone-200 shadow-sm hover:shadow-md transition-all h-full flex flex-col overflow-hidden p-4">
+            <div className="bg-white dark:bg-slate-800 rounded-2xl border border-stone-200 dark:border-slate-600 shadow-sm hover:shadow-md transition-all h-full flex flex-col overflow-hidden p-4">
                 <div className="flex-1 flex items-center justify-between">
                     <div className="flex items-center gap-3">
                         <div className="p-2 bg-gradient-to-br from-indigo-500 to-purple-500 rounded-xl shadow-sm">
                             <Shield size={14} className="text-white" />
                         </div>
                         <div>
-                            <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">결재 대기</p>
+                            <p className="text-[10px] font-bold text-slate-400 dark:text-slate-400 uppercase tracking-wider">결재 대기</p>
                             <p className={`text-xs font-bold ${urgency.text}`}>{urgency.label}</p>
                         </div>
                     </div>
@@ -91,14 +91,14 @@ export default function ExecutiveApprovalsWidget({ data, size }: ExecutiveApprov
     }
 
     return (
-        <div className="bg-white rounded-2xl border border-stone-200 shadow-sm hover:shadow-md transition-all h-full flex flex-col overflow-hidden p-4">
+        <div className="bg-white dark:bg-slate-800 rounded-2xl border border-stone-200 dark:border-slate-600 shadow-sm hover:shadow-md transition-all h-full flex flex-col overflow-hidden p-4">
             {/* 헤더 */}
             <div className="flex items-center justify-between mb-2">
                 <div className="flex items-center gap-2">
                     <div className="p-1.5 bg-gradient-to-br from-indigo-500 to-purple-500 rounded-lg">
                         <Shield size={14} className="text-white" />
                     </div>
-                    <h4 className="text-sm font-bold text-slate-800">중요 결재 대기</h4>
+                    <h4 className="text-sm font-bold text-slate-800 dark:text-slate-100">중요 결재 대기</h4>
                 </div>
                 <div
                     className={`flex items-center justify-center w-9 h-9 rounded-xl ${urgency.badge} shadow-md ${urgency.glow} ${
@@ -116,16 +116,16 @@ export default function ExecutiveApprovalsWidget({ data, size }: ExecutiveApprov
                         {topItems.map((item, idx) => (
                             <div
                                 key={item?.id ?? idx}
-                                className="flex items-center gap-2 p-2 rounded-lg bg-stone-50 hover:bg-stone-100 transition-colors cursor-pointer group/item"
+                                className="flex items-center gap-2 p-2 rounded-lg bg-stone-50 dark:bg-slate-700/50 hover:bg-stone-100 dark:hover:bg-slate-700 transition-colors cursor-pointer group/item"
                             >
-                                <div className="w-7 h-7 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center flex-shrink-0">
+                                <div className="w-7 h-7 rounded-full bg-indigo-100 dark:bg-indigo-900/40 text-indigo-600 dark:text-indigo-400 flex items-center justify-center flex-shrink-0">
                                     <User size={12} />
                                 </div>
                                 <div className="flex-1 min-w-0">
-                                    <p className="text-xs font-bold text-slate-700 truncate">
+                                    <p className="text-xs font-bold text-slate-700 dark:text-slate-200 truncate">
                                         {item?.userName ?? item?.name ?? '이름 없음'}
                                     </p>
-                                    <p className="text-[9px] text-slate-400 font-medium">
+                                    <p className="text-[10px] text-slate-400 dark:text-slate-400 font-medium">
                                         {item?.type ?? item?.vacationType ?? '결재'}
                                         {item?.startDate ? ` \u00B7 ${formatDate(item.startDate)}` : ''}
                                         {item?.createdAt && !item?.startDate ? ` \u00B7 ${formatDate(item.createdAt)}` : ''}
@@ -134,7 +134,7 @@ export default function ExecutiveApprovalsWidget({ data, size }: ExecutiveApprov
                                 {isLarge && (
                                     <div className="text-right flex-shrink-0 mr-0.5">
                                         {item?.createdAt && (
-                                            <p className="text-[9px] text-slate-400 font-medium">
+                                            <p className="text-[10px] text-slate-400 dark:text-slate-400 font-medium">
                                                 신청: {formatDate(item.createdAt)}
                                             </p>
                                         )}
@@ -142,7 +142,7 @@ export default function ExecutiveApprovalsWidget({ data, size }: ExecutiveApprov
                                 )}
                                 <ChevronRight
                                     size={12}
-                                    className="text-slate-300 group-hover/item:text-slate-500 transition-colors flex-shrink-0"
+                                    className="text-slate-300 dark:text-slate-500 group-hover/item:text-slate-500 dark:group-hover/item:text-slate-400 transition-colors flex-shrink-0"
                                 />
                             </div>
                         ))}
@@ -155,8 +155,8 @@ export default function ExecutiveApprovalsWidget({ data, size }: ExecutiveApprov
                     </div>
                 ) : (
                     <div className="h-full flex flex-col items-center justify-center py-4">
-                        <Clock size={24} className="text-slate-200 mb-1.5" />
-                        <p className="text-xs text-slate-400 font-medium">대기 중인 결재가 없습니다</p>
+                        <Clock size={24} className="text-slate-200 dark:text-slate-600 mb-1.5" />
+                        <p className="text-xs text-slate-400 dark:text-slate-400 font-medium">대기 중인 결재가 없습니다</p>
                     </div>
                 )}
             </div>

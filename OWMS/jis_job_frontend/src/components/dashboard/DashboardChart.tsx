@@ -232,8 +232,8 @@ export default function DashboardChart({
         }));
 
         return (
-            <div className="bg-white p-6 rounded-2xl border border-stone-200 shadow-sm h-full flex flex-col hover:shadow-md transition-all">
-                <h4 className="text-lg font-bold text-slate-800 mb-6">{title}</h4>
+            <div className="bg-white dark:bg-slate-800 p-6 rounded-2xl border border-stone-200 dark:border-slate-600 shadow-sm h-full flex flex-col hover:shadow-md transition-all">
+                <h4 className="text-lg font-bold text-slate-800 dark:text-slate-100 mb-6">{title}</h4>
                 <div className="flex-1 flex flex-col lg:flex-row gap-4" style={{ minHeight: height }}>
                     {/* 좌측: 스택 바 */}
                     <div className="flex-1" style={{ height }}>
@@ -293,7 +293,7 @@ export default function DashboardChart({
                         </div>
                         <div className="flex flex-wrap justify-center gap-x-3 gap-y-1 mt-2">
                             {donutData.slice(0, 6).map((d, i) => (
-                                <span key={i} className="flex items-center gap-1 text-[10px] text-slate-500 font-medium">
+                                <span key={i} className="flex items-center gap-1 text-[10px] text-slate-500 dark:text-slate-400 font-medium">
                                     <span className="w-2 h-2 rounded-full" style={{ backgroundColor: colors[i % colors.length] }} />
                                     {d.name}
                                 </span>
@@ -306,8 +306,8 @@ export default function DashboardChart({
     }
 
     return (
-        <div className="bg-white p-6 rounded-2xl border border-stone-200 shadow-sm h-full flex flex-col hover:shadow-md transition-all">
-            <h4 className="text-lg font-bold text-slate-800 mb-6">{title}</h4>
+        <div className="bg-white dark:bg-slate-800 p-6 rounded-2xl border border-stone-200 dark:border-slate-600 shadow-sm h-full flex flex-col hover:shadow-md transition-all">
+            <h4 className="text-lg font-bold text-slate-800 dark:text-slate-100 mb-6">{title}</h4>
             <div className="flex-1" style={{ width: '100%', height: height }}>
                 <ResponsiveContainer>
                     {renderChart()}

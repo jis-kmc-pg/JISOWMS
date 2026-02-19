@@ -83,36 +83,36 @@ export default function TeamAttendanceWidget({ data, size }: TeamAttendanceWidge
             count: atOffice,
             icon: <Users size={18} />,
             smallIcon: <Users size={14} />,
-            color: 'text-emerald-600',
-            bg: 'bg-emerald-50',
-            ring: 'ring-emerald-100',
+            color: 'text-emerald-600 dark:text-emerald-400',
+            bg: 'bg-emerald-50 dark:bg-emerald-900/30',
+            ring: 'ring-emerald-100 dark:ring-emerald-800/30',
         },
         {
             label: '재택',
             count: remote,
             icon: <Home size={18} />,
             smallIcon: <Home size={14} />,
-            color: 'text-blue-600',
-            bg: 'bg-blue-50',
-            ring: 'ring-blue-100',
+            color: 'text-blue-600 dark:text-blue-400',
+            bg: 'bg-blue-50 dark:bg-blue-900/30',
+            ring: 'ring-blue-100 dark:ring-blue-800/30',
         },
         {
             label: '외근',
             count: fieldWork,
             icon: <MapPin size={18} />,
             smallIcon: <MapPin size={14} />,
-            color: 'text-amber-600',
-            bg: 'bg-amber-50',
-            ring: 'ring-amber-100',
+            color: 'text-amber-600 dark:text-amber-400',
+            bg: 'bg-amber-50 dark:bg-amber-900/30',
+            ring: 'ring-amber-100 dark:ring-amber-800/30',
         },
         {
             label: '휴가',
             count: onLeave,
             icon: <Calendar size={18} />,
             smallIcon: <Calendar size={14} />,
-            color: 'text-rose-600',
-            bg: 'bg-rose-50',
-            ring: 'ring-rose-100',
+            color: 'text-rose-600 dark:text-rose-400',
+            bg: 'bg-rose-50 dark:bg-rose-900/30',
+            ring: 'ring-rose-100 dark:ring-rose-800/30',
         },
     ];
 
@@ -121,9 +121,9 @@ export default function TeamAttendanceWidget({ data, size }: TeamAttendanceWidge
     // ── Small: 아이콘 + 숫자만 한 줄에 4개 미니 뱃지 ──
     if (isSmall) {
         return (
-            <div className="bg-white p-4 rounded-2xl border border-stone-200 shadow-sm hover:shadow-md transition-all h-full flex flex-col overflow-hidden">
+            <div className="bg-white dark:bg-slate-800 p-4 rounded-2xl border border-stone-200 dark:border-slate-600 shadow-sm hover:shadow-md transition-all h-full flex flex-col overflow-hidden">
                 <div className="flex items-center justify-between mb-2">
-                    <h4 className="text-sm font-bold text-slate-800 flex items-center gap-1.5">
+                    <h4 className="text-sm font-bold text-slate-800 dark:text-slate-100 flex items-center gap-1.5">
                         <Activity size={14} className="text-indigo-500" />
                         근태 현황
                     </h4>
@@ -131,7 +131,7 @@ export default function TeamAttendanceWidget({ data, size }: TeamAttendanceWidge
 
                 {!hasData ? (
                     <div className="flex-1 min-h-0 flex items-center justify-center">
-                        <p className="text-xs text-slate-400 font-medium">데이터 없음</p>
+                        <p className="text-xs text-slate-400 dark:text-slate-400 font-medium">데이터 없음</p>
                     </div>
                 ) : (
                     <div className="flex-1 min-h-0 flex items-center justify-center">
@@ -158,14 +158,14 @@ export default function TeamAttendanceWidget({ data, size }: TeamAttendanceWidge
     if (isLarge) {
         const totalActive = atOffice + remote + fieldWork + onLeave;
         return (
-            <div className="bg-white p-4 rounded-2xl border border-stone-200 shadow-sm hover:shadow-md transition-all h-full flex flex-col overflow-hidden">
+            <div className="bg-white dark:bg-slate-800 p-4 rounded-2xl border border-stone-200 dark:border-slate-600 shadow-sm hover:shadow-md transition-all h-full flex flex-col overflow-hidden">
                 <div className="flex items-center justify-between mb-2">
-                    <h4 className="text-sm font-bold text-slate-800 flex items-center gap-1.5">
+                    <h4 className="text-sm font-bold text-slate-800 dark:text-slate-100 flex items-center gap-1.5">
                         <Activity size={14} className="text-indigo-500" />
                         팀 근태 현황
                     </h4>
                     {totalEmployees > 0 && (
-                        <span className="text-[10px] font-bold text-slate-400 bg-stone-50 px-2 py-0.5 rounded-md">
+                        <span className="text-[10px] font-bold text-slate-400 dark:text-slate-400 bg-stone-50 dark:bg-slate-700/50 px-2 py-0.5 rounded-md">
                             총 {totalEmployees}명
                         </span>
                     )}
@@ -173,7 +173,7 @@ export default function TeamAttendanceWidget({ data, size }: TeamAttendanceWidge
 
                 {!hasData ? (
                     <div className="flex-1 min-h-0 flex items-center justify-center">
-                        <p className="text-xs text-slate-400 font-medium text-center">
+                        <p className="text-xs text-slate-400 dark:text-slate-400 font-medium text-center">
                             근태 데이터가 없습니다
                         </p>
                     </div>
@@ -194,19 +194,19 @@ export default function TeamAttendanceWidget({ data, size }: TeamAttendanceWidge
                                             <span className={`text-2xl font-black tabular-nums ${card.color}`}>
                                                 {card.count}
                                             </span>
-                                            <span className="text-xs font-bold text-slate-400">명</span>
+                                            <span className="text-xs font-bold text-slate-400 dark:text-slate-400">명</span>
                                         </div>
-                                        <p className="text-[10px] font-bold text-slate-500 mt-0.5">
+                                        <p className="text-[10px] font-bold text-slate-500 dark:text-slate-400 dark:text-slate-400 mt-0.5">
                                             {card.label}
                                         </p>
                                         <div className="mt-1.5 flex items-center gap-1">
                                             <div className="flex-1 h-1 bg-white/60 rounded-full overflow-hidden">
                                                 <div
-                                                    className={`h-full rounded-full ${card.bg === 'bg-emerald-50' ? 'bg-emerald-400' : card.bg === 'bg-blue-50' ? 'bg-blue-400' : card.bg === 'bg-amber-50' ? 'bg-amber-400' : 'bg-rose-400'}`}
+                                                    className={`h-full rounded-full ${card.bg.includes('emerald') ? 'bg-emerald-400' : card.bg.includes('blue') ? 'bg-blue-400' : card.bg.includes('amber') ? 'bg-amber-400' : 'bg-rose-400'}`}
                                                     style={{ width: `${pct}%` }}
                                                 />
                                             </div>
-                                            <span className={`text-[9px] font-black tabular-nums ${card.color}`}>
+                                            <span className={`text-[10px] font-black tabular-nums ${card.color}`}>
                                                 {pct}%
                                             </span>
                                         </div>
@@ -222,15 +222,15 @@ export default function TeamAttendanceWidget({ data, size }: TeamAttendanceWidge
 
     // ── Medium: 2x2 그리드 ──
     return (
-        <div className="bg-white p-4 rounded-2xl border border-stone-200 shadow-sm hover:shadow-md transition-all h-full flex flex-col overflow-hidden">
+        <div className="bg-white dark:bg-slate-800 p-4 rounded-2xl border border-stone-200 dark:border-slate-600 shadow-sm hover:shadow-md transition-all h-full flex flex-col overflow-hidden">
             {/* 헤더 */}
             <div className="flex items-center justify-between mb-2">
-                <h4 className="text-sm font-bold text-slate-800 flex items-center gap-1.5">
+                <h4 className="text-sm font-bold text-slate-800 dark:text-slate-100 flex items-center gap-1.5">
                     <Activity size={14} className="text-indigo-500" />
                     팀 근태 현황
                 </h4>
                 {totalEmployees > 0 && (
-                    <span className="text-[10px] font-bold text-slate-400 bg-stone-50 px-2 py-0.5 rounded-md">
+                    <span className="text-[10px] font-bold text-slate-400 dark:text-slate-400 bg-stone-50 dark:bg-slate-700/50 px-2 py-0.5 rounded-md">
                         총 {totalEmployees}명
                     </span>
                 )}
@@ -238,7 +238,7 @@ export default function TeamAttendanceWidget({ data, size }: TeamAttendanceWidge
 
             {!hasData ? (
                 <div className="flex-1 min-h-0 flex items-center justify-center">
-                    <p className="text-xs text-slate-400 font-medium text-center">
+                    <p className="text-xs text-slate-400 dark:text-slate-400 font-medium text-center">
                         근태 데이터가 없습니다
                     </p>
                 </div>
@@ -258,9 +258,9 @@ export default function TeamAttendanceWidget({ data, size }: TeamAttendanceWidge
                                         <span className={`text-xl font-black tabular-nums ${card.color}`}>
                                             {card.count}
                                         </span>
-                                        <span className="text-xs font-bold text-slate-400">명</span>
+                                        <span className="text-xs font-bold text-slate-400 dark:text-slate-400">명</span>
                                     </div>
-                                    <p className="text-[10px] font-bold text-slate-500">
+                                    <p className="text-[10px] font-bold text-slate-500 dark:text-slate-400">
                                         {card.label}
                                     </p>
                                 </div>

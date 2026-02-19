@@ -115,13 +115,13 @@ export default function DeptResourceUtilWidget({ data, size }: DeptResourceUtilW
     const totalMeetingUsed = meetingStats.reduce((s, r) => s + (r.usedSlots ?? 0), 0);
 
     return (
-        <div className="bg-white rounded-2xl border border-stone-200 shadow-sm hover:shadow-md transition-all h-full flex flex-col overflow-hidden p-4">
+        <div className="bg-white dark:bg-slate-800 rounded-2xl border border-stone-200 dark:border-slate-600 shadow-sm hover:shadow-md transition-all h-full flex flex-col overflow-hidden p-4">
             {/* 헤더 */}
             <div className="flex items-center gap-2.5 mb-2">
-                <div className="p-2 bg-indigo-50 rounded-xl">
+                <div className="p-2 bg-indigo-50 dark:bg-indigo-900/30 rounded-xl">
                     <Activity size={14} className="text-indigo-500" />
                 </div>
-                <h4 className="text-sm font-bold text-slate-800">부서 배차/회의실 활용률</h4>
+                <h4 className="text-sm font-bold text-slate-800 dark:text-slate-100">부서 배차/회의실 활용률</h4>
             </div>
 
             {/* Small: 두 가지 컴팩트 스탯 (배차율% + 회의실율%) */}
@@ -129,11 +129,11 @@ export default function DeptResourceUtilWidget({ data, size }: DeptResourceUtilW
                 <div className="flex-1 flex items-center justify-around gap-2">
                     <div className="text-center">
                         <p className="text-lg font-black tabular-nums text-indigo-600">{dispatchUtil}%</p>
-                        <p className="text-[10px] font-bold text-slate-400">배차</p>
+                        <p className="text-[10px] font-bold text-slate-400 dark:text-slate-400">배차</p>
                     </div>
                     <div className="text-center">
                         <p className="text-lg font-black tabular-nums text-emerald-600">{meetingUtil}%</p>
-                        <p className="text-[10px] font-bold text-slate-400">회의실</p>
+                        <p className="text-[10px] font-bold text-slate-400 dark:text-slate-400">회의실</p>
                     </div>
                 </div>
             ) : (
@@ -158,9 +158,9 @@ export default function DeptResourceUtilWidget({ data, size }: DeptResourceUtilW
                                 <div className="text-center">
                                     <div className="flex items-center justify-center gap-1.5">
                                         <Car size={12} className="text-indigo-500" />
-                                        <span className="text-xs font-bold text-slate-700">배차</span>
+                                        <span className="text-xs font-bold text-slate-700 dark:text-slate-200">배차</span>
                                     </div>
-                                    <p className="text-[10px] font-bold text-slate-400">
+                                    <p className="text-[10px] font-bold text-slate-400 dark:text-slate-400">
                                         {totalDispatches}건 이용
                                     </p>
                                 </div>
@@ -183,9 +183,9 @@ export default function DeptResourceUtilWidget({ data, size }: DeptResourceUtilW
                                 <div className="text-center">
                                     <div className="flex items-center justify-center gap-1.5">
                                         <DoorOpen size={12} className="text-emerald-500" />
-                                        <span className="text-xs font-bold text-slate-700">회의실</span>
+                                        <span className="text-xs font-bold text-slate-700 dark:text-slate-200">회의실</span>
                                     </div>
-                                    <p className="text-[10px] font-bold text-slate-400">
+                                    <p className="text-[10px] font-bold text-slate-400 dark:text-slate-400">
                                         {meetingStats.length > 0 ? `${totalMeetingUsed}슬롯 이용` : '데이터 없음'}
                                     </p>
                                 </div>

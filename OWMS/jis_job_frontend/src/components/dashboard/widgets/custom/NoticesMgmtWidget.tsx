@@ -47,22 +47,22 @@ export default function NoticesMgmtWidget({ data, size }: NoticesMgmtWidgetProps
     if (isSmall) {
         const latestNotice = notices.length > 0 ? notices[0] : null;
         return (
-            <div className="bg-white rounded-2xl border border-stone-200 shadow-sm hover:shadow-md transition-all h-full flex flex-col overflow-hidden p-4">
+            <div className="bg-white dark:bg-slate-800 rounded-2xl border border-stone-200 dark:border-slate-600 shadow-sm hover:shadow-md transition-all h-full flex flex-col overflow-hidden p-4">
                 <div className="flex-1 flex items-center gap-3">
                     <div className="p-2 bg-gradient-to-br from-amber-400 to-orange-500 rounded-xl shadow-sm flex-shrink-0">
                         <Megaphone size={14} className="text-white" />
                     </div>
                     <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2">
-                            <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">공지사항</p>
+                            <p className="text-[10px] font-bold text-slate-400 dark:text-slate-400 uppercase tracking-wider">공지사항</p>
                             <span className="text-xs font-black text-indigo-600 tabular-nums">{notices.length}건</span>
                         </div>
                         {latestNotice ? (
-                            <p className="text-sm font-bold text-slate-700 truncate mt-0.5">
+                            <p className="text-sm font-bold text-slate-700 dark:text-slate-200 truncate mt-0.5">
                                 {latestNotice.title}
                             </p>
                         ) : (
-                            <p className="text-sm text-slate-400 mt-0.5">공지사항이 없습니다</p>
+                            <p className="text-sm text-slate-400 dark:text-slate-400 mt-0.5">공지사항이 없습니다</p>
                         )}
                     </div>
                 </div>
@@ -71,18 +71,18 @@ export default function NoticesMgmtWidget({ data, size }: NoticesMgmtWidgetProps
     }
 
     return (
-        <div className="bg-white rounded-2xl border border-stone-200 shadow-sm hover:shadow-md transition-all h-full flex flex-col overflow-hidden p-4">
+        <div className="bg-white dark:bg-slate-800 rounded-2xl border border-stone-200 dark:border-slate-600 shadow-sm hover:shadow-md transition-all h-full flex flex-col overflow-hidden p-4">
             {/* 헤더 */}
             <div className="flex items-center justify-between mb-2">
                 <div className="flex items-center gap-2">
                     <div className="p-1.5 bg-gradient-to-br from-amber-400 to-orange-500 rounded-lg">
                         <Megaphone size={14} className="text-white" />
                     </div>
-                    <h4 className="text-sm font-bold text-slate-800">공지사항</h4>
+                    <h4 className="text-sm font-bold text-slate-800 dark:text-slate-100">공지사항</h4>
                 </div>
-                <button className="flex items-center gap-1 px-2 py-1 bg-indigo-50 hover:bg-indigo-100 rounded-lg transition-colors border border-indigo-100">
+                <button className="flex items-center gap-1 px-2 py-1 bg-indigo-50 dark:bg-indigo-900/30 hover:bg-indigo-100 dark:hover:bg-indigo-900/50 rounded-lg transition-colors border border-indigo-100 dark:border-indigo-800/30">
                     <Plus size={10} className="text-indigo-600" />
-                    <span className="text-[9px] font-black text-indigo-600 uppercase">작성</span>
+                    <span className="text-[10px] font-black text-indigo-600 uppercase">작성</span>
                 </button>
             </div>
 
@@ -90,49 +90,49 @@ export default function NoticesMgmtWidget({ data, size }: NoticesMgmtWidgetProps
             <div className="flex-1 min-h-0 overflow-auto space-y-1">
                 {displayNotices.length === 0 ? (
                     <div className="flex flex-col items-center justify-center py-4">
-                        <Megaphone size={20} className="text-slate-200 mb-1.5" />
-                        <p className="text-xs text-slate-400 font-medium">공지사항이 없습니다</p>
+                        <Megaphone size={20} className="text-slate-200 dark:text-slate-600 mb-1.5" />
+                        <p className="text-xs text-slate-400 dark:text-slate-400 font-medium">공지사항이 없습니다</p>
                     </div>
                 ) : (
                     displayNotices.map((notice, idx) => (
                         <div
                             key={notice.id || idx}
-                            className="flex items-center gap-2 p-2 rounded-lg hover:bg-stone-50 transition-all duration-200 cursor-pointer group/item border border-transparent hover:border-stone-100"
+                            className="flex items-center gap-2 p-2 rounded-lg hover:bg-stone-50 dark:hover:bg-slate-700/50 transition-all duration-200 cursor-pointer group/item border border-transparent hover:border-stone-100 dark:hover:border-slate-700"
                         >
                             <div className="flex-1 min-w-0">
                                 <div className="flex items-center gap-1.5">
                                     {notice.pinned && (
-                                        <span className="px-1 py-0.5 bg-rose-50 text-rose-500 rounded text-[8px] font-black border border-rose-100">
+                                        <span className="px-1 py-0.5 bg-rose-50 text-rose-500 rounded text-[10px] font-black border border-rose-100">
                                             고정
                                         </span>
                                     )}
-                                    <p className="text-xs font-bold text-slate-700 truncate group-hover/item:text-indigo-600 transition-colors">
+                                    <p className="text-xs font-bold text-slate-700 dark:text-slate-200 truncate group-hover/item:text-indigo-600 transition-colors">
                                         {notice.title}
                                     </p>
                                 </div>
                                 <div className="flex items-center gap-1 mt-0.5">
                                     <Clock size={9} className="text-slate-300" />
-                                    <span className="text-[9px] text-slate-400 font-medium">
+                                    <span className="text-[10px] text-slate-400 dark:text-slate-400 font-medium">
                                         {timeAgo(notice.createdAt)}
                                     </span>
                                     {notice.author && (
                                         <>
-                                            <span className="text-slate-200">|</span>
-                                            <span className="text-[9px] text-slate-400 font-medium">{notice.author}</span>
+                                            <span className="text-slate-200 dark:text-slate-600">|</span>
+                                            <span className="text-[10px] text-slate-400 dark:text-slate-400 font-medium">{notice.author}</span>
                                         </>
                                     )}
                                     {isLarge && notice.viewCount !== undefined && (
                                         <>
-                                            <span className="text-slate-200">|</span>
+                                            <span className="text-slate-200 dark:text-slate-600">|</span>
                                             <Eye size={9} className="text-slate-300" />
-                                            <span className="text-[9px] text-slate-400 font-medium">
+                                            <span className="text-[10px] text-slate-400 dark:text-slate-400 font-medium">
                                                 {notice.viewCount}
                                             </span>
                                         </>
                                     )}
                                 </div>
                             </div>
-                            <ChevronRight size={12} className="text-slate-300 group-hover/item:text-slate-500 transition-colors flex-shrink-0" />
+                            <ChevronRight size={12} className="text-slate-300 dark:text-slate-500 group-hover/item:text-slate-500 dark:group-hover/item:text-slate-400 transition-colors flex-shrink-0" />
                         </div>
                     ))
                 )}
@@ -140,7 +140,7 @@ export default function NoticesMgmtWidget({ data, size }: NoticesMgmtWidgetProps
 
             {/* 더보기 */}
             {notices.length > displayCount && (
-                <div className="pt-1.5 border-t border-stone-100 mt-1">
+                <div className="pt-1.5 border-t border-stone-100 dark:border-slate-700 mt-1">
                     <button className="w-full text-center text-[10px] font-bold text-indigo-500 hover:text-indigo-700 transition-colors">
                         전체 보기
                     </button>

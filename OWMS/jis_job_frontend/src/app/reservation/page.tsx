@@ -33,15 +33,15 @@ function ReservationContent() {
     return (
         <div className="space-y-6 pb-20">
             {/* Tab Navigation */}
-            <div className="flex items-center gap-2 bg-white border border-stone-200 rounded-2xl p-1.5 shadow-sm">
+            <div className="flex items-center gap-2 bg-white dark:bg-slate-800 border border-stone-200 dark:border-slate-600 rounded-2xl p-1.5 shadow-sm">
                 {tabs.map((tab) => (
                     <button
                         key={tab.id}
                         onClick={() => handleTabChange(tab.id)}
                         className={`flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-sm font-bold transition-all ${
                             activeTab === tab.id
-                                ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-200'
-                                : 'text-slate-500 hover:bg-stone-50 hover:text-slate-700'
+                                ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-200 dark:shadow-indigo-900/30'
+                                : 'text-slate-500 dark:text-slate-400 hover:bg-stone-50 dark:hover:bg-slate-700 hover:text-slate-700 dark:hover:text-slate-200'
                         }`}
                     >
                         {tab.icon}
@@ -61,7 +61,7 @@ function ReservationContent() {
 
 export default function ReservationPage() {
     return (
-        <Suspense fallback={<div className="flex items-center justify-center py-20 text-slate-400">Loading...</div>}>
+        <Suspense fallback={<div className="flex items-center justify-center py-20 text-slate-400 dark:text-slate-400">Loading...</div>}>
             <ReservationContent />
         </Suspense>
     );

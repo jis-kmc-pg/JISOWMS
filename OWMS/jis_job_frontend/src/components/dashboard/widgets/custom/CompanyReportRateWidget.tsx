@@ -19,10 +19,10 @@ interface CompanyReportRateWidgetProps {
 }
 
 function getBarColor(rate: number): { gradient: string; text: string; bg: string } {
-    if (rate >= 80) return { gradient: 'from-emerald-400 to-emerald-500', text: 'text-emerald-600', bg: 'bg-emerald-50' };
-    if (rate >= 60) return { gradient: 'from-indigo-400 to-indigo-500', text: 'text-indigo-600', bg: 'bg-indigo-50' };
-    if (rate >= 40) return { gradient: 'from-amber-400 to-amber-500', text: 'text-amber-600', bg: 'bg-amber-50' };
-    return { gradient: 'from-rose-400 to-rose-500', text: 'text-rose-600', bg: 'bg-rose-50' };
+    if (rate >= 80) return { gradient: 'from-emerald-400 to-emerald-500', text: 'text-emerald-600 dark:text-emerald-400', bg: 'bg-emerald-50 dark:bg-emerald-900/30' };
+    if (rate >= 60) return { gradient: 'from-indigo-400 to-indigo-500', text: 'text-indigo-600 dark:text-indigo-400', bg: 'bg-indigo-50 dark:bg-indigo-900/30' };
+    if (rate >= 40) return { gradient: 'from-amber-400 to-amber-500', text: 'text-amber-600 dark:text-amber-400', bg: 'bg-amber-50 dark:bg-amber-900/30' };
+    return { gradient: 'from-rose-400 to-rose-500', text: 'text-rose-600 dark:text-rose-400', bg: 'bg-rose-50 dark:bg-rose-900/30' };
 }
 
 export default function CompanyReportRateWidget({ data, size }: CompanyReportRateWidgetProps) {
@@ -63,14 +63,14 @@ export default function CompanyReportRateWidget({ data, size }: CompanyReportRat
     if (isSmall) {
         const colors = getBarColor(avgRate);
         return (
-            <div className="bg-white rounded-2xl border border-stone-200 shadow-sm hover:shadow-md transition-all h-full flex flex-col overflow-hidden p-4">
+            <div className="bg-white dark:bg-slate-800 rounded-2xl border border-stone-200 dark:border-slate-600 shadow-sm hover:shadow-md transition-all h-full flex flex-col overflow-hidden p-4">
                 <div className="flex-1 flex items-center justify-between">
                     <div className="flex items-center gap-3">
                         <div className="p-2 bg-gradient-to-br from-indigo-500 to-purple-500 rounded-xl shadow-sm">
                             <FileBarChart size={14} className="text-white" />
                         </div>
                         <div>
-                            <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">업무보고 작성률</p>
+                            <p className="text-[10px] font-bold text-slate-400 dark:text-slate-400 uppercase tracking-wider">업무보고 작성률</p>
                             <p className={`text-2xl font-black tabular-nums ${colors.text}`}>
                                 {avgRate}<span className="text-xs font-bold text-slate-400 ml-0.5">%</span>
                             </p>
@@ -90,14 +90,14 @@ export default function CompanyReportRateWidget({ data, size }: CompanyReportRat
     }
 
     return (
-        <div className="bg-white rounded-2xl border border-stone-200 shadow-sm hover:shadow-md transition-all h-full flex flex-col overflow-hidden p-4">
+        <div className="bg-white dark:bg-slate-800 rounded-2xl border border-stone-200 dark:border-slate-600 shadow-sm hover:shadow-md transition-all h-full flex flex-col overflow-hidden p-4">
             {/* 헤더 */}
             <div className="flex items-center justify-between mb-2">
                 <div className="flex items-center gap-2">
                     <div className="p-1.5 bg-gradient-to-br from-indigo-500 to-purple-500 rounded-lg">
                         <FileBarChart size={14} className="text-white" />
                     </div>
-                    <h4 className="text-sm font-bold text-slate-800">부서별 업무보고 작성률</h4>
+                    <h4 className="text-sm font-bold text-slate-800 dark:text-slate-100">부서별 업무보고 작성률</h4>
                 </div>
                 <div className="flex items-center gap-1">
                     <TrendingUp size={12} className="text-emerald-500" />
@@ -110,7 +110,7 @@ export default function CompanyReportRateWidget({ data, size }: CompanyReportRat
                 {sortedTeams.length === 0 ? (
                     <div className="h-full flex flex-col items-center justify-center py-4">
                         <FileBarChart size={24} className="text-slate-200 mb-2" />
-                        <p className="text-xs text-slate-400 font-medium">보고 데이터가 없습니다</p>
+                        <p className="text-xs text-slate-400 dark:text-slate-400 font-medium">보고 데이터가 없습니다</p>
                     </div>
                 ) : (
                     <div className={isLarge ? 'grid grid-cols-2 gap-x-4 gap-y-1.5' : 'space-y-1.5'}>
@@ -122,7 +122,7 @@ export default function CompanyReportRateWidget({ data, size }: CompanyReportRat
                                 <div key={`${team.name}-${idx}`} className="group/bar">
                                     <div className="flex items-center justify-between mb-0.5">
                                         <div className="flex items-center gap-1.5">
-                                            <span className="text-xs font-bold text-slate-700 group-hover/bar:text-indigo-600 transition-colors">
+                                            <span className="text-xs font-bold text-slate-700 dark:text-slate-200 group-hover/bar:text-indigo-600 transition-colors">
                                                 {team.name}
                                             </span>
                                             {team.total > 0 && (
@@ -135,7 +135,7 @@ export default function CompanyReportRateWidget({ data, size }: CompanyReportRat
                                             {team.rate}%
                                         </span>
                                     </div>
-                                    <div className="relative h-2.5 bg-stone-100 rounded-full overflow-hidden">
+                                    <div className="relative h-2.5 bg-stone-100 dark:bg-slate-700 rounded-full overflow-hidden">
                                         <div
                                             className={`h-full bg-gradient-to-r ${colors.gradient} rounded-full transition-all duration-700 ease-out relative`}
                                             style={{ width: `${Math.max(team.rate * barScale, 2)}%` }}

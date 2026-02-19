@@ -28,16 +28,16 @@ const WeeklyStatusNav: React.FC<WeeklyStatusNavProps> = ({ statusData, selectedD
         const isHoliday = item.workType === '연차' || item.workType === '공휴일' || item.workType === '공가';
 
         // 상태에 따른 프리미엄 스타일 결정 (HSL 조화 컬러)
-        let statusClasses = 'bg-stone-50/50 text-stone-400 border-stone-100 hover:border-indigo-200 hover:bg-white hover:shadow-lg hover:shadow-indigo-500/10';
+        let statusClasses = 'bg-stone-50/50 dark:bg-slate-700/30 text-stone-400 border-stone-100 dark:border-slate-700 hover:border-indigo-200 hover:bg-white dark:hover:bg-slate-700 hover:shadow-lg hover:shadow-indigo-500/10';
 
         if (item.hasJob) {
-            statusClasses = 'bg-indigo-50/30 text-indigo-500 border-indigo-100 hover:border-indigo-300 hover:bg-indigo-50/60';
+            statusClasses = 'bg-indigo-50/30 dark:bg-indigo-900/20 text-indigo-500 border-indigo-100 dark:border-indigo-800/30 hover:border-indigo-300 hover:bg-indigo-50/60';
         } else if (isHoliday) {
-            statusClasses = 'bg-amber-50/30 text-amber-500 border-amber-100 hover:border-amber-300 hover:bg-amber-50/60';
+            statusClasses = 'bg-amber-50/30 dark:bg-amber-900/20 text-amber-500 border-amber-100 hover:border-amber-300 hover:bg-amber-50/60';
         }
 
         if (isSelected) {
-            statusClasses = 'bg-gradient-to-br from-indigo-600 to-violet-600 text-white border-indigo-500 shadow-xl shadow-indigo-200 scale-105 z-10';
+            statusClasses = 'bg-gradient-to-br from-indigo-600 to-violet-600 text-white border-indigo-500 shadow-xl shadow-indigo-200 dark:shadow-indigo-900/30 scale-105 z-10';
         }
 
         return (
@@ -46,10 +46,10 @@ const WeeklyStatusNav: React.FC<WeeklyStatusNavProps> = ({ statusData, selectedD
                 onClick={() => onDateSelect(new Date(item.date))}
                 className={`flex flex-col items-center justify-center p-3 rounded-2xl border transition-all duration-300 group min-w-[72px] sm:min-w-[80px] ${statusClasses} ${item.isToday && !isSelected ? 'ring-4 ring-indigo-50' : ''}`}
             >
-                <span className={`text-[10px] font-black mb-1.5 tracking-tighter uppercase transition-colors ${isSelected ? 'text-indigo-100' : 'text-slate-400 group-hover:text-indigo-500'} truncate w-full text-center`}>
+                <span className={`text-[10px] font-black mb-1.5 tracking-tighter uppercase transition-colors ${isSelected ? 'text-indigo-100' : 'text-slate-400 dark:text-slate-400 group-hover:text-indigo-500'} truncate w-full text-center`}>
                     {item.dayName}
                 </span>
-                <span className={`text-sm font-black mb-2 transition-transform duration-300 ${isSelected ? 'scale-110' : 'group-hover:scale-110 text-slate-700'}`}>
+                <span className={`text-sm font-black mb-2 transition-transform duration-300 ${isSelected ? 'scale-110' : 'group-hover:scale-110 text-slate-700 dark:text-slate-200'}`}>
                     {item.date.split('-')[2]}
                 </span>
                 <div className={`transition-all duration-300 ${isSelected ? 'scale-110' : 'group-hover:rotate-12'}`}>
@@ -68,28 +68,28 @@ const WeeklyStatusNav: React.FC<WeeklyStatusNavProps> = ({ statusData, selectedD
     return (
         <div className="relative w-full no-print">
             {/* 배경 글래스모피즘 효과 */}
-            <div className="absolute inset-0 bg-white/40 backdrop-blur-xl rounded-[2.5rem] border border-white/60 shadow-[0_32px_64px_-16px_rgba(0,0,0,0.05)] -z-10" />
+            <div className="absolute inset-0 bg-white/40 dark:bg-slate-800/40 backdrop-blur-xl rounded-[2.5rem] border border-white/60 dark:border-slate-700/60 shadow-[0_32px_64px_-16px_rgba(0,0,0,0.05)] -z-10" />
 
             <div className="flex flex-col p-6 sm:p-8">
                 {/* 헤더 영역 및 도움말 */}
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-6 sm:mb-8 gap-4">
                     <div className="flex items-center space-x-3">
-                        <div className="bg-indigo-600 p-2.5 rounded-2xl shadow-lg shadow-indigo-200 shrink-0">
+                        <div className="bg-indigo-600 p-2.5 rounded-2xl shadow-lg shadow-indigo-200 dark:shadow-indigo-900/30 shrink-0">
                             <Calendar size={20} className="text-white" />
                         </div>
                         <div>
-                            <h3 className="text-lg font-black text-slate-800 tracking-tight flex items-center">
+                            <h3 className="text-lg font-black text-slate-800 dark:text-slate-100 tracking-tight flex items-center">
                                 주간 업무 현황
                                 <Sparkles size={16} className="ml-2 text-indigo-500 animate-pulse" />
                             </h3>
-                            <p className="text-[11px] font-bold text-slate-400 mt-0.5">금주 및 차주 평일 작성 상태를 확인하고 이동하세요.</p>
+                            <p className="text-[11px] font-bold text-slate-400 dark:text-slate-400 mt-0.5">금주 및 차주 평일 작성 상태를 확인하고 이동하세요.</p>
                         </div>
                     </div>
 
                     {/* 도움말 카드 (헤더 우측으로 이동) */}
-                    <div className="hidden sm:flex items-center space-x-2 bg-white/60 px-4 py-2 rounded-xl border border-white/60 shadow-sm">
+                    <div className="hidden sm:flex items-center space-x-2 bg-white/60 dark:bg-slate-800/60 px-4 py-2 rounded-xl border border-white/60 dark:border-slate-700/60 shadow-sm">
                         <AlertCircle size={14} className="text-indigo-500" />
-                        <span className="text-[10px] font-bold text-slate-500">
+                        <span className="text-[10px] font-bold text-slate-500 dark:text-slate-400">
                             날짜를 클릭하여 해당 보고서로 이동
                         </span>
                     </div>
@@ -101,7 +101,7 @@ const WeeklyStatusNav: React.FC<WeeklyStatusNavProps> = ({ statusData, selectedD
                     <div className="flex flex-col space-y-3">
                         <div className="flex items-center space-x-2 ml-1">
                             <div className="w-1.5 h-1.5 rounded-full bg-indigo-500 shadow-[0_0_8px_rgba(99,102,241,0.6)]" />
-                            <span className="text-[11px] font-black text-slate-400 uppercase tracking-widest">THIS WEEK</span>
+                            <span className="text-[11px] font-black text-slate-400 dark:text-slate-400 uppercase tracking-widest">THIS WEEK</span>
                         </div>
                         <div className="grid grid-cols-5 gap-2 sm:gap-4">
                             {thisWeek.map(renderDay)}
@@ -111,8 +111,8 @@ const WeeklyStatusNav: React.FC<WeeklyStatusNavProps> = ({ statusData, selectedD
                     {/* 차주 현황 */}
                     <div className="flex flex-col space-y-3">
                         <div className="flex items-center space-x-2 ml-1">
-                            <div className="w-1.5 h-1.5 rounded-full bg-slate-300" />
-                            <span className="text-[11px] font-black text-slate-400 uppercase tracking-widest">NEXT WEEK</span>
+                            <div className="w-1.5 h-1.5 rounded-full bg-slate-300 dark:bg-slate-600" />
+                            <span className="text-[11px] font-black text-slate-400 dark:text-slate-400 uppercase tracking-widest">NEXT WEEK</span>
                         </div>
                         <div className="grid grid-cols-5 gap-2 sm:gap-4">
                             {nextWeek.map(renderDay)}
