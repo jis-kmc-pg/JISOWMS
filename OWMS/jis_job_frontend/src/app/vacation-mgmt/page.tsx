@@ -2,7 +2,8 @@
 
 import { useState, useEffect, Suspense } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
-import { Settings, Plus, ClipboardList, Shield } from 'lucide-react';
+import { Settings, Plus, ClipboardList, Shield, Plane, ArrowLeft } from 'lucide-react';
+import Link from 'next/link';
 import BulkVacation from '@/components/vacation/BulkVacation';
 import AdminVacation from '@/components/vacation/AdminVacation';
 import VacationStats from '@/components/vacation/VacationStats';
@@ -34,9 +35,20 @@ function VacationManagementContent() {
 
     return (
         <div className="space-y-8 pb-20">
-            <div>
-                <h2 className="text-2xl font-bold text-slate-800 dark:text-slate-100">연차 관리</h2>
-                <p className="text-slate-500 dark:text-slate-400 mt-1 font-medium">경영지원부 전용 임직원 휴가 및 연차 통합 관리 시스템입니다.</p>
+            <div className="flex items-center space-x-3 sm:space-x-4">
+                <Link href="/" className="text-slate-400 dark:text-slate-400 hover:text-indigo-600 transition-colors shrink-0" aria-label="홈으로 이동">
+                    <ArrowLeft size={22} aria-hidden="true" />
+                </Link>
+                <div className="min-w-0">
+                    <h1 className="text-lg sm:text-2xl font-extrabold text-slate-800 dark:text-slate-100 flex items-center gap-2 sm:gap-2.5">
+                        <div className="bg-indigo-50 dark:bg-indigo-900/30 p-1.5 sm:p-2 rounded-xl border border-indigo-100 dark:border-indigo-800/30 shrink-0">
+                            <Plane size={18} className="text-indigo-600 dark:text-indigo-400 sm:hidden" />
+                            <Plane size={22} className="text-indigo-600 dark:text-indigo-400 hidden sm:block" />
+                        </div>
+                        <span className="truncate">연차 관리</span>
+                    </h1>
+                    <p className="hidden sm:block text-sm text-slate-400 dark:text-slate-400 mt-1 ml-12">경영지원부 전용 임직원 휴가 및 연차 통합 관리 시스템입니다.</p>
+                </div>
             </div>
 
             <div className="flex flex-col md:flex-row gap-8">

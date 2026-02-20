@@ -75,7 +75,7 @@ export default function BoardListPage() {
     };
 
     return (
-        <div className="p-3 sm:p-6 max-w-5xl mx-auto">
+        <div className="px-8 max-w-[1600px] mx-auto">
             {/* Header */}
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-0 mb-4 sm:mb-6">
                 <div className="flex items-center space-x-3 sm:space-x-4 min-w-0">

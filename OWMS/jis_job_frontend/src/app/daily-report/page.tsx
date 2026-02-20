@@ -2,7 +2,7 @@
 'use client';
 
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { Save, Plus, ArrowLeft, FileSpreadsheet } from 'lucide-react';
+import { Save, Plus, ArrowLeft, FileSpreadsheet, FileText } from 'lucide-react';
 import Link from 'next/link';
 import api from '../../lib/api';
 import WeeklyStatusNav from '../../components/WeeklyStatusNav';
@@ -422,17 +422,22 @@ export default function DailyReportPage() {
 
     // --- Render ---
     return (
-        <div className="w-full max-w-[1920px] mx-auto space-y-4 sm:space-y-8 pb-20 px-3 sm:px-8">
+        <div className="w-full max-w-[1600px] mx-auto space-y-8 pb-20 px-8">
             {/* Header */}
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-0">
                 <div className="flex items-center space-x-3 sm:space-x-4 min-w-0">
-                    <Link href="/" aria-label="대시보드로 돌아가기" className="p-2 sm:p-2.5 hover:bg-stone-100 dark:hover:bg-slate-600 rounded-full transition-colors text-slate-400 dark:text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 shrink-0">
-                        <ArrowLeft size={22} className="sm:hidden" aria-hidden="true" />
-                        <ArrowLeft size={24} className="hidden sm:block" aria-hidden="true" />
+                    <Link href="/" className="text-slate-400 dark:text-slate-400 hover:text-indigo-600 transition-colors shrink-0" aria-label="홈으로 이동">
+                        <ArrowLeft size={22} aria-hidden="true" />
                     </Link>
                     <div className="min-w-0">
-                        <h2 className="text-xl sm:text-3xl font-bold text-slate-800 dark:text-slate-100 truncate">일일 업무 보고</h2>
-                        <p className="text-slate-500 dark:text-slate-400 mt-0.5 sm:mt-1 font-medium text-xs sm:text-base hidden sm:block">오늘 진행한 업무를 상세히 기록하세요.</p>
+                        <h1 className="text-lg sm:text-2xl font-extrabold text-slate-800 dark:text-slate-100 flex items-center gap-2 sm:gap-2.5">
+                            <div className="bg-indigo-50 dark:bg-indigo-900/30 p-1.5 sm:p-2 rounded-xl border border-indigo-100 dark:border-indigo-800/30 shrink-0">
+                                <FileText size={18} className="text-indigo-600 dark:text-indigo-400 sm:hidden" />
+                                <FileText size={22} className="text-indigo-600 dark:text-indigo-400 hidden sm:block" />
+                            </div>
+                            <span className="truncate">일일 업무 보고</span>
+                        </h1>
+                        <p className="hidden sm:block text-sm text-slate-400 dark:text-slate-400 mt-1 ml-12">오늘 진행한 업무를 상세히 기록하세요.</p>
                     </div>
                 </div>
                 <div className="flex items-center space-x-2 sm:space-x-3 shrink-0">

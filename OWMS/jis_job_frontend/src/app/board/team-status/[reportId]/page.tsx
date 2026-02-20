@@ -146,7 +146,7 @@ export default function TeamStatusDetailPage() {
     );
 
     return (
-        <div className="p-3 sm:p-6 max-w-5xl mx-auto">
+        <div className="px-8 max-w-[1600px] mx-auto">
             {/* Back Link */}
             <Link href="/board/team-status" className="inline-flex items-center text-slate-400 dark:text-slate-400 mb-4 sm:mb-6 hover:text-indigo-600 transition-colors font-medium text-sm">
                 <ArrowLeft size={18} className="mr-1.5" /> 목록으로 돌아가기

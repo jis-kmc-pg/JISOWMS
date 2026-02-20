@@ -128,8 +128,8 @@ export default function DashboardLayout({
     return (
         <div className="min-h-screen bg-[#fdfbf7] dark:bg-slate-900 text-slate-700 dark:text-slate-200 flex flex-col font-sans transition-colors duration-300 whitespace-nowrap">
             {/* Top Navigation Bar */}
-            <header className="fixed top-0 left-0 right-0 z-50 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl border-b border-stone-200 dark:border-slate-700 h-16 shadow-sm">
-                <div className="max-w-7xl mx-auto px-4 h-full flex items-center justify-between">
+            <header className="fixed top-0 left-0 right-0 z-50 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl border-b border-stone-200 dark:border-slate-700 h-16 lg:h-auto 3xl:h-16 shadow-sm">
+                <div className="w-full max-w-[1600px] mx-auto px-8 h-16 lg:h-auto lg:py-2 3xl:h-16 3xl:py-0 flex lg:flex-wrap 3xl:flex-nowrap items-center justify-between lg:gap-4 3xl:gap-0">
                     {/* Logo */}
                     <Link href="/" className="flex items-center space-x-2 group">
                         <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-indigo-500 to-purple-500 flex items-center justify-center shadow-lg shadow-indigo-500/20 group-hover:shadow-indigo-500/40 transition-all transform group-hover:scale-105">
@@ -142,7 +142,7 @@ export default function DashboardLayout({
                     </Link>
 
                     {/* Desktop Navigation */}
-                    <nav className="hidden md:flex items-center space-x-1">
+                    <nav className="hidden lg:flex items-center space-x-1 w-full 3xl:w-auto justify-center 3xl:justify-start order-3 3xl:order-2">
                         {menuItems.map((item) => {
                             const isActive = pathname === item.href || (item.href !== '/' && pathname.startsWith(item.href));
 
@@ -205,7 +205,7 @@ export default function DashboardLayout({
                     </nav>
 
                     {/* Right Section (Profile & Settings) */}
-                    <div className="hidden md:flex items-center space-x-4">
+                    <div className="hidden lg:flex items-center space-x-4 order-2 3xl:order-3">
                         {/* Special Management Buttons */}
                         <div className="flex items-center space-x-2 mr-2">
                             {managementItems.map((item) => {
@@ -299,7 +299,7 @@ export default function DashboardLayout({
 
                     {/* Mobile Menu Button */}
                     <button
-                        className="md:hidden p-2 text-slate-500 hover:text-slate-900 hover:bg-stone-50 rounded-xl transition-all"
+                        className="lg:hidden p-2 text-slate-500 hover:text-slate-900 hover:bg-stone-50 dark:text-slate-400 dark:hover:text-slate-200 dark:hover:bg-slate-700 rounded-xl transition-all"
                         onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
                     >
                         {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
@@ -308,7 +308,7 @@ export default function DashboardLayout({
 
                 {/* Mobile Menu Dropdown */}
                 {isMobileMenuOpen && (
-                    <div className="md:hidden absolute top-16 left-0 right-0 bg-white dark:bg-slate-900 border-b border-stone-200 dark:border-slate-700 p-6 shadow-2xl animate-in slide-in-from-top-4 duration-300 z-50">
+                    <div className="lg:hidden absolute top-full left-0 right-0 bg-white dark:bg-slate-900 border-b border-stone-200 dark:border-slate-700 p-6 shadow-2xl animate-in slide-in-from-top-4 duration-300 z-50">
                         <nav className="flex flex-col space-y-2">
                             {menuItems.map((item) => {
                                 const isActive = pathname === item.href || (item.href !== '/' && pathname.startsWith(item.href));
@@ -405,7 +405,7 @@ export default function DashboardLayout({
             </header>
 
             {/* Main Content Area */}
-            <main className="flex-1 pt-16 relative whitespace-normal">
+            <main className="flex-1 pt-16 lg:pt-20 3xl:pt-16 relative whitespace-normal">
                 {/* Background decoration */}
                 <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
                     <div className="absolute top-[-10%] left-[20%] w-[40%] h-[40%] bg-indigo-200/20 rounded-full blur-[120px] mix-blend-multiply"></div>
@@ -413,7 +413,7 @@ export default function DashboardLayout({
                     <div className="absolute bottom-[10%] left-[10%] w-[30%] h-[30%] bg-emerald-200/20 rounded-full blur-[100px] mix-blend-multiply"></div>
                 </div>
 
-                <div className="relative z-10 max-w-7xl mx-auto p-4 md:p-8">
+                <div className="relative z-10 w-full max-w-[1600px] mx-auto px-8 py-8">
                     {children}
                 </div>
             </main>

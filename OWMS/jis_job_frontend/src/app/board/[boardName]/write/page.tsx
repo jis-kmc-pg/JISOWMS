@@ -59,7 +59,7 @@ export default function PostWritePage() {
     };
 
     return (
-        <div className="p-3 sm:p-6 max-w-3xl mx-auto">
+        <div className="px-8 max-w-[1600px] mx-auto">
             {/* Back */}
             <button onClick={() => router.back()} className="inline-flex items-center text-slate-400 dark:text-slate-400 mb-4 sm:mb-6 hover:text-indigo-600 transition-colors font-medium text-sm">
                 <ArrowLeft size={18} className="mr-1.5" aria-hidden="true" /> 취소하고 돌아가기

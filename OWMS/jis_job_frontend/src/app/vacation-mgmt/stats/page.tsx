@@ -1,7 +1,8 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { BarChart3, TrendingUp, AlertCircle, Save, RotateCcw, Edit3, X, Calculator, Calendar } from 'lucide-react';
+import { BarChart3, TrendingUp, AlertCircle, Save, RotateCcw, Edit3, X, Calculator, Calendar, ArrowLeft } from 'lucide-react';
+import Link from 'next/link';
 import api from '@/lib/api';
 
 interface MonthlyAdjustment {
@@ -119,10 +120,21 @@ export default function VacationStatsPage() {
 
     return (
         <div className="space-y-8 pb-20">
-            <div className="flex items-center justify-between">
-                <div>
-                    <h2 className="text-2xl font-bold text-slate-800 tracking-tight text-slate-800">연차 실적 및 통계</h2>
-                    <p className="text-slate-500 mt-1 font-medium">부서별 연차 소진율과 개인별 잔여 연차 실적을 모니터링합니다.</p>
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-0">
+                <div className="flex items-center space-x-3 sm:space-x-4 min-w-0">
+                    <Link href="/" className="text-slate-400 dark:text-slate-400 hover:text-indigo-600 transition-colors shrink-0" aria-label="홈으로 이동">
+                        <ArrowLeft size={22} aria-hidden="true" />
+                    </Link>
+                    <div className="min-w-0">
+                        <h1 className="text-lg sm:text-2xl font-extrabold text-slate-800 dark:text-slate-100 flex items-center gap-2 sm:gap-2.5">
+                            <div className="bg-indigo-50 dark:bg-indigo-900/30 p-1.5 sm:p-2 rounded-xl border border-indigo-100 dark:border-indigo-800/30 shrink-0">
+                                <BarChart3 size={18} className="text-indigo-600 dark:text-indigo-400 sm:hidden" />
+                                <BarChart3 size={22} className="text-indigo-600 dark:text-indigo-400 hidden sm:block" />
+                            </div>
+                            <span className="truncate">연차 실적 및 통계</span>
+                        </h1>
+                        <p className="hidden sm:block text-sm text-slate-400 dark:text-slate-400 mt-1 ml-12">부서별 연차 소진율과 개인별 잔여 연차 실적을 모니터링합니다.</p>
+                    </div>
                 </div>
                 <div className="flex items-center space-x-3 text-xs font-bold bg-indigo-50 text-indigo-600 border border-indigo-200 px-4 py-2 rounded-xl">
                     <AlertCircle size={16} />

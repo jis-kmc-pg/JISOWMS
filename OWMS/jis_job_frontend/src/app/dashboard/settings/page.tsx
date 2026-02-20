@@ -152,7 +152,7 @@ export default function DashboardSettingsPage() {
     ];
 
     return (
-        <div className="space-y-8 animate-in fade-in duration-500 max-w-4xl mx-auto">
+        <div className="space-y-8 animate-in fade-in duration-500 max-w-[1600px] mx-auto">
             {/* 토스트 메시지 */}
             {toast.show && (
                 <div className="fixed top-6 right-6 z-50 animate-in slide-in-from-right duration-300" role="status" aria-live="polite">

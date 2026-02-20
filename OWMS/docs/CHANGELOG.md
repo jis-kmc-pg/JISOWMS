@@ -1,5 +1,290 @@
 # JISOWMS CHANGELOG
 
+## [2026-02-21] 반응형 레이아웃 개선 및 CORS 설정 수정
+
+> 헤더 레이아웃 반응형 브레이크포인트 최적화 및 백엔드 CORS 설정 추가
+
+---
+
+### 문제 해결: Network Error (CORS)
+
+**파일**: `jis_job_backend/src/main.ts`
+
+**변경사항**:
+- CORS origin에 `http://localhost:3002` 추가
+- Next.js dev 서버가 3000 포트 사용 중일 때 3002로 fallback하는 경우 대응
+
+**수정 전**:
+```typescript
+origin: [
+  'http://localhost:3000',
+  'http://localhost:1420',
+  'http://192.168.123.75:3000',
+  'http://192.168.123.46:3000',
+  'tauri://localhost',
+]
+```
+
+**수정 후**:
+```typescript
+origin: [
+  'http://localhost:3000',
+  'http://localhost:3002',  // ← 추가
+  'http://localhost:1420',
+  'http://192.168.123.75:3000',
+  'http://192.168.123.46:3000',
+  'tauri://localhost',
+]
+```
+
+**효과**:
+- 로그인 페이지에서 발생하던 Network Error 해결
+- 포트 충돌 시에도 정상적인 백엔드 연결 가능
+
+---
+
+### 반응형 레이아웃: 브레이크포인트 최적화
+
+**파일**: `jis_job_frontend/src/app/globals.css`
+
+**변경사항**:
+- Tailwind v4 커스텀 브레이크포인트 `3xl` 조정
+- 1600px → 1400px → 1420px → **1530px** (최종)
+
+**수정 내용**:
+```css
+@theme {
+  --breakpoint-3xl: 1530px;  /* 최종 값 */
+}
+```
+
+**레이아웃 기준**:
+- **≥ 1530px**: 1줄 데스크톱 메뉴 (로고 ← 네비게이션 → 프로필, 양쪽 정렬)
+- **1024px ~ 1529px**: 2줄 레이아웃
+  - 1줄: 로고 + 프로필 (가운데 정렬)
+  - 2줄: 네비게이션 (가운데 정렬)
+- **< 1024px**: 햄버거 메뉴 (1줄)
+
+---
+
+### 반응형 레이아웃: 2줄 모드 정렬 개선
+
+**파일**: `jis_job_frontend/src/app/dashboard-layout.tsx`
+
+**변경사항**:
+- 2줄 레이아웃(lg ~ 3xl)에서 1줄 콘텐츠(로고+프로필) 정렬 방식 변경
+- 양쪽 정렬(`justify-between`) → 가운데 정렬(`justify-center`)
+
+**수정 전**:
+```tsx
+<div className="... justify-between lg:gap-2 3xl:gap-0">
+```
+
+**수정 후**:
+```tsx
+<div className="... justify-between lg:justify-center 3xl:justify-between lg:gap-4 3xl:gap-0">
+```
+
+**효과**:
+- 2줄 모드에서 로고와 프로필이 중앙에 배치되어 시각적 균형 개선
+- gap 증가(2→4)로 가독성 향상
+
+---
+
+---
+
+### 헤더-컨텐츠 폭 정렬 수정
+
+**문제**: 헤더와 컨텐츠 영역의 폭이 시각적으로 맞지 않음
+
+**원인**:
+1. 반응형 padding 차이 (`px-4 md:px-8`)
+2. 헤더의 `lg:justify-center` 정렬로 로고 위치 이동
+
+**해결**:
+
+**파일**: `jis_job_frontend/src/app/dashboard-layout.tsx`
+
+1. **Padding 통일** (모든 화면 크기에서 동일한 32px)
+   ```tsx
+   // 수정 전
+   px-4 md:px-8
+
+   // 수정 후
+   px-8
+   ```
+
+2. **Justify 정렬 수정** (모든 화면에서 양쪽 정렬)
+   ```tsx
+   // 수정 전
+   justify-between lg:justify-center 3xl:justify-between
+
+   // 수정 후
+   justify-between
+   ```
+
+**효과**:
+- 헤더의 로고와 컨텐츠 시작 위치가 정확히 일치
+- 모든 화면 크기에서 일관된 정렬
+
+---
+
+### 전체 페이지 폭 통일
+
+**파일**: 총 16개 페이지
+
+**변경사항**: 모든 페이지를 헤더와 동일한 `max-w-[1600px]`와 `px-8`로 통일
+
+**게시판 페이지 (6개)**:
+- `board/[boardName]/page.tsx`: max-w-5xl → max-w-[1600px]
+- `board/[boardName]/[postId]/page.tsx`: max-w-4xl → max-w-[1600px]
+- `board/[boardName]/write/page.tsx`: max-w-3xl → max-w-[1600px]
+- `board/team-status/page.tsx`: max-w-6xl → max-w-[1600px]
+- `board/team-status/[reportId]/page.tsx`: max-w-5xl → max-w-[1600px]
+- `board/team-status/write/page.tsx`: max-w-4xl → max-w-[1600px]
+
+**일반 페이지 (10개)**:
+- `activity-log/page.tsx`: max-w-7xl → max-w-[1600px]
+- `daily-report/page.tsx`: max-w-[1920px] → max-w-[1600px]
+- `dashboard/settings/page.tsx`: max-w-4xl → max-w-[1600px]
+- `vacation-mgmt/bulk/page.tsx`: max-w-4xl → max-w-[1600px]
+- `vacation-mgmt/page.tsx`: 상속 (정상)
+- `vacation-mgmt/admin/page.tsx`: 상속 (정상)
+- `vacation-mgmt/stats/page.tsx`: 상속 (정상)
+- `weekly-status/page.tsx`: 상속 (정상)
+- `settings/page.tsx`: 상속 (정상)
+- 기타 페이지: 상속 (정상)
+
+---
+
+### 페이지 타이틀 UI 통일
+
+**목적**: 모든 페이지의 타이틀을 공지사항 스타일로 통일하여 일관된 UX 제공
+
+**기준 스타일** (공지사항 기준):
+```tsx
+<div className="flex items-center space-x-3 sm:space-x-4">
+    <Link href="/" className="text-slate-400 hover:text-indigo-600 ...">
+        <ArrowLeft size={22} />
+    </Link>
+    <div className="min-w-0">
+        <h1 className="text-lg sm:text-2xl font-extrabold ... flex items-center gap-2">
+            <div className="bg-indigo-50 dark:bg-indigo-900/30 p-1.5 sm:p-2 rounded-xl ...">
+                <Icon size={18} className="sm:hidden" />
+                <Icon size={22} className="hidden sm:block" />
+            </div>
+            <span className="truncate">페이지 제목</span>
+        </h1>
+        <p className="hidden sm:block text-sm text-slate-400 mt-1 ml-12">설명</p>
+    </div>
+</div>
+```
+
+**수정된 페이지 (13개)**:
+
+| 페이지 | 아이콘 | 변경 사항 |
+|--------|--------|-----------|
+| daily-report | FileText | 뒤로가기 + 아이콘 박스 추가 |
+| weekly-status | Calendar | 뒤로가기 + 아이콘 박스 추가 |
+| activity-log | Activity | 뒤로가기 추가, 아이콘 박스화 |
+| settings | Settings | 뒤로가기 + 아이콘 박스 추가 |
+| vacation-mgmt | Plane | 뒤로가기 + 아이콘 박스 추가 |
+| vacation-mgmt/admin | Users | 뒤로가기 + 아이콘 박스 추가 |
+| vacation-mgmt/bulk | Users | 뒤로가기 + 아이콘 박스 추가 |
+| vacation-mgmt/stats | BarChart3 | 뒤로가기 + 아이콘 박스 추가 |
+| reservation | Calendar | 헤더 추가 (뒤로가기 + 아이콘 + 제목) |
+| attendance | CalendarClock | 뒤로가기 + 아이콘 박스 추가 |
+| attendance/approval | CheckSquare | 뒤로가기 + 아이콘 박스 추가 |
+| board (6개) | MessageSquare | (이미 통일됨) |
+
+**통일된 요소**:
+1. ← 뒤로가기 버튼 (대시보드 제외)
+2. Indigo 테마 아이콘 박스
+3. 반응형 타이틀 (text-lg sm:text-2xl font-extrabold)
+4. 모바일에서 숨겨지는 설명 (hidden sm:block)
+
+**효과**:
+- 모든 페이지에서 일관된 네비게이션 경험
+- 아이콘으로 페이지 식별성 향상
+- 반응형 대응으로 모바일 가독성 개선
+
+---
+
+### 수정 파일 요약
+
+| 파일 | 변경 내용 |
+|------|----------|
+| `jis_job_backend/src/main.ts` | CORS origin에 `localhost:3002` 추가 |
+| `jis_job_frontend/src/app/globals.css` | 3xl 브레이크포인트 1530px으로 설정 |
+| `jis_job_frontend/src/app/dashboard-layout.tsx` | padding px-8 통일, justify-between으로 정렬 수정 |
+| 16개 페이지 파일 | max-w-[1600px], px-8로 폭 통일 |
+| 13개 페이지 파일 | 타이틀 UI 공지사항 스타일로 통일 |
+
+---
+
+## [2026-02-21] WebSocket 실시간 알림 시스템 구현
+
+> 연차 신청/승인 시 실시간 푸시 알림 (OWMS_SYS 데스크톱 앱)
+
+---
+
+### Backend (NotificationGateway)
+
+**신규 파일**: `src/gateway/notification.gateway.ts`
+- **Namespace**: `/notifications` (Socket.IO)
+- **CORS**: localhost:3000, localhost:1420, 192.168.123.75:3000, 192.168.123.46:3000, tauri://localhost
+- **User Connection Management**: Map<userId, socketId[]> (멀티 디바이스 지원)
+- **이벤트**:
+  - `register`: 클라이언트 userId 등록
+  - `vacation:request`: 연차 신청 알림 (팀장/부서장에게)
+  - `vacation:approved`: 연차 승인 알림 (신청자에게)
+
+**수정 파일**: `src/gateway/gateway.module.ts`
+- NotificationGateway를 Global Module로 등록 및 export
+
+**수정 파일**: `src/vacation/vacation.service.ts`
+- **requestVacation()**: 연차 생성 시 팀장/부서장 조회 후 `sendVacationRequest()` 호출
+- **updateVacation()**: 연차 승인 시 `sendVacationApproved()` 호출
+- Prisma include에 `team.users`, `department.users` 추가하여 알림 대상 추출
+
+### OWMS_SYS (Tauri 데스크톱 앱)
+
+**신규 파일**: `src/services/notificationService.ts`
+- Socket.IO Client 연결 관리 (`io()` from `socket.io-client`)
+- **connect()**: userId 기반 WebSocket 연결 + register 이벤트 발송
+- **disconnect()**: 연결 해제
+- **이벤트 핸들러**:
+  - `vacation:request`: 팀장/부서장 → Tauri `sendNotification()` 호출 (📅 연차 신청 알림)
+  - `vacation:approved`: 팀원/팀장 → Tauri `sendNotification()` 호출 (✅ 연차 승인 알림)
+
+**수정 파일**: `src/components/Dashboard.tsx`
+- **useEffect**: user.id 존재 시 자동으로 `notificationService.connect()` 호출
+- **cleanup**: 컴포넌트 언마운트 시 `notificationService.disconnect()` 호출
+- **제거**: 테스트용 `handleTestNotification()` 함수 및 "알림 테스트 (개발용)" 버튼 삭제
+
+**의존성 추가**: `socket.io-client` (`pnpm add socket.io-client`)
+
+### 알림 플로우
+
+1. **연차 신청** (ksm → 팀장/부서장)
+   - Web/OWMS_SYS에서 연차 신청
+   - Backend: 팀장(teamId 기준) + 부서장(departmentId 기준) userId 배열 추출
+   - `NotificationGateway.sendVacationRequest(targetUserIds, notification)`
+   - 연결된 팀장/부서장 OWMS_SYS에 Windows 알림 표시
+
+2. **연차 승인** (부서장 → ksm)
+   - Web에서 연차 승인
+   - Backend: `status: 'PENDING' → 'APPROVED'` 감지
+   - `NotificationGateway.sendVacationApproved(userId, notification)`
+   - 신청자 OWMS_SYS에 Windows 알림 표시
+
+### 테스트 결과
+- ✅ ksm(팀원) 연차 신청 → sjlee(부서장) 알림 수신 확인
+- ✅ sjlee(부서장) 승인 → ksm(팀원) 승인 알림 확인
+- ✅ 테스트 데이터 정리 (ID 254, 255 삭제)
+
+---
+
 ## [2026-02-19] 업무망 배포 준비
 
 > DB를 업무망(내부망)으로 전환하고 배포 서버(192.168.123.75) 환경 구성

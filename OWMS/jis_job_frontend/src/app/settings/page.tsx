@@ -1,7 +1,8 @@
 'use client';
 
 import { useState } from 'react';
-import { Briefcase, User, Building2, UserCog, Shield, DoorOpen, Car } from 'lucide-react';
+import { Briefcase, User, Building2, UserCog, Shield, DoorOpen, Car, Settings, ArrowLeft } from 'lucide-react';
+import Link from 'next/link';
 import JobsSettings from '@/components/settings/JobsSettings';
 import ProfileSettings from '@/components/settings/ProfileSettings';
 import DeptTeamSettings from '@/components/settings/DeptTeamSettings';
@@ -31,9 +32,20 @@ export default function SettingsPage() {
 
     return (
         <div className="space-y-8 pb-20">
-            <div>
-                <h2 className="text-2xl font-bold text-slate-800 dark:text-slate-100">설정</h2>
-                <p className="text-slate-500 dark:text-slate-400 mt-1 font-medium">시스템 및 개인화 설정을 관리합니다.</p>
+            <div className="flex items-center space-x-3 sm:space-x-4">
+                <Link href="/" className="text-slate-400 dark:text-slate-400 hover:text-indigo-600 transition-colors shrink-0" aria-label="홈으로 이동">
+                    <ArrowLeft size={22} aria-hidden="true" />
+                </Link>
+                <div className="min-w-0">
+                    <h1 className="text-lg sm:text-2xl font-extrabold text-slate-800 dark:text-slate-100 flex items-center gap-2 sm:gap-2.5">
+                        <div className="bg-indigo-50 dark:bg-indigo-900/30 p-1.5 sm:p-2 rounded-xl border border-indigo-100 dark:border-indigo-800/30 shrink-0">
+                            <Settings size={18} className="text-indigo-600 dark:text-indigo-400 sm:hidden" />
+                            <Settings size={22} className="text-indigo-600 dark:text-indigo-400 hidden sm:block" />
+                        </div>
+                        <span className="truncate">설정</span>
+                    </h1>
+                    <p className="hidden sm:block text-sm text-slate-400 dark:text-slate-400 mt-1 ml-12">시스템 및 개인화 설정을 관리합니다.</p>
+                </div>
             </div>
 
             <div className="flex flex-col md:flex-row gap-8">

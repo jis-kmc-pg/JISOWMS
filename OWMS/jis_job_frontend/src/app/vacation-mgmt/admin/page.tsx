@@ -1,7 +1,8 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Search, Filter, Trash2, CheckCircle, XCircle, Edit3, Download } from 'lucide-react';
+import { Search, Filter, Trash2, CheckCircle, XCircle, Edit3, Download, Users, ArrowLeft } from 'lucide-react';
+import Link from 'next/link';
 import api from '@/lib/api';
 
 export default function AdminVacationPage() {
@@ -56,10 +57,21 @@ export default function AdminVacationPage() {
 
     return (
         <div className="space-y-8 pb-20">
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-                <div>
-                    <h2 className="text-2xl font-bold text-slate-800 tracking-tight">전체 임직원 연차 관리</h2>
-                    <p className="text-slate-500 mt-1 font-medium">모든 신청 내역을 조회하고 승인, 수정 및 삭제 처리를 수행합니다.</p>
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-0">
+                <div className="flex items-center space-x-3 sm:space-x-4 min-w-0">
+                    <Link href="/" className="text-slate-400 dark:text-slate-400 hover:text-indigo-600 transition-colors shrink-0" aria-label="홈으로 이동">
+                        <ArrowLeft size={22} aria-hidden="true" />
+                    </Link>
+                    <div className="min-w-0">
+                        <h1 className="text-lg sm:text-2xl font-extrabold text-slate-800 dark:text-slate-100 flex items-center gap-2 sm:gap-2.5">
+                            <div className="bg-indigo-50 dark:bg-indigo-900/30 p-1.5 sm:p-2 rounded-xl border border-indigo-100 dark:border-indigo-800/30 shrink-0">
+                                <Users size={18} className="text-indigo-600 dark:text-indigo-400 sm:hidden" />
+                                <Users size={22} className="text-indigo-600 dark:text-indigo-400 hidden sm:block" />
+                            </div>
+                            <span className="truncate">전체 임직원 연차 관리</span>
+                        </h1>
+                        <p className="hidden sm:block text-sm text-slate-400 dark:text-slate-400 mt-1 ml-12">모든 신청 내역을 조회하고 승인, 수정 및 삭제 처리를 수행합니다.</p>
+                    </div>
                 </div>
                 <div className="flex items-center space-x-2">
                     <button className="flex items-center space-x-2 px-4 py-2 bg-white border border-stone-200 rounded-xl text-slate-600 font-bold hover:bg-stone-50 transition-all">

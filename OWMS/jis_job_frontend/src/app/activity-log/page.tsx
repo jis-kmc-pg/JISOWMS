@@ -15,7 +15,9 @@ import {
     Pencil,
     Trash2,
     Filter,
+    ArrowLeft,
 } from "lucide-react";
+import Link from "next/link";
 
 interface ActivityLog {
     id: number;
@@ -125,15 +127,21 @@ export default function ActivityLogPage() {
     };
 
     return (
-        <div className="p-3 sm:p-6 max-w-7xl mx-auto">
+        <div className="px-8 max-w-[1600px] mx-auto">
             {/* Header */}
-            <div className="flex items-center gap-3 mb-5">
-                <div className="bg-indigo-50 dark:bg-indigo-900/30 p-2 rounded-xl border border-indigo-100 dark:border-indigo-800/30">
-                    <Activity size={22} className="text-indigo-600 dark:text-indigo-400" />
-                </div>
-                <div>
-                    <h1 className="text-lg sm:text-xl font-extrabold text-slate-800 dark:text-slate-100">활동 로그</h1>
-                    <p className="text-xs text-slate-400 dark:text-slate-400 mt-0.5">사용자 활동 기록을 확인합니다</p>
+            <div className="flex items-center space-x-3 sm:space-x-4 mb-5">
+                <Link href="/" className="text-slate-400 dark:text-slate-400 hover:text-indigo-600 transition-colors shrink-0" aria-label="홈으로 이동">
+                    <ArrowLeft size={22} aria-hidden="true" />
+                </Link>
+                <div className="min-w-0">
+                    <h1 className="text-lg sm:text-2xl font-extrabold text-slate-800 dark:text-slate-100 flex items-center gap-2 sm:gap-2.5">
+                        <div className="bg-indigo-50 dark:bg-indigo-900/30 p-1.5 sm:p-2 rounded-xl border border-indigo-100 dark:border-indigo-800/30 shrink-0">
+                            <Activity size={18} className="text-indigo-600 dark:text-indigo-400 sm:hidden" />
+                            <Activity size={22} className="text-indigo-600 dark:text-indigo-400 hidden sm:block" />
+                        </div>
+                        <span className="truncate">활동 로그</span>
+                    </h1>
+                    <p className="hidden sm:block text-sm text-slate-400 dark:text-slate-400 mt-1 ml-12">사용자 활동 기록을 확인합니다</p>
                 </div>
             </div>
 

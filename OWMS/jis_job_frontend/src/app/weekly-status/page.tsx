@@ -1,7 +1,8 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { ChevronLeft, ChevronRight, Calculator, Calendar, Download, Printer, X } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Calculator, Calendar, Download, Printer, X, ArrowLeft } from 'lucide-react';
+import Link from 'next/link';
 import api from '../../lib/api';
 import ToastNotification from '../../components/daily-report/ToastNotification';
 
@@ -209,10 +210,21 @@ export default function WeeklyStatusPage() {
 
     return (
         <div className="space-y-6 relative pb-10">
-            <div className="flex items-center justify-between">
-                <div>
-                    <h2 className="text-2xl font-bold text-slate-800 dark:text-slate-100">주간 업무 현황</h2>
-                    <p className="text-slate-500 dark:text-slate-400 mt-1 font-medium">팀원들의 주간 업무 작성 현황을 확인합니다. 완료 아이콘을 클릭하여 상세 내용을 확인하세요.</p>
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-0">
+                <div className="flex items-center space-x-3 sm:space-x-4 min-w-0">
+                    <Link href="/" className="text-slate-400 dark:text-slate-400 hover:text-indigo-600 transition-colors shrink-0" aria-label="홈으로 이동">
+                        <ArrowLeft size={22} aria-hidden="true" />
+                    </Link>
+                    <div className="min-w-0">
+                        <h1 className="text-lg sm:text-2xl font-extrabold text-slate-800 dark:text-slate-100 flex items-center gap-2 sm:gap-2.5">
+                            <div className="bg-indigo-50 dark:bg-indigo-900/30 p-1.5 sm:p-2 rounded-xl border border-indigo-100 dark:border-indigo-800/30 shrink-0">
+                                <Calendar size={18} className="text-indigo-600 dark:text-indigo-400 sm:hidden" />
+                                <Calendar size={22} className="text-indigo-600 dark:text-indigo-400 hidden sm:block" />
+                            </div>
+                            <span className="truncate">주간 업무 현황</span>
+                        </h1>
+                        <p className="hidden sm:block text-sm text-slate-400 dark:text-slate-400 mt-1 ml-12">팀원들의 주간 업무 작성 현황을 확인합니다.</p>
+                    </div>
                 </div>
 
                 <div className="flex items-center space-x-4">
