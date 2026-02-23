@@ -23,12 +23,25 @@
         "alwaysOnTop": true,
         "center": false,
         "visible": false,
+        "decorations": false,
         "x": 1480,
-        "y": 520
+        "y": 100
       }
     ],
     "security": {
-      "csp": null
+      "csp": null,
+      "capabilities": [
+        {
+          "identifier": "main-capability",
+          "windows": ["main"],
+          "permissions": [
+            "core:window:allow-hide",
+            "core:window:allow-show",
+            "core:window:allow-set-focus",
+            "notification:default"
+          ]
+        }
+      ]
     }
   },
   "bundle": {

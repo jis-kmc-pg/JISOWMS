@@ -1,4 +1,4 @@
-import { Controller, Post, UseGuards, Request, Res } from '@nestjs/common';
+import { Controller, Post, UseGuards, Request, Res, Body } from '@nestjs/common';
 import type { Response } from 'express';
 import { AuthService } from './auth.service';
 import { LocalAuthGuard } from './local-auth.guard';
@@ -72,5 +72,36 @@ export class AuthController {
     });
 
     return { message: 'Tokens refreshed' };
+  }
+
+  /**
+   * SSO (Single Sign-On) 엔드포인트
+   * Tauri 앱에서 전달받은 토큰으로 웹 브라우저에 쿠키 설정
+   */
+  @Post('sso')
+  async sso(
+    @Body('token') token: string,
+    @Res({ passthrough: true }) res: Response,
+  ) {
+    const result = await this.authService.validateSsoToken(token);
+
+    // Access Token & Refresh Token 쿠키 설정
+    res.cookie('access_token', result.accessToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      path: '/',
+      maxAge: 15 * 60 * 1000, // 15분
+    });
+
+    res.cookie('refresh_token', result.refreshToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      path: '/',
+      maxAge: 7 * 24 * 60 * 60 * 1000, // 7일
+    });
+
+    return { message: 'SSO login successful', user: result.user };
   }
 }

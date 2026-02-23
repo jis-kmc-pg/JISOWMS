@@ -105,4 +105,51 @@ export class AuthService {
       refreshToken: rt,
     };
   }
+
+  /**
+   * SSO 토큰 검증 및 새 토큰 발급
+   * Tauri 앱에서 전달받은 JWT 토큰을 검증하고 웹용 쿠키 토큰 생성
+   */
+  async validateSsoToken(token: string) {
+    try {
+      // JWT 토큰 검증
+      const payload = await this.jwtService.verifyAsync(token, {
+        secret: this.configService.get<string>('JWT_SECRET'),
+      });
+
+      // 사용자 정보 조회
+      const user = await this.prisma.user.findUnique({
+        where: { id: payload.sub },
+        include: {
+          department: { select: { name: true } },
+          team: { select: { name: true } },
+        },
+      });
+
+      if (!user) {
+        throw new UnauthorizedException('User not found');
+      }
+
+      // 새로운 토큰 발급 (웹 브라우저용)
+      const tokens = await this.getTokens(
+        user.id,
+        user.userId,
+        user.role,
+        user.departmentId,
+        user.teamId,
+      );
+
+      // Refresh Token을 DB에 저장
+      await this.updateRefreshToken(user.id, tokens.refreshToken);
+
+      const { password, refreshToken, ...userWithoutSensitive } = user;
+
+      return {
+        ...tokens,
+        user: userWithoutSensitive,
+      };
+    } catch (error) {
+      throw new UnauthorizedException('Invalid SSO token');
+    }
+  }
 }

@@ -1,5 +1,6 @@
 import { Injectable, BadRequestException, Logger } from '@nestjs/common';
 import { PrismaService } from '../prisma.service';
+import { NotificationGateway } from '../gateway/notification.gateway';
 
 interface CreateVacationDto {
   type: string;
@@ -11,7 +12,10 @@ interface CreateVacationDto {
 @Injectable()
 export class VacationService {
   private readonly logger = new Logger(VacationService.name);
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private notificationGateway: NotificationGateway,
+  ) {}
 
   // 1. Get Vacation Summary (Total, Used, Remaining)
   async getSummary(userId: number) {
@@ -118,7 +122,7 @@ export class VacationService {
       );
     }
 
-    return this.prisma.vacation.create({
+    const vacation = await this.prisma.vacation.create({
       data: {
         userId,
         type: dto.type,
@@ -127,7 +131,59 @@ export class VacationService {
         reason: dto.reason,
         status: 'PENDING',
       },
+      include: {
+        user: {
+          include: {
+            team: {
+              include: {
+                users: {
+                  where: { role: 'TEAM_LEADER' },
+                  select: { id: true },
+                },
+              },
+            },
+            department: {
+              include: {
+                users: {
+                  where: { role: 'DEPT_HEAD' },
+                  select: { id: true },
+                },
+              },
+            },
+          },
+        },
+      },
     });
+
+    // 알림 발송: 팀장 + 부서장에게
+    const targetUserIds: number[] = [];
+
+    // 팀장 찾기
+    if (vacation.user.team?.users) {
+      vacation.user.team.users.forEach((u) => targetUserIds.push(u.id));
+    }
+
+    // 부서장 찾기
+    if (vacation.user.department?.users) {
+      vacation.user.department.users.forEach((u) => targetUserIds.push(u.id));
+    }
+
+    if (targetUserIds.length > 0) {
+      this.notificationGateway.sendVacationRequest(targetUserIds, {
+        type: 'vacation_request',
+        userId: vacation.user.id,
+        userName: vacation.user.name,
+        startDate: vacation.startDate.toISOString(),
+        endDate: vacation.endDate.toISOString(),
+        vacationType: vacation.type,
+        timestamp: Date.now(),
+      });
+      this.logger.log(
+        `Sent vacation request notification to ${targetUserIds.length} users`,
+      );
+    }
+
+    return vacation;
   }
 
   // 4. [Dept Head] Get Requests in specific department
@@ -249,14 +305,43 @@ export class VacationService {
 
   // 6. [Admin] Update/Approve Vacation
   async updateVacation(id: number, data: any) {
-    return this.prisma.vacation.update({
+    // 승인 여부 확인
+    const wasApproved = data.status === 'APPROVED';
+
+    const vacation = await this.prisma.vacation.update({
       where: { id },
       data: {
         ...data,
         startDate: data.startDate ? new Date(data.startDate) : undefined,
         endDate: data.endDate ? new Date(data.endDate) : undefined,
       },
+      include: {
+        user: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
+      },
     });
+
+    // 승인 알림 발송
+    if (wasApproved) {
+      this.notificationGateway.sendVacationApproved(vacation.user.id, {
+        type: 'vacation_approved',
+        userId: vacation.user.id,
+        userName: vacation.user.name,
+        startDate: vacation.startDate.toISOString(),
+        endDate: vacation.endDate.toISOString(),
+        vacationType: vacation.type,
+        timestamp: Date.now(),
+      });
+      this.logger.log(
+        `Sent vacation approved notification to user ${vacation.user.id}`,
+      );
+    }
+
+    return vacation;
   }
 
   // 7. [Admin] Delete Vacation

@@ -1,6 +1,6 @@
 # JISOWMS 프로젝트 현황 문서
 
-> 작성일: 2026-02-15 | 최종 갱신: 2026-02-19 업무망 배포 준비
+> 작성일: 2026-02-15 | 최종 갱신: 2026-02-21 WebSocket 실시간 알림 시스템
 
 ---
 
@@ -59,6 +59,9 @@ OWMS Web (Next.js 16, :3000)  -->  OWMS Backend (NestJS 11, :4000)
 |------|-----------|
 | Tauri | v2 |
 | Rust | 시스템 레이어 |
+| socket.io-client | WebSocket 클라이언트 |
+| React | 19+ |
+| TypeScript | 5.x |
 
 ### Database
 | 항목 | 값 |
@@ -72,7 +75,7 @@ OWMS Web (Next.js 16, :3000)  -->  OWMS Backend (NestJS 11, :4000)
 
 ## 3. 주요 기능 목록
 
-### Backend 모듈 구성 (17개)
+### Backend 모듈 구성 (18개)
 
 | 모듈 | 경로 | 주요 기능 |
 |------|------|-----------|
@@ -81,13 +84,14 @@ OWMS Web (Next.js 16, :3000)  -->  OWMS Backend (NestJS 11, :4000)
 | Admin | `admin/` | 관리자 기능 |
 | Reports | `reports/` | 업무보고 작성/조회, 주간노트, 프로젝트 관리, 일일 근태 |
 | Work Status | `work-status/` | 주간 작성현황 요약, 팀/부서별 통계, 키워드 분석 |
-| Vacation | `vacation/` | 연차 신청/승인, 부서별 통계, 일괄 등록 |
+| Vacation | `vacation/` | 연차 신청/승인, 부서별 통계, 일괄 등록, 실시간 알림 |
 | Dispatch | `dispatch/` | 배차 신청/조회/취소, 팀/부서 필터 |
 | Meeting Room | `meeting-room/` | 회의실 CRUD, 예약 관리, 취소 |
 | Board | `board/` | 게시판 관리, 게시글 CRUD, 댓글, 최근글 |
 | Metrics | `metrics/` | 대시보드 통계, 월간 트렌드, 배차/회의실 통계, 근태/연차 추이 |
 | Dashboard | `dashboard/` | 대시보드 메인 |
 | Dashboard Preferences | `dashboard-preferences/` | 위젯 레이아웃 저장/복원, 역할별 기본 프리셋 |
+| Gateway | `gateway/` | WebSocket 실시간 알림 (DashboardGateway, NotificationGateway) |
 | Vehicle | `vehicle/` | 차량 관리 |
 | Team Status | `team-status/` | 팀 업무현황 보고서 |
 | Activity Log | `activity-log/` | 활동 로그 |
@@ -368,6 +372,38 @@ CEO > EXECUTIVE > DEPT_HEAD > TEAM_LEADER > MEMBER
 ---
 
 ## 8. 최근 변경 이력
+
+### WebSocket 실시간 알림 시스템 (2026-02-21)
+
+**기능 개요:**
+- 연차 신청/승인 시 실시간 푸시 알림 (OWMS_SYS 데스크톱 앱)
+- Socket.IO 기반 WebSocket 양방향 통신
+- Tauri 시스템 알림과 통합
+
+**Backend 구현:**
+- `gateway/notification.gateway.ts` 신규 생성
+  - Namespace: `/notifications`
+  - User Connection Management: Map<userId, socketId[]> (멀티 디바이스 지원)
+  - 이벤트: `register`, `vacation:request`, `vacation:approved`
+- `gateway/gateway.module.ts` NotificationGateway Global 등록
+- `vacation/vacation.service.ts` 알림 전송 로직 추가
+  - requestVacation(): 팀장/부서장에게 연차 신청 알림
+  - updateVacation(): 신청자에게 승인 알림
+
+**OWMS_SYS 구현:**
+- `services/notificationService.ts` 신규 생성 (Socket.IO Client)
+  - connect/disconnect 연결 관리
+  - vacation:request → Tauri sendNotification() (📅 연차 신청 알림)
+  - vacation:approved → Tauri sendNotification() (✅ 연차 승인 알림)
+- `components/Dashboard.tsx` useEffect 자동 연결/해제
+- 테스트용 버튼 제거 (handleTestNotification)
+
+**알림 플로우:**
+1. **연차 신청**: ksm(팀원) → 팀장/부서장 OWMS_SYS에 Windows 알림
+2. **연차 승인**: 부서장 → ksm(신청자) OWMS_SYS에 Windows 알림
+
+**의존성:**
+- OWMS_SYS: `socket.io-client` 추가
 
 ### 업무망 배포 준비 (2026-02-19)
 
@@ -667,6 +703,11 @@ const items = Array.isArray(data) ? data : (data?.data || data?.items || []);
 |--------|------|
 | @nestjs/websockets + @nestjs/platform-socket.io | WebSocket 게이트웨이 |
 | socket.io | Socket.IO 서버 |
+
+### Desktop 추가 패키지
+| 패키지 | 용도 |
+|--------|------|
+| socket.io-client | WebSocket 실시간 알림 |
 
 ---
 

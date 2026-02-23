@@ -22,9 +22,10 @@ export function middleware(request: NextRequest) {
     const token = request.cookies.get('access_token')?.value;
     const { pathname } = request.nextUrl;
 
-    // 로그인 페이지나 정적 리소스는 통과
+    // 로그인 페이지, SSO, 정적 리소스는 통과
     if (
         pathname.startsWith('/login') ||
+        pathname.startsWith('/sso') || // SSO 경로 추가
         pathname.startsWith('/_next') ||
         pathname === '/favicon.ico' ||
         pathname.includes('.') // 이미지 등 파일 제외

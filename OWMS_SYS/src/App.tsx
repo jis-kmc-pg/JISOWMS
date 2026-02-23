@@ -4,6 +4,7 @@ import { listen } from "@tauri-apps/api/event";
 import { useUserStore } from "./store/userStore";
 import Login from "./components/Login";
 import Dashboard from "./components/Dashboard";
+import { scheduleNotifications } from "./services/notificationScheduler";
 
 function App() {
   const user = useUserStore((state) => state.user);
@@ -18,6 +19,13 @@ function App() {
       unlisten.then((fn) => fn());
     };
   }, [logout]);
+
+  // 로그인 후 알림 스케줄러 시작 (금요일 9시, 10시 알림)
+  useEffect(() => {
+    if (user) {
+      scheduleNotifications(user.id, user.role);
+    }
+  }, [user]);
 
   return <>{user ? <Dashboard /> : <Login />}</>;
 }

@@ -3,12 +3,13 @@
 import { useEffect, useRef } from 'react';
 import { io, Socket } from 'socket.io-client';
 import { useSWRConfig } from 'swr';
+import { env } from '../env';
 
 // Nginx가 /socket.io/를 Backend로 프록시하므로 namespace만 지정
 // 개발 환경(localhost)에서는 직접 연결, 배포 환경에서는 same-origin 프록시
-const SOCKET_URL = process.env.NEXT_PUBLIC_API_URL?.startsWith('/')
+const SOCKET_URL = env.API_URL.startsWith('/')
     ? '/dashboard'
-    : (process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000') + '/dashboard';
+    : env.API_URL + '/dashboard';
 
 export function useSocket() {
     const { mutate } = useSWRConfig();

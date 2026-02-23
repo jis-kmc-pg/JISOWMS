@@ -1,8 +1,9 @@
 import axios from 'axios';
+import { env } from './env';
 
 // Create an Axios instance
 const api = axios.create({
-    baseURL: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000',
+    baseURL: env.API_URL,
     withCredentials: true, // Send cookies with requests
     headers: {
         'Content-Type': 'application/json',
