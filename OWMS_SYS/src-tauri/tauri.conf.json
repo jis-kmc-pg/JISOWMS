@@ -24,6 +24,7 @@
         "center": false,
         "visible": false,
         "decorations": false,
+        "dragDropEnabled": false,
         "x": 1480,
         "y": 100
       }
@@ -38,7 +39,17 @@
             "core:window:allow-hide",
             "core:window:allow-show",
             "core:window:allow-set-focus",
-            "notification:default"
+            "core:window:allow-start-dragging",
+            "notification:default",
+            "opener:default",
+            {
+              "identifier": "http:default",
+              "allow": [
+                "http://jis4f.iptime.org:2140/*",
+                "http://localhost:4000/*",
+                "http://**"
+              ]
+            }
           ]
         }
       ]

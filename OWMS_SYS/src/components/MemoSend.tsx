@@ -16,7 +16,7 @@ export default function MemoSend() {
             await apiClient.post("/reports/system-memos", { content, date: today });
             setContent("");
             setToast({ message: "메모가 전송되었습니다!", type: "success" });
-        } catch (error) {
+        } catch (error: any) {
             console.error("메모 전송 실패:", error);
             setToast({ message: "메모 전송에 실패했습니다.", type: "error" });
         } finally {

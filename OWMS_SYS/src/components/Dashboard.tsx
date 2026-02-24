@@ -3,7 +3,6 @@ import { useUserStore } from "../store/userStore";
 import { openUrl } from "@tauri-apps/plugin-opener";
 import { getCurrentWindow } from "@tauri-apps/api/window";
 import { downloadDir } from "@tauri-apps/api/path";
-import { sendNotification } from "@tauri-apps/plugin-notification";
 import { ExternalLink, Send, Clock, Car, Users, Calendar, FileDown, Plus, ChevronDown, LogOut } from "lucide-react";
 import MemoSend from "./MemoSend";
 import WeeklyStatusSimple from "./WeeklyStatusSimple";

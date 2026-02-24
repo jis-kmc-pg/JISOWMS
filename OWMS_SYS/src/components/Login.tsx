@@ -1,9 +1,8 @@
 import { useState } from "react";
-import { AxiosError } from "axios";
-import apiClient from "../api/client";
+import { invoke } from "@tauri-apps/api/core";
 import { useUserStore } from "../store/userStore";
 import { getCurrentWindow } from "@tauri-apps/api/window";
-import { LogIn, ChevronDown } from "lucide-react";
+import { LogIn, ChevronDown, GripHorizontal } from "lucide-react";
 
 export default function Login() {
     const { login, lastUserId } = useUserStore();
@@ -15,14 +14,19 @@ export default function Login() {
         e.preventDefault();
         setError("");
         try {
-            const response = await apiClient.post("/auth/login", { userId, password });
-            login(response.data.accessToken, response.data.user);
+            const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:4000';
+
+            const response = await invoke<{ accessToken: string; user: any }>('login_command', {
+                url: `${apiUrl}/auth/login`,
+                userId,
+                password
+            });
+
+            login(response.accessToken, response.user);
         } catch (err: unknown) {
-            if (err instanceof AxiosError) {
-                setError(err.response?.data?.message || "로그인에 실패했습니다.");
-            } else {
-                setError("로그인에 실패했습니다.");
-            }
+            console.error('Login error:', err);
+            const errorMessage = typeof err === 'string' ? err : "로그인에 실패했습니다.";
+            setError(errorMessage);
         }
     };
 
@@ -33,10 +37,20 @@ export default function Login() {
 
     return (
         <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 p-3 relative">
+            {/* 드래그 가능한 영역 */}
+            <div
+                data-tauri-drag-region
+                className="absolute top-0 left-0 right-0 h-12 flex items-center justify-center cursor-move group"
+            >
+                <div className="flex items-center gap-1 text-slate-400 group-hover:text-slate-600 transition-colors">
+                    <GripHorizontal size={14} />
+                </div>
+            </div>
+
             {/* 트레이 숨김 버튼 */}
             <button
                 onClick={handleClose}
-                className="absolute top-3 right-3 p-2 bg-white/80 hover:bg-white rounded-lg shadow-md hover:shadow-lg transition-all cursor-pointer border border-blue-100"
+                className="absolute top-3 right-3 p-2 bg-white/80 hover:bg-white rounded-lg shadow-md hover:shadow-lg transition-all cursor-pointer border border-blue-100 z-10"
                 title="트레이로 숨기기"
             >
                 <ChevronDown size={16} className="text-slate-600" />

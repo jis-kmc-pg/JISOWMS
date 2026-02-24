@@ -13,7 +13,8 @@ interface VacationNotification {
 
 class NotificationService {
   private socket: Socket | null = null;
-  private userId: number | null = null;
+  // @ts-ignore - userId will be used for future user-specific features
+  private _userId: number | null = null;
 
   connect(userId: number, apiUrl: string) {
     if (this.socket?.connected) {
@@ -21,7 +22,7 @@ class NotificationService {
       return;
     }
 
-    this.userId = userId;
+    this._userId = userId;
     const socketUrl = apiUrl.replace(/\/api$/, ''); // http://localhost:4000
 
     this.socket = io(`${socketUrl}/notifications`, {
@@ -66,7 +67,7 @@ class NotificationService {
     if (this.socket) {
       this.socket.disconnect();
       this.socket = null;
-      this.userId = null;
+      this._userId = null;
       console.log('Disconnected from notification service');
     }
   }
@@ -93,6 +94,10 @@ class NotificationService {
 
   isConnected(): boolean {
     return this.socket?.connected ?? false;
+  }
+
+  getUserId(): number | null {
+    return this._userId;
   }
 }
 
