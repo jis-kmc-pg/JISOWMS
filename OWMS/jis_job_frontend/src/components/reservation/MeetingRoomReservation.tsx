@@ -227,16 +227,7 @@ export default function MeetingRoomReservation() {
     return (
         <div>
             {/* Header */}
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4 sm:mb-6">
-                <div>
-                    <h2 className="text-lg sm:text-xl font-extrabold text-slate-800 dark:text-slate-100 flex items-center gap-2">
-                        <div className="bg-violet-50 dark:bg-violet-900/30 p-1.5 rounded-lg border border-violet-100 dark:border-violet-800/30">
-                            <DoorOpen size={18} className="text-violet-600" aria-hidden="true" />
-                        </div>
-                        회의실 예약
-                    </h2>
-                    <p className="text-xs text-slate-400 dark:text-slate-400 mt-1 ml-9 hidden sm:block">회의실별 월간 예약 현황을 확인하고 예약할 수 있습니다</p>
-                </div>
+            <div className="flex justify-end mb-4 sm:mb-6">
                 <button
                     onClick={() => openReserveModal()}
                     className="bg-violet-600 text-white px-4 sm:px-5 py-2 sm:py-2.5 rounded-xl hover:bg-violet-700 flex items-center justify-center gap-2 shadow-lg shadow-violet-200 font-bold text-sm transition-colors active:scale-[0.97] shrink-0 w-full sm:w-auto"

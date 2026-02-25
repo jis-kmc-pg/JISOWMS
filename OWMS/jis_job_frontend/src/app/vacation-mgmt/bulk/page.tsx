@@ -46,9 +46,11 @@ export default function BulkVacationPage() {
             });
             alert('일괄 신청이 완료되었습니다.');
             setForm({ type: 'ANNUAL', startDate: '', endDate: '', reason: '부서 일괄 신청' });
-        } catch (e) {
+        } catch (e: any) {
             console.error(e);
-            alert('일괄 신청 중 오류가 발생했습니다.');
+            // 백엔드 응답의 실제 오류 메시지 표시
+            const errorMessage = e?.response?.data?.message || '일괄 신청 중 오류가 발생했습니다.';
+            alert(errorMessage);
         } finally {
             setLoading(false);
         }

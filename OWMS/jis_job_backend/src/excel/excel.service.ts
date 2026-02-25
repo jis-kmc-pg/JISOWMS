@@ -335,7 +335,8 @@ export class ExcelService {
         if (rNum <= endRow) {
           // Row 41 ~ 44 범위 내에서 기입
           const targetCell = worksheet.getRow(rNum).getCell(4); // D41, D42...
-          const masterCell = targetCell.master; // 템플릿의 가로 병합(D:N) 마스터 셀
+          // 병합된 셀인 경우 master 사용, 아니면 자기 자신 사용
+          const masterCell = targetCell.master || targetCell;
 
           masterCell.value = line;
           masterCell.alignment = {
@@ -346,13 +347,15 @@ export class ExcelService {
         }
       });
     } else {
-      // 데이터가 없는 경우: Row 40-44 전체 초기화 (레이블 포함)
-      for (let r = 40; r <= endRow; r++) {
+      // 데이터가 없는 경우: Row 41-44 데이터 영역(Col D-N)만 초기화
+      // Col A-C는 "중요정보사항" 레이블 영역이므로 보존
+      for (let r = startRow; r <= endRow; r++) {
         const row = worksheet.getRow(r);
-        // Col 1~14 초기화
-        for (let c = 1; c <= 14; c++) {
+        // Col 4~14 (D-N) 초기화 (Col 1-3은 레이블 영역 보존)
+        for (let c = 4; c <= 14; c++) {
           const cell = row.getCell(c);
-          if (cell.address === cell.master.address) {
+          const masterCell = cell.master || cell;
+          if (cell.address === masterCell.address) {
             cell.value = null;
           }
         }

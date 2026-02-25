@@ -10,8 +10,14 @@ import {
     Edit2,
     Trash2,
     XCircle,
-    RotateCcw
+    RotateCcw,
+    AlertCircle
 } from 'lucide-react';
+import {
+    MAX_PROJECT_NAME_LENGTH,
+    MAX_CLIENT_NAME_LENGTH,
+    MAX_COMBINED_JOB_TITLE_LENGTH
+} from '../../constants/validation';
 
 interface Job {
     id: number;
@@ -68,6 +74,26 @@ export default function JobsSettings() {
     const handleSubmit = async () => {
         if (!formData.projectName) return;
 
+        // 글자수 검증
+        if (formData.projectName.length > MAX_PROJECT_NAME_LENGTH) {
+            alert(`업무명은 최대 ${MAX_PROJECT_NAME_LENGTH}자까지 입력 가능합니다.`);
+            return;
+        }
+
+        if (formData.clientName && formData.clientName.length > MAX_CLIENT_NAME_LENGTH) {
+            alert(`거래처명은 최대 ${MAX_CLIENT_NAME_LENGTH}자까지 입력 가능합니다.`);
+            return;
+        }
+
+        // 결합 시 전체 길이 체크 ("거래처 : 업무명" 형식)
+        if (formData.clientName) {
+            const combinedLength = formData.clientName.length + 3 + formData.projectName.length; // " : " = 3자
+            if (combinedLength > MAX_COMBINED_JOB_TITLE_LENGTH) {
+                alert(`거래처명과 업무명을 합쳐서 최대 ${MAX_COMBINED_JOB_TITLE_LENGTH}자까지 입력 가능합니다.\n(현재: ${combinedLength}자, "${formData.clientName} : ${formData.projectName}")`);
+                return;
+            }
+        }
+
         try {
             if (isEditing && currentJobId) {
                 await api.patch(`/reports/projects/${currentJobId}`, formData);
@@ -100,6 +126,21 @@ export default function JobsSettings() {
 
         return matchesSearch && matchesFilter;
     });
+
+    // 글자수 검증 헬퍼 함수들
+    const getCombinedLength = () => {
+        if (!formData.clientName) return formData.projectName.length;
+        return formData.clientName.length + 3 + formData.projectName.length; // " : " = 3자
+    };
+
+    const getCombinedTitle = () => {
+        if (!formData.clientName) return formData.projectName;
+        return `${formData.clientName} : ${formData.projectName}`;
+    };
+
+    const isProjectNameExceeded = formData.projectName.length > MAX_PROJECT_NAME_LENGTH;
+    const isClientNameExceeded = formData.clientName.length > MAX_CLIENT_NAME_LENGTH;
+    const isCombinedExceeded = formData.clientName && getCombinedLength() > MAX_COMBINED_JOB_TITLE_LENGTH;
 
     return (
         <div className="space-y-6">
@@ -222,26 +263,80 @@ export default function JobsSettings() {
                         </div>
                         <div className="space-y-5">
                             <div>
-                                <label className="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase mb-2">업무명 (필수)</label>
+                                <div className="flex justify-between items-center mb-2">
+                                    <label className="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase">업무명 (필수)</label>
+                                    <span className={`text-xs font-bold ${isProjectNameExceeded ? 'text-rose-500' : 'text-slate-400 dark:text-slate-400'}`}>
+                                        {formData.projectName.length}/{MAX_PROJECT_NAME_LENGTH}
+                                    </span>
+                                </div>
                                 <input
                                     type="text"
                                     value={formData.projectName}
                                     onChange={(e) => setFormData({ ...formData, projectName: e.target.value })}
                                     placeholder="예: 차세대 ERP 구축"
-                                    className="w-full bg-stone-50 dark:bg-slate-700/50 border border-stone-200 dark:border-slate-600 rounded-xl px-4 py-3 text-slate-800 dark:text-slate-100 outline-none focus:border-indigo-500 focus:bg-white dark:focus:bg-slate-700 focus:ring-2 focus:ring-indigo-100 dark:focus:ring-indigo-800/30 transition-all font-medium"
+                                    className={`w-full bg-stone-50 dark:bg-slate-700/50 border rounded-xl px-4 py-3 text-slate-800 dark:text-slate-100 outline-none focus:ring-2 transition-all font-medium ${
+                                        isProjectNameExceeded
+                                            ? 'border-rose-300 dark:border-rose-700 focus:border-rose-500 focus:ring-rose-100 dark:focus:ring-rose-800/30'
+                                            : 'border-stone-200 dark:border-slate-600 focus:border-indigo-500 focus:bg-white dark:focus:bg-slate-700 focus:ring-indigo-100 dark:focus:ring-indigo-800/30'
+                                    }`}
                                     autoFocus
                                 />
+                                {isProjectNameExceeded && (
+                                    <div className="flex items-center space-x-1.5 mt-2 text-rose-500 text-xs font-medium animate-in fade-in slide-in-from-top-1 duration-200">
+                                        <AlertCircle size={14} />
+                                        <span>업무명은 최대 {MAX_PROJECT_NAME_LENGTH}자까지 입력 가능합니다.</span>
+                                    </div>
+                                )}
                             </div>
                             <div>
-                                <label className="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase mb-2">거래처 / 관련 부서</label>
+                                <div className="flex justify-between items-center mb-2">
+                                    <label className="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase">거래처 / 관련 부서</label>
+                                    <span className={`text-xs font-bold ${isClientNameExceeded ? 'text-rose-500' : 'text-slate-400 dark:text-slate-400'}`}>
+                                        {formData.clientName.length}/{MAX_CLIENT_NAME_LENGTH}
+                                    </span>
+                                </div>
                                 <input
                                     type="text"
                                     value={formData.clientName}
                                     onChange={(e) => setFormData({ ...formData, clientName: e.target.value })}
                                     placeholder="예: A사, 경영지원팀"
-                                    className="w-full bg-stone-50 dark:bg-slate-700/50 border border-stone-200 dark:border-slate-600 rounded-xl px-4 py-3 text-slate-800 dark:text-slate-100 outline-none focus:border-indigo-500 focus:bg-white dark:focus:bg-slate-700 focus:ring-2 focus:ring-indigo-100 dark:focus:ring-indigo-800/30 transition-all font-medium"
+                                    className={`w-full bg-stone-50 dark:bg-slate-700/50 border rounded-xl px-4 py-3 text-slate-800 dark:text-slate-100 outline-none focus:ring-2 transition-all font-medium ${
+                                        isClientNameExceeded
+                                            ? 'border-rose-300 dark:border-rose-700 focus:border-rose-500 focus:ring-rose-100 dark:focus:ring-rose-800/30'
+                                            : 'border-stone-200 dark:border-slate-600 focus:border-indigo-500 focus:bg-white dark:focus:bg-slate-700 focus:ring-indigo-100 dark:focus:ring-indigo-800/30'
+                                    }`}
                                 />
+                                {isClientNameExceeded && (
+                                    <div className="flex items-center space-x-1.5 mt-2 text-rose-500 text-xs font-medium animate-in fade-in slide-in-from-top-1 duration-200">
+                                        <AlertCircle size={14} />
+                                        <span>거래처명은 최대 {MAX_CLIENT_NAME_LENGTH}자까지 입력 가능합니다.</span>
+                                    </div>
+                                )}
                             </div>
+                            {/* 결합 길이 경고 */}
+                            {formData.clientName && formData.projectName && (
+                                <div className={`p-3 rounded-xl border transition-all ${
+                                    isCombinedExceeded
+                                        ? 'bg-rose-50 dark:bg-rose-900/20 border-rose-200 dark:border-rose-800/30'
+                                        : 'bg-indigo-50 dark:bg-indigo-900/20 border-indigo-200 dark:border-indigo-800/30'
+                                }`}>
+                                    <div className="flex items-start space-x-2">
+                                        <AlertCircle size={16} className={`mt-0.5 shrink-0 ${isCombinedExceeded ? 'text-rose-500' : 'text-indigo-500'}`} />
+                                        <div className="text-xs">
+                                            <div className={`font-bold mb-1 ${isCombinedExceeded ? 'text-rose-700 dark:text-rose-400' : 'text-indigo-700 dark:text-indigo-400'}`}>
+                                                주간업무 작성 시 표시될 제목
+                                            </div>
+                                            <div className={`font-medium mb-1.5 ${isCombinedExceeded ? 'text-rose-600 dark:text-rose-300' : 'text-indigo-600 dark:text-indigo-300'}`}>
+                                                "{getCombinedTitle()}"
+                                            </div>
+                                            <div className={`font-bold ${isCombinedExceeded ? 'text-rose-500' : 'text-indigo-500'}`}>
+                                                {getCombinedLength()}/{MAX_COMBINED_JOB_TITLE_LENGTH}자
+                                                {isCombinedExceeded && ' (초과!)'}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
                         </div>
                         <div className="flex space-x-3 mt-8">
                             <button
@@ -253,7 +348,7 @@ export default function JobsSettings() {
                             <button
                                 onClick={handleSubmit}
                                 className="flex-1 bg-indigo-600 hover:bg-indigo-700 py-3.5 rounded-xl font-bold text-white transition-all shadow-lg shadow-indigo-500/20 disabled:opacity-50 disabled:cursor-not-allowed hover:shadow-indigo-500/30"
-                                disabled={!formData.projectName}
+                                disabled={!formData.projectName || isProjectNameExceeded || isClientNameExceeded || isCombinedExceeded}
                             >
                                 {isEditing ? '수정하기' : '등록하기'}
                             </button>

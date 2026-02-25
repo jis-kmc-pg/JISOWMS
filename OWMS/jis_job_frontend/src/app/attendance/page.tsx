@@ -90,9 +90,11 @@ export default function AttendancePage() {
             } else {
                 toast('연차 신청에 실패했습니다.', 'error');
             }
-        } catch (err) {
+        } catch (err: any) {
             console.error(err);
-            toast('오류가 발생했습니다.', 'error');
+            // 백엔드 응답의 실제 오류 메시지 표시 (예: "보유 연차가 부족합니다")
+            const errorMessage = err?.response?.data?.message || '오류가 발생했습니다.';
+            toast(errorMessage, 'error');
         }
     };
 

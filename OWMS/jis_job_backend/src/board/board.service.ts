@@ -134,6 +134,29 @@ export class BoardService implements OnModuleInit {
         return post;
     }
 
+    async updatePost(id: number, userId: number, updateData: { title?: string; content?: string }) {
+        const post = await this.prisma.post.findUnique({ where: { id } });
+        if (!post) throw new NotFoundException('게시글이 존재하지 않습니다.');
+
+        // 권한 체크 (본인만 수정 가능)
+        if (post.userId !== userId) {
+            throw new ForbiddenException('작성자만 수정할 수 있습니다.');
+        }
+
+        return this.prisma.post.update({
+            where: { id },
+            data: {
+                ...(updateData.title && { title: updateData.title }),
+                ...(updateData.content && { content: updateData.content }),
+                updatedAt: new Date(),
+            },
+            include: {
+                user: { select: { id: true, name: true, position: true } },
+                board: true,
+            }
+        });
+    }
+
     async deletePost(id: number, userId: number) {
         const post = await this.prisma.post.findUnique({ where: { id } });
         if (!post) throw new NotFoundException('게시글이 존재하지 않습니다.');

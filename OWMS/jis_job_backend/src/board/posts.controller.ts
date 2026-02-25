@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Param, Delete, UseGuards, Request } from '@nestjs/common';
+import { Controller, Get, Post, Patch, Body, Param, Delete, UseGuards, Request } from '@nestjs/common';
 import { BoardService } from './board.service';
 import { CreateCommentDto } from './dto/create-comment.dto';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
@@ -11,6 +11,11 @@ export class PostsController {
     @Get(':id')
     findOne(@Param('id') id: string) {
         return this.boardService.findPost(+id);
+    }
+
+    @Patch(':id')
+    update(@Request() req: any, @Param('id') id: string, @Body() updateData: { title?: string; content?: string }) {
+        return this.boardService.updatePost(+id, req.user.id, updateData);
     }
 
     @Delete(':id')

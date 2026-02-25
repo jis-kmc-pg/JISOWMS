@@ -503,9 +503,10 @@ export default function WeeklyStatusPage() {
                         onClick={() => setIsDetailOpen(false)}
                         role="presentation"
                     ></div>
-                    <div className="fixed top-0 right-0 h-full w-[400px] bg-white dark:bg-slate-800 border-l border-stone-200 dark:border-slate-600 shadow-2xl z-50 transform transition-transform duration-300 overflow-y-auto">
-                        <div className="p-6">
-                            <div className="flex items-center justify-between mb-8 border-b border-stone-100 dark:border-slate-700 pb-4">
+                    <div className="fixed top-20 right-0 h-[calc(100vh-5rem)] w-[400px] bg-white dark:bg-slate-800 border-l border-stone-200 dark:border-slate-600 shadow-2xl z-50 transform transition-transform duration-300 flex flex-col">
+                        {/* 고정 헤더 */}
+                        <div className="flex-shrink-0 p-6 border-b border-stone-100 dark:border-slate-700">
+                            <div className="flex items-center justify-between">
                                 <div>
                                     <h3 className="text-xl font-bold text-slate-800 dark:text-slate-100">{selectedUser?.name}님의 업무</h3>
                                     <div className="flex items-center gap-2 mt-1">
@@ -521,7 +522,10 @@ export default function WeeklyStatusPage() {
                                     ✕
                                 </button>
                             </div>
+                        </div>
 
+                        {/* 스크롤 가능한 컨텐츠 영역 */}
+                        <div className="flex-1 overflow-y-auto p-6">
                             {detailLoading ? (
                                 <div className="space-y-4">
                                     {[1, 2, 3].map(i => (

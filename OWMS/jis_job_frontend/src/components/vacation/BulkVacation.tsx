@@ -58,17 +58,17 @@ export default function BulkVacation() {
 
         // Validation
         if (!form.startDate) {
-            console.error('날짜를 선택해주세요.');
+            alert('날짜를 선택해주세요.');
             return;
         }
 
         if (targetType === 'DEPT' && !selectedDept) {
-            console.error('부서를 선택해주세요.');
+            alert('부서를 선택해주세요.');
             return;
         }
 
         if (targetType === 'USER' && !selectedUser) {
-            console.error('대상 사용자를 선택해주세요.');
+            alert('대상 사용자를 선택해주세요.');
             return;
         }
 
@@ -86,16 +86,18 @@ export default function BulkVacation() {
                 targetId: targetType === 'DEPT' ? selectedDept : (targetType === 'USER' ? selectedUser.id : undefined),
                 ...form
             });
-            console.error('신청이 완료되었습니다.');
+            alert('신청이 완료되었습니다.');
             setForm({ ...form, startDate: '', endDate: '', reason: '일괄 신청' });
             if (targetType === 'USER') {
                 setUserQuery('');
                 setUserResults([]);
                 setSelectedUser(null);
             }
-        } catch (e) {
+        } catch (e: any) {
             console.error(e);
-            console.error('신청 중 오류가 발생했습니다.');
+            // 백엔드 응답의 실제 오류 메시지 표시
+            const errorMessage = e?.response?.data?.message || '신청 중 오류가 발생했습니다.';
+            alert(errorMessage);
         } finally {
             setLoading(false);
         }

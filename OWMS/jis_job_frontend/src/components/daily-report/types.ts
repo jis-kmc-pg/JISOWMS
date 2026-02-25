@@ -78,17 +78,23 @@ export const getWeekStart = (date: Date) => {
     return start;
 };
 
-// 1줄 20자 초과 여부 체크
+import {
+    MAX_CHARS_PER_LINE,
+    MAX_WEEKLY_NOTE_LINES,
+    MAX_WEEKLY_NOTE_CHARS_PER_LINE
+} from '../../constants/validation';
+
+// 1줄당 최대 글자수 초과 여부 체크
 export const isLineExceeded = (text: string) => {
     if (!text) return false;
     const lines = text.split('\n');
-    return lines.some(line => line.length > 20);
+    return lines.some(line => line.length > MAX_CHARS_PER_LINE);
 };
 
-// 주간 정보 유효성 체크 (4줄 이상 또는 줄당 40자 초과)
+// 주간 정보 유효성 체크 (최대 줄 수 또는 줄당 최대 글자수 초과)
 export const isWeeklyNoteExceeded = (text: string) => {
     if (!text) return false;
     const lines = text.split('\n');
-    if (lines.length > 4) return true;
-    return lines.some(line => line.length > 40);
+    if (lines.length > MAX_WEEKLY_NOTE_LINES) return true;
+    return lines.some(line => line.length > MAX_WEEKLY_NOTE_CHARS_PER_LINE);
 };

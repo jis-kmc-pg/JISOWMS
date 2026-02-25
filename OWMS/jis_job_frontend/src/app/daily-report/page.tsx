@@ -98,12 +98,9 @@ export default function DailyReportPage() {
         const weekStartStr = formatDate(getWeekStart(selectedDate));
 
         try {
-            try {
-                const statusNavRes = await api.get(`/reports/my-status?date=${dateStr}`);
-                if (statusNavRes.data) setWeeklyStatus(statusNavRes.data);
-            } catch {
-                // silently ignore
-            }
+            // weeklyStatus는 항상 오늘 날짜 기준으로 고정 (이번주/차주 자동 변경 방지)
+            // selectedDate 변경 시에도 재조회하지 않음
+            // 초기 로딩 시에만 useEffect에서 별도로 조회
 
             let fetchedWorkType = '내근';
             try {
@@ -157,6 +154,20 @@ export default function DailyReportPage() {
     }, [selectedDate]);
 
     useEffect(() => { fetchReport(); }, [fetchReport]);
+
+    // 주간 업무 현황은 오늘 날짜 기준으로 한 번만 로드 (이번주/차주 고정)
+    useEffect(() => {
+        const fetchWeeklyStatus = async () => {
+            const todayStr = formatDate(new Date()); // 항상 오늘 날짜 기준
+            try {
+                const statusNavRes = await api.get(`/reports/my-status?date=${todayStr}`);
+                if (statusNavRes.data) setWeeklyStatus(statusNavRes.data);
+            } catch {
+                // silently ignore
+            }
+        };
+        fetchWeeklyStatus();
+    }, []); // 빈 dependency array - 컴포넌트 마운트 시 한 번만 실행
 
     // --- Click Outside ---
     useEffect(() => {

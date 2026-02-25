@@ -89,12 +89,29 @@ export default function DashboardLayout({
 
     const [openSubmenu, setOpenSubmenu] = useState<string | null>(null);
 
+    const vacationChildren: MenuItem[] = [
+        { name: '연차 신청', icon: <ClipboardList size={16} />, href: '/attendance' },
+    ];
+
+    if (user?.role === 'DEPT_HEAD') {
+        vacationChildren.push({ name: '연차 승인', icon: <CheckCircle size={16} />, href: '/attendance/approval' });
+    }
+
     const menuItems: MenuItem[] = [
         { name: '대시보드', icon: <LayoutDashboard size={18} />, href: '/' },
         { name: '일일 업무 보고', icon: <FileText size={18} />, href: '/daily-report' },
         { name: '주간 업무 현황', icon: <Calendar size={18} />, href: '/weekly-status' },
-        { name: '연차 신청', icon: <ClipboardList size={18} />, href: '/attendance' },
-        { name: '예약', icon: <CalendarCheck size={18} />, href: '/reservation' },
+        {
+            name: '연차', icon: <ClipboardList size={18} />, href: '/attendance',
+            children: vacationChildren,
+        },
+        {
+            name: '예약', icon: <CalendarCheck size={18} />, href: '/reservation',
+            children: [
+                { name: '업무차', icon: <CalendarCheck size={16} />, href: '/reservation/vehicle' },
+                { name: '회의실', icon: <CalendarCheck size={16} />, href: '/reservation/room' },
+            ],
+        },
         { name: '공지사항', icon: <Megaphone size={18} />, href: '/board/notice' },
         {
             name: '게시판', icon: <MessageSquare size={18} />, href: '/board',
@@ -105,10 +122,6 @@ export default function DashboardLayout({
             ],
         },
     ];
-
-    if (user?.role === 'DEPT_HEAD') {
-        menuItems.push({ name: '연차 승인', icon: <CheckCircle size={18} />, href: '/attendance/approval' });
-    }
 
     const managementItems: MenuItem[] = [];
     if (['CEO', 'EXECUTIVE', 'DEPT_HEAD', 'TEAM_LEADER'].includes(user?.role || '')) {
@@ -165,23 +178,25 @@ export default function DashboardLayout({
                                             <ChevronDown size={14} className={`transition-transform ${openSubmenu === item.name ? 'rotate-180' : ''}`} />
                                         </button>
                                         {openSubmenu === item.name && (
-                                            <div className="absolute top-full left-0 mt-1 w-44 bg-white border border-stone-200 rounded-xl shadow-lg py-1 z-50">
-                                                {item.children.map((child) => {
-                                                    const isChildActive = pathname === child.href || pathname.startsWith(child.href + '/');
-                                                    return (
-                                                        <Link
-                                                            key={child.href}
-                                                            href={child.href}
-                                                            className={`flex items-center space-x-2 px-4 py-2.5 text-sm font-bold transition-all ${isChildActive
-                                                                ? 'bg-indigo-50 text-indigo-600'
-                                                                : 'text-slate-500 hover:text-slate-900 hover:bg-stone-50'
-                                                                }`}
-                                                        >
-                                                            {child.icon}
-                                                            <span>{child.name}</span>
-                                                        </Link>
-                                                    );
-                                                })}
+                                            <div className="absolute top-full left-0 pt-2 w-44 z-50">
+                                                <div className="bg-white dark:bg-slate-800 border border-stone-200 dark:border-slate-700 rounded-xl shadow-lg py-1">
+                                                    {item.children.map((child) => {
+                                                        const isChildActive = pathname === child.href || pathname.startsWith(child.href + '/');
+                                                        return (
+                                                            <Link
+                                                                key={child.href}
+                                                                href={child.href}
+                                                                className={`flex items-center space-x-2 px-4 py-2.5 text-sm font-bold transition-all ${isChildActive
+                                                                    ? 'bg-indigo-50 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400'
+                                                                    : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-stone-50 dark:hover:bg-slate-700'
+                                                                    }`}
+                                                            >
+                                                                {child.icon}
+                                                                <span>{child.name}</span>
+                                                            </Link>
+                                                        );
+                                                    })}
+                                                </div>
                                             </div>
                                         )}
                                     </div>
