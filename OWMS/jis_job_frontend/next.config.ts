@@ -1,7 +1,8 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  // 운영 PM2가 .next/standalone/server.js로 실행하므로 standalone 빌드 필요
+  output: 'standalone',
   async headers() {
     return [
       {
