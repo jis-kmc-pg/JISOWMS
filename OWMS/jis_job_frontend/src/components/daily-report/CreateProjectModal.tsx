@@ -1,11 +1,7 @@
 'use client';
 
 import { Plus, XCircle, AlertCircle } from 'lucide-react';
-import {
-    MAX_PROJECT_NAME_LENGTH,
-    MAX_CLIENT_NAME_LENGTH,
-    MAX_COMBINED_JOB_TITLE_LENGTH
-} from '../../constants/validation';
+import { MAX_COMBINED_JOB_TITLE_LENGTH } from '../../constants/validation';
 
 interface CreateProjectModalProps {
     show: boolean;
@@ -15,27 +11,28 @@ interface CreateProjectModalProps {
     onClose: () => void;
 }
 
+interface LineInfo {
+    text: string;       // 표시될 줄 텍스트 (1줄은 "거래처 : 업무명")
+    length: number;     // 표시 텍스트 길이
+    exceeded: boolean;
+}
+
+function buildLineInfos(projectName: string, clientName: string, maxLen: number): LineInfo[] {
+    const lines = projectName.split('\n');
+    return lines.map((rawLine, idx) => {
+        const text = idx === 0 && clientName
+            ? `${clientName} : ${rawLine}`
+            : rawLine;
+        return { text, length: text.length, exceeded: text.length > maxLen };
+    });
+}
+
 export default function CreateProjectModal({ show, data, onDataChange, onCreate, onClose }: CreateProjectModalProps) {
     if (!show) return null;
 
-    const projectNameLen = data.projectName.length;
-    const clientNameLen = data.clientName.length;
-    const combinedLen = data.clientName
-        ? clientNameLen + 3 + projectNameLen // " : " = 3자
-        : projectNameLen;
-    const combinedTitle = data.clientName
-        ? `${data.clientName} : ${data.projectName}`
-        : data.projectName;
-
-    const isProjectNameExceeded = projectNameLen > MAX_PROJECT_NAME_LENGTH;
-    const isClientNameExceeded = clientNameLen > MAX_CLIENT_NAME_LENGTH;
-    const isCombinedExceeded = !!data.clientName && combinedLen > MAX_COMBINED_JOB_TITLE_LENGTH;
-
-    const isDisabled =
-        !data.projectName.trim() ||
-        isProjectNameExceeded ||
-        isClientNameExceeded ||
-        isCombinedExceeded;
+    const lineInfos = buildLineInfos(data.projectName, data.clientName, MAX_COMBINED_JOB_TITLE_LENGTH);
+    const hasAnyExceeded = lineInfos.some(l => l.exceeded);
+    const isDisabled = !data.projectName.trim() || hasAnyExceeded;
 
     return (
         <div className="fixed inset-0 z-[300] flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-in fade-in duration-200">
@@ -53,74 +50,53 @@ export default function CreateProjectModal({ show, data, onDataChange, onCreate,
                 </div>
                 <div className="space-y-4">
                     <div>
-                        <div className="flex justify-between items-center mb-2">
-                            <label className="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase">거래처 / 관련 부서</label>
-                            <span className={`text-xs font-bold ${isClientNameExceeded ? 'text-rose-500' : 'text-slate-400 dark:text-slate-400'}`}>
-                                {clientNameLen}/{MAX_CLIENT_NAME_LENGTH}
-                            </span>
-                        </div>
+                        <label className="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase mb-2">거래처 / 관련 부서</label>
                         <input
                             type="text"
                             value={data.clientName}
                             onChange={(e) => onDataChange({ ...data, clientName: e.target.value })}
                             placeholder="예: 호연테크"
-                            className={`w-full bg-stone-50 dark:bg-slate-700/50 border rounded-xl px-4 py-3 text-slate-800 dark:text-slate-100 outline-none focus:ring-2 transition-all font-medium dark:placeholder:text-slate-500 ${
-                                isClientNameExceeded
-                                    ? 'border-rose-300 dark:border-rose-700 focus:border-rose-500 focus:ring-rose-100 dark:focus:ring-rose-800/30'
-                                    : 'border-stone-200 dark:border-slate-600 focus:border-indigo-500 focus:bg-white dark:focus:bg-slate-700 focus:ring-indigo-100 dark:focus:ring-indigo-800/30'
-                            }`}
+                            className="w-full bg-stone-50 dark:bg-slate-700/50 border border-stone-200 dark:border-slate-600 rounded-xl px-4 py-3 text-slate-800 dark:text-slate-100 outline-none focus:border-indigo-500 focus:bg-white dark:focus:bg-slate-700 focus:ring-2 focus:ring-indigo-100 dark:focus:ring-indigo-800/30 transition-all font-medium dark:placeholder:text-slate-500"
                             autoFocus
                         />
-                        {isClientNameExceeded && (
-                            <div className="flex items-center space-x-1.5 mt-2 text-rose-500 text-xs font-medium animate-in fade-in slide-in-from-top-1 duration-200">
-                                <AlertCircle size={14} />
-                                <span>거래처명은 최대 {MAX_CLIENT_NAME_LENGTH}자까지 입력 가능합니다.</span>
-                            </div>
-                        )}
                     </div>
                     <div>
-                        <div className="flex justify-between items-center mb-2">
-                            <label className="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase">업무명 (필수)</label>
-                            <span className={`text-xs font-bold ${isProjectNameExceeded ? 'text-rose-500' : 'text-slate-400 dark:text-slate-400'}`}>
-                                {projectNameLen}/{MAX_PROJECT_NAME_LENGTH}
-                            </span>
-                        </div>
-                        <input
-                            type="text"
+                        <label className="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase mb-2">업무명 (필수, Enter로 줄바꿈)</label>
+                        <textarea
                             value={data.projectName}
                             onChange={(e) => onDataChange({ ...data, projectName: e.target.value })}
                             placeholder="예: 네트워크 작업"
-                            className={`w-full bg-stone-50 dark:bg-slate-700/50 border rounded-xl px-4 py-3 text-slate-800 dark:text-slate-100 outline-none focus:ring-2 transition-all font-medium dark:placeholder:text-slate-500 ${
-                                isProjectNameExceeded
-                                    ? 'border-rose-300 dark:border-rose-700 focus:border-rose-500 focus:ring-rose-100 dark:focus:ring-rose-800/30'
-                                    : 'border-stone-200 dark:border-slate-600 focus:border-indigo-500 focus:bg-white dark:focus:bg-slate-700 focus:ring-indigo-100 dark:focus:ring-indigo-800/30'
-                            }`}
+                            rows={3}
+                            className="w-full bg-stone-50 dark:bg-slate-700/50 border border-stone-200 dark:border-slate-600 rounded-xl px-4 py-3 text-slate-800 dark:text-slate-100 outline-none focus:border-indigo-500 focus:bg-white dark:focus:bg-slate-700 focus:ring-2 focus:ring-indigo-100 dark:focus:ring-indigo-800/30 transition-all font-medium dark:placeholder:text-slate-500 resize-none"
                         />
-                        {isProjectNameExceeded && (
-                            <div className="flex items-center space-x-1.5 mt-2 text-rose-500 text-xs font-medium animate-in fade-in slide-in-from-top-1 duration-200">
-                                <AlertCircle size={14} />
-                                <span>업무명은 최대 {MAX_PROJECT_NAME_LENGTH}자까지 입력 가능합니다.</span>
-                            </div>
-                        )}
                     </div>
-                    {data.clientName && data.projectName && (
+                    {data.projectName && (
                         <div className={`p-3 rounded-xl border transition-all ${
-                            isCombinedExceeded
+                            hasAnyExceeded
                                 ? 'bg-rose-50 dark:bg-rose-900/20 border-rose-200 dark:border-rose-800/30'
                                 : 'bg-indigo-50 dark:bg-indigo-900/20 border-indigo-200 dark:border-indigo-800/30'
                         }`}>
                             <div className="flex items-start space-x-2">
-                                <AlertCircle size={16} className={`mt-0.5 shrink-0 ${isCombinedExceeded ? 'text-rose-500' : 'text-indigo-500'}`} />
-                                <div className="text-xs">
-                                    <div className={`font-bold mb-1 ${isCombinedExceeded ? 'text-rose-700 dark:text-rose-400' : 'text-indigo-700 dark:text-indigo-400'}`}>
-                                        주간업무 작성 시 표시될 제목
+                                <AlertCircle size={16} className={`mt-0.5 shrink-0 ${hasAnyExceeded ? 'text-rose-500' : 'text-indigo-500'}`} />
+                                <div className="text-xs flex-1">
+                                    <div className={`font-bold mb-2 ${hasAnyExceeded ? 'text-rose-700 dark:text-rose-400' : 'text-indigo-700 dark:text-indigo-400'}`}>
+                                        주간업무 작성 시 표시될 줄별 길이 (1줄당 {MAX_COMBINED_JOB_TITLE_LENGTH}자)
                                     </div>
-                                    <div className={`font-medium mb-1.5 break-all ${isCombinedExceeded ? 'text-rose-600 dark:text-rose-300' : 'text-indigo-600 dark:text-indigo-300'}`}>
-                                        &quot;{combinedTitle}&quot;
-                                    </div>
-                                    <div className={`font-bold ${isCombinedExceeded ? 'text-rose-500' : 'text-indigo-500'}`}>
-                                        {combinedLen}/{MAX_COMBINED_JOB_TITLE_LENGTH}자
-                                        {isCombinedExceeded && ' (초과!)'}
+                                    <div className="space-y-1">
+                                        {lineInfos.map((line, idx) => (
+                                            <div key={idx} className="flex items-center gap-2">
+                                                <span className={`shrink-0 font-bold ${line.exceeded ? 'text-rose-500' : 'text-slate-500 dark:text-slate-400'}`}>
+                                                    {idx + 1}줄
+                                                </span>
+                                                <span className={`flex-1 break-all font-medium ${line.exceeded ? 'text-rose-600 dark:text-rose-300' : 'text-indigo-600 dark:text-indigo-300'}`}>
+                                                    &quot;{line.text}&quot;
+                                                </span>
+                                                <span className={`shrink-0 font-bold tabular-nums ${line.exceeded ? 'text-rose-500' : 'text-indigo-500'}`}>
+                                                    {line.length}/{MAX_COMBINED_JOB_TITLE_LENGTH}
+                                                    {line.exceeded && '↑'}
+                                                </span>
+                                            </div>
+                                        ))}
                                     </div>
                                 </div>
                             </div>

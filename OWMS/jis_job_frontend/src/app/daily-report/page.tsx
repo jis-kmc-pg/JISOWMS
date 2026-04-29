@@ -11,11 +11,7 @@ import {
     JobItem, ProjectItem, WeeklyNavStatus, SystemMemo, PastJobResult,
     formatDate, getWeekStart, isLineExceeded, isWeeklyNoteExceeded
 } from '../../components/daily-report/types';
-import {
-    MAX_PROJECT_NAME_LENGTH,
-    MAX_CLIENT_NAME_LENGTH,
-    MAX_COMBINED_JOB_TITLE_LENGTH
-} from '../../constants/validation';
+import { MAX_COMBINED_JOB_TITLE_LENGTH } from '../../constants/validation';
 import DateNavigation from '../../components/daily-report/DateNavigation';
 import JobCard from '../../components/daily-report/JobCard';
 import Sidebar from '../../components/daily-report/Sidebar';
@@ -333,24 +329,20 @@ export default function DailyReportPage() {
     };
 
     const handleCreateProject = async () => {
-        const projectName = newProjectData.projectName.trim();
+        // 업무명은 줄바꿈 보존, 양 끝 공백만 trim
+        const projectName = newProjectData.projectName.replace(/^\s+|\s+$/g, '');
         const clientName = newProjectData.clientName.trim();
 
         if (!projectName) { showToastMsg('업무명을 입력해주세요.'); return; }
 
-        // 1줄당 글자수 제한 검증
-        if (projectName.length > MAX_PROJECT_NAME_LENGTH) {
-            showToastMsg(`업무명은 최대 ${MAX_PROJECT_NAME_LENGTH}자까지 입력 가능합니다.`);
-            return;
-        }
-        if (clientName.length > MAX_CLIENT_NAME_LENGTH) {
-            showToastMsg(`거래처명은 최대 ${MAX_CLIENT_NAME_LENGTH}자까지 입력 가능합니다.`);
-            return;
-        }
-        if (clientName) {
-            const combinedLength = clientName.length + 3 + projectName.length; // " : " = 3자
-            if (combinedLength > MAX_COMBINED_JOB_TITLE_LENGTH) {
-                showToastMsg(`거래처명과 업무명을 합쳐 최대 ${MAX_COMBINED_JOB_TITLE_LENGTH}자까지 입력 가능합니다. (현재 ${combinedLength}자)`);
+        // 줄별 검증: 1줄은 "거래처 : 업무명_1줄" 결합, 2줄+는 업무명 단독
+        const lines = projectName.split('\n');
+        for (let i = 0; i < lines.length; i++) {
+            const text = i === 0 && clientName
+                ? `${clientName} : ${lines[i]}`
+                : lines[i];
+            if (text.length > MAX_COMBINED_JOB_TITLE_LENGTH) {
+                showToastMsg(`${i + 1}번째 줄이 ${MAX_COMBINED_JOB_TITLE_LENGTH}자를 초과합니다. (현재 ${text.length}자: "${text}")`);
                 return;
             }
         }
