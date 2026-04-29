@@ -58,3 +58,6 @@ next-env.d.ts
 
 # Tauri
 OWMS_SYS/src-tauri/target/
+
+# Claude Code worktrees
+.claude/
