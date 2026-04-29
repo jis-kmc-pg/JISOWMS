@@ -65,6 +65,10 @@ export default function TeamReportSummaryListWidget({ data, size }: TeamReportSu
 
     const days: DayEntry[] = Array.isArray(data) ? data : (data?.days ?? data?.data ?? data?.items ?? []);
 
+    // 14일(저번주+이번주) 데이터일 때 7번째와 8번째 사이에 구분선 (저번주 끝/이번주 시작)
+    const splitIdx = days.length >= 14 ? 7 : -1;
+    const isWeekDivider = (idx: number) => idx === splitIdx;
+
     // 유저별로 요일 데이터 집계
     const userMap = new Map<string, { id: string | number; name: string; department?: string; statuses: Record<string, string> }>();
 
@@ -181,7 +185,12 @@ export default function TeamReportSummaryListWidget({ data, size }: TeamReportSu
                                     이름
                                 </span>
                                 {displayDays.map((day, idx) => (
-                                    <span key={idx} className="text-[10px] font-bold text-slate-400 dark:text-slate-400 uppercase tracking-wider text-center">
+                                    <span
+                                        key={idx}
+                                        className={`text-[10px] font-bold text-slate-400 dark:text-slate-400 uppercase tracking-wider text-center ${
+                                            isWeekDivider(idx) ? 'border-l-2 border-indigo-200 dark:border-indigo-700/50' : ''
+                                        }`}
+                                    >
                                         {day}
                                     </span>
                                 ))}
@@ -217,7 +226,13 @@ export default function TeamReportSummaryListWidget({ data, size }: TeamReportSu
                                         {displayDays.map((day, dIdx) => {
                                             const dot = getStatusDot(member.statuses[day]);
                                             return (
-                                                <div key={dIdx} className="flex justify-center" title={`${day} - ${dot.label}`}>
+                                                <div
+                                                    key={dIdx}
+                                                    className={`flex justify-center ${
+                                                        isWeekDivider(dIdx) ? 'border-l-2 border-indigo-200 dark:border-indigo-700/50' : ''
+                                                    }`}
+                                                    title={`${day} - ${dot.label}`}
+                                                >
                                                     <div
                                                         className={`${dotSize} rounded-full ${dot.color} ring-1 ${dot.ring} flex items-center justify-center`}
                                                     />
@@ -267,7 +282,12 @@ export default function TeamReportSummaryListWidget({ data, size }: TeamReportSu
                                 이름
                             </span>
                             {displayDays.map((day, idx) => (
-                                <span key={idx} className="text-[10px] font-bold text-slate-400 dark:text-slate-400 uppercase tracking-wider text-center">
+                                <span
+                                    key={idx}
+                                    className={`text-[10px] font-bold text-slate-400 dark:text-slate-400 uppercase tracking-wider text-center ${
+                                        isWeekDivider(idx) ? 'border-l-2 border-indigo-200 dark:border-indigo-700/50' : ''
+                                    }`}
+                                >
                                     {day}
                                 </span>
                             ))}
@@ -301,7 +321,13 @@ export default function TeamReportSummaryListWidget({ data, size }: TeamReportSu
                                     {displayDays.map((day, dIdx) => {
                                         const dot = getStatusDot(member.statuses[day]);
                                         return (
-                                            <div key={dIdx} className="flex justify-center" title={`${day} - ${dot.label}`}>
+                                            <div
+                                                key={dIdx}
+                                                className={`flex justify-center ${
+                                                    isWeekDivider(dIdx) ? 'border-l-2 border-indigo-200 dark:border-indigo-700/50' : ''
+                                                }`}
+                                                title={`${day} - ${dot.label}`}
+                                            >
                                                 <div
                                                     className={`${dotSize} rounded-full ${dot.color} ring-2 ${dot.ring} flex items-center justify-center transition-transform hover:scale-110`}
                                                 >
