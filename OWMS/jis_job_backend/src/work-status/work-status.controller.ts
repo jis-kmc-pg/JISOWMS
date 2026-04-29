@@ -13,6 +13,7 @@ export class WorkStatusController {
     @Query('date') date: string,
     @Query('teamId') teamId?: string,
     @Query('deptId') deptId?: string,
+    @Query('weeks') weeks?: string,
   ) {
     // 요청자의 유저 정보를 서비스로 전달하여 권한별 필터링 처리
     return this.workStatusService.getWeeklyStatus(
@@ -20,6 +21,7 @@ export class WorkStatusController {
       date,
       teamId ? parseInt(teamId) : undefined,
       deptId ? parseInt(deptId) : undefined,
+      weeks ? parseInt(weeks) : 1,
     );
   }
 

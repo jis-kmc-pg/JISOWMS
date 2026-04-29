@@ -10,7 +10,6 @@ interface TeamReportRateWidgetProps {
 }
 
 export default function TeamReportRateWidget({ data, size }: TeamReportRateWidgetProps) {
-    const isSmall = size === 'small';
     const isLarge = size === 'large';
 
     // /work-status/summary 에서 teams[0] = 내 팀
@@ -46,38 +45,7 @@ export default function TeamReportRateWidget({ data, size }: TeamReportRateWidge
             ? 'bg-rose-50 dark:bg-rose-900/30'
             : 'bg-amber-50 dark:bg-amber-900/30';
 
-    // ── Small: 컴팩트 stat 카드 (rate% + missing count 인라인) ──
-    if (isSmall) {
-        return (
-            <div className="bg-white dark:bg-slate-800 p-4 rounded-2xl border border-stone-200 dark:border-slate-600 shadow-sm hover:shadow-md transition-all h-full flex flex-col overflow-hidden">
-                <div className="flex items-center justify-between mb-2">
-                    <p className="text-sm font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wide truncate">
-                        업무보고 작성률
-                    </p>
-                    <div className={`p-1.5 rounded-lg ${statusBg} ${statusColor}`}>
-                        {isComplete ? <CheckCircle2 size={14} /> : <AlertCircle size={14} />}
-                    </div>
-                </div>
-
-                <div className="flex-1 min-h-0 flex items-center justify-center">
-                    {total > 0 ? (
-                        <div className="flex items-center gap-3 w-full">
-                            <span className={`text-3xl font-black tabular-nums ${statusColor}`}>
-                                {entryRate.toFixed(0)}%
-                            </span>
-                            {missing > 0 && (
-                                <span className="text-xs font-bold text-rose-500 bg-rose-50 dark:bg-rose-900/30 px-2 py-0.5 rounded-lg">
-                                    {missing}명 미작성
-                                </span>
-                            )}
-                        </div>
-                    ) : (
-                        <p className="text-xs text-slate-400 dark:text-slate-400 font-medium">데이터 없음</p>
-                    )}
-                </div>
-            </div>
-        );
-    }
+    // ── Small은 medium과 동일 레이아웃 사용 (이번주/다음주 분할) ──
 
     // ── Large: 확장 레이아웃 (멤버 이름 목록 + 넓은 차트) ──
     if (isLarge) {

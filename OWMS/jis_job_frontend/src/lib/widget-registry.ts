@@ -96,13 +96,13 @@ export const WIDGET_REGISTRY: WidgetDef[] = [
     {
         id: 'team-report-summary',
         title: '팀원 업무보고 요약',
-        description: '팀원별 이번주 핵심 업무 한줄 요약 리스트',
+        description: '팀원별 저번주+이번주 작성 현황 한눈에 보기',
         category: 'team',
         minRole: 'TEAM_LEADER',
         size: 'large',
 
         rendererType: 'custom',
-        apiPath: '/work-status/weekly',
+        apiPath: '/work-status/weekly?weeks=2',
     },
     {
         id: 'team-vacation-table',

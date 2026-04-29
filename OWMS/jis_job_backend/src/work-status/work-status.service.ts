@@ -11,13 +11,19 @@ export class WorkStatusService {
     dateStr?: string,
     teamId?: number,
     deptId?: number,
+    weeks: number = 1,
   ) {
     const targetDate = dateStr ? new Date(dateStr) : new Date();
+    const safeWeeks = Math.max(1, Math.min(4, weeks)); // 1~4주만 허용
+    const totalDays = safeWeeks * 7;
 
-    // 주간 시작(일요일) 및 종료(토요일) 데이터 계산 (기존 로직 유지)
-    // 주간 시작(일요일) 및 종료(토요일) 데이터 계산 (기존 로직 유지)
-    const startOfWeek = DateUtil.getMonday(targetDate);
-    const endOfWeek = DateUtil.setEndOfDay(new Date(startOfWeek.getTime() + 6 * 86400000));
+    // weeks=2 이상이면 시작점을 (weeks-1) 주만큼 앞당김 (이번주 기준 저번주 포함)
+    const thisMonday = DateUtil.getMonday(targetDate);
+    const startOfWeek = new Date(thisMonday);
+    startOfWeek.setDate(thisMonday.getDate() - (safeWeeks - 1) * 7);
+    const endOfWeek = DateUtil.setEndOfDay(
+      new Date(startOfWeek.getTime() + (totalDays - 1) * 86400000),
+    );
 
     // 1. Get filtered users based on role (역할별 데이터 스코핑)
     const where: any = {};
@@ -97,7 +103,7 @@ export class WorkStatusService {
 
     // 4. Build matrix: Date x User -> Status (O(n) per day)
     const weeklyStatus = [];
-    for (let i = 0; i < 7; i++) {
+    for (let i = 0; i < totalDays; i++) {
       const currentDate = new Date(startOfWeek);
       currentDate.setDate(startOfWeek.getDate() + i);
       const dateString = currentDate.toISOString().split('T')[0];

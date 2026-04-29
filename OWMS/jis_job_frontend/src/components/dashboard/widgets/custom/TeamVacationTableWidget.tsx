@@ -63,8 +63,10 @@ export default function TeamVacationTableWidget({ data, size }: TeamVacationTabl
                         {stats.map((member, idx) => {
                             const total = Number(member.totalDays ?? member.total) || 0;
                             const used = Number(member.usedDays ?? member.used) || 0;
+                            const remaining = Number(member.remainingDays ?? member.remaining) || (total - used);
                             const rate = Number(member.usageRate) || (total > 0 ? Math.round((used / total) * 100) : 0);
                             const usage = getUsageColor(rate);
+                            const remainingColor = remaining <= 3 ? 'text-rose-600 dark:text-rose-400' : usage.text;
 
                             return (
                                 <div key={idx} className="flex items-center gap-2">
@@ -77,8 +79,8 @@ export default function TeamVacationTableWidget({ data, size }: TeamVacationTabl
                                             style={{ width: `${Math.min(rate, 100)}%` }}
                                         />
                                     </div>
-                                    <span className={`text-[10px] font-black tabular-nums ${usage.text} w-8 text-right flex-shrink-0`}>
-                                        {rate}%
+                                    <span className={`text-[10px] font-black tabular-nums ${remainingColor} w-10 text-right flex-shrink-0`}>
+                                        {remaining}일
                                     </span>
                                 </div>
                             );
