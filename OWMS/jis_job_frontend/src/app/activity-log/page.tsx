@@ -1,8 +1,11 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import api from "@/lib/api";
 import { format } from "date-fns";
+
+const MANAGER_ROLES = ['CEO', 'EXECUTIVE', 'DEPT_HEAD', 'TEAM_LEADER'];
 import {
     Activity,
     Search,
@@ -66,9 +69,24 @@ function getStatusColor(code: number | null): string {
 }
 
 export default function ActivityLogPage() {
+    const router = useRouter();
+    const [authorized, setAuthorized] = useState<boolean | null>(null);
     const [logs, setLogs] = useState<ActivityLog[]>([]);
     const [loading, setLoading] = useState(true);
     const [users, setUsers] = useState<UserOption[]>([]);
+
+    useEffect(() => {
+        if (typeof window === 'undefined') return;
+        const userStr = localStorage.getItem('user');
+        if (!userStr) { router.replace('/login'); return; }
+        try {
+            const u = JSON.parse(userStr);
+            if (MANAGER_ROLES.includes(u.role || '')) setAuthorized(true);
+            else { setAuthorized(false); router.replace('/'); }
+        } catch {
+            router.replace('/login');
+        }
+    }, [router]);
 
     // Filters
     const [filterUserId, setFilterUserId] = useState("");
@@ -125,6 +143,8 @@ export default function ActivityLogPage() {
     const handleKeyDown = (e: React.KeyboardEvent) => {
         if (e.key === "Enter") handleSearch();
     };
+
+    if (authorized !== true) return null;
 
     return (
         <div className="px-8 max-w-[1600px] mx-auto">

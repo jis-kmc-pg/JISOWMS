@@ -124,7 +124,8 @@ export default function DashboardLayout({
     ];
 
     const managementItems: MenuItem[] = [];
-    if (['CEO', 'EXECUTIVE', 'DEPT_HEAD', 'TEAM_LEADER'].includes(user?.role || '')) {
+    const isManager = ['CEO', 'EXECUTIVE', 'DEPT_HEAD', 'TEAM_LEADER'].includes(user?.role || '');
+    if (isManager) {
         managementItems.push({ name: '활동 로그', icon: <Activity size={18} />, href: '/activity-log' });
     }
     if (user?.departmentId === 3) {
@@ -134,7 +135,9 @@ export default function DashboardLayout({
             href: '/vacation-mgmt',
         });
     }
-    managementItems.push({ name: '설정', icon: <Settings size={18} />, href: '/settings' });
+    if (isManager) {
+        managementItems.push({ name: '설정', icon: <Settings size={18} />, href: '/settings' });
+    }
 
     if (pathname === '/login') return <>{children}</>;
 
@@ -255,10 +258,10 @@ export default function DashboardLayout({
                         </button>
 
                         <div className="flex items-center space-x-3 pl-2 relative">
-                            <div className="text-right hidden lg:block">
+                            <Link href="/profile" className="text-right hidden lg:block hover:opacity-80 transition-opacity cursor-pointer" title="프로필 설정">
                                 <p className="text-sm font-bold text-slate-700 leading-none">{user?.name || '관리자'}</p>
                                 <p className="text-[10px] text-slate-400 mt-1 font-medium italic">{user?.department?.name || '부서 정보 없음'}</p>
-                            </div>
+                            </Link>
                             <button
                                 onClick={() => setIsProfileOpen(!isProfileOpen)}
                                 className="w-9 h-9 rounded-full bg-gradient-to-br from-indigo-100 to-purple-100 border border-white shadow-sm flex items-center justify-center hover:ring-2 hover:ring-indigo-200 transition-all active:scale-95"

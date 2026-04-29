@@ -47,17 +47,19 @@ export class VacationService {
         : calculatedTotal;
     const finalTotal = baseTotal + ((user as any)?.carryoverLeave || 0);
 
-    // Calculate monthly usage from loaded vacations
+    // Calculate monthly usage from loaded vacations (공가는 연차에서 제외)
     const monthlyUsage = new Array(12).fill(0);
     const usedVacations = (user as any)?.vacations || [];
-    usedVacations.forEach((v: any) => {
-      const month = v.startDate.getMonth();
-      monthlyUsage[month] += this.calculateDuration(
-        v.startDate,
-        v.endDate,
-        v.type,
-      );
-    });
+    usedVacations
+      .filter((v: any) => v.type !== 'OFFICIAL')
+      .forEach((v: any) => {
+        const month = v.startDate.getMonth();
+        monthlyUsage[month] += this.calculateDuration(
+          v.startDate,
+          v.endDate,
+          v.type,
+        );
+      });
 
     // Apply adjustments from loaded data
     const adjustments = (user as any)?.vacationAdjustments || [];
@@ -112,14 +114,16 @@ export class VacationService {
       throw new BadRequestException('이미 해당 기간에 신청된 휴가가 있습니다.');
     }
 
-    // 2. Check Remaining Days
-    const summary = await this.getSummary(userId);
-    const requestDays = this.calculateDuration(start, end, dto.type);
+    // 2. Check Remaining Days (공가는 연차에서 차감되지 않음)
+    if (dto.type !== 'OFFICIAL') {
+      const summary = await this.getSummary(userId);
+      const requestDays = this.calculateDuration(start, end, dto.type);
 
-    if (summary.remaining < requestDays) {
-      throw new BadRequestException(
-        `잔여 연차가 부족합니다. (잔여: ${summary.remaining}, 신청: ${requestDays})`,
-      );
+      if (summary.remaining < requestDays) {
+        throw new BadRequestException(
+          `잔여 연차가 부족합니다. (잔여: ${summary.remaining}, 신청: ${requestDays})`,
+        );
+      }
     }
 
     const vacation = await this.prisma.vacation.create({
@@ -395,20 +399,24 @@ export class VacationService {
       const total = baseAllowance + (u.carryoverLeave || 0);
 
       let used = 0;
-      u.vacations.forEach((v: any) => {
-        used += this.calculateDuration(v.startDate, v.endDate, v.type);
-      });
+      u.vacations
+        .filter((v: any) => v.type !== 'OFFICIAL')
+        .forEach((v: any) => {
+          used += this.calculateDuration(v.startDate, v.endDate, v.type);
+        });
 
-      // Monthly usage
+      // Monthly usage (공가는 연차에서 제외)
       const monthlyUsage = new Array(12).fill(0);
-      u.vacations.forEach((v: any) => {
-        const month = v.startDate.getMonth();
-        monthlyUsage[month] += this.calculateDuration(
-          v.startDate,
-          v.endDate,
-          v.type,
-        );
-      });
+      u.vacations
+        .filter((v: any) => v.type !== 'OFFICIAL')
+        .forEach((v: any) => {
+          const month = v.startDate.getMonth();
+          monthlyUsage[month] += this.calculateDuration(
+            v.startDate,
+            v.endDate,
+            v.type,
+          );
+        });
 
       // Apply adjustments to monthlyUsage (Override if exists)
       u.vacationAdjustments.forEach((adj: any) => {

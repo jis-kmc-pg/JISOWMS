@@ -1,8 +1,11 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import { Briefcase, User, Building2, UserCog, Shield, DoorOpen, Car, Settings, ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
+
+const MANAGER_ROLES = ['CEO', 'EXECUTIVE', 'DEPT_HEAD', 'TEAM_LEADER'];
 import JobsSettings from '@/components/settings/JobsSettings';
 import ProfileSettings from '@/components/settings/ProfileSettings';
 import DeptTeamSettings from '@/components/settings/DeptTeamSettings';
@@ -14,7 +17,24 @@ import VehicleSettings from '@/components/settings/VehicleSettings';
 type TabId = 'profile' | 'jobs' | 'dept-team' | 'users' | 'roles' | 'meeting-room' | 'vehicles';
 
 export default function SettingsPage() {
+    const router = useRouter();
+    const [authorized, setAuthorized] = useState<boolean | null>(null);
     const [activeTab, setActiveTab] = useState<TabId>('profile');
+
+    useEffect(() => {
+        if (typeof window === 'undefined') return;
+        const userStr = localStorage.getItem('user');
+        if (!userStr) { router.replace('/login'); return; }
+        try {
+            const u = JSON.parse(userStr);
+            if (MANAGER_ROLES.includes(u.role || '')) setAuthorized(true);
+            else { setAuthorized(false); router.replace('/'); }
+        } catch {
+            router.replace('/login');
+        }
+    }, [router]);
+
+    if (authorized !== true) return null;
 
     const tabs = [
         { id: 'profile' as TabId, label: '프로필 설정', icon: <User size={18} />, group: '개인' },

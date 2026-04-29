@@ -175,7 +175,7 @@ export default function AttendancePage() {
                         {vacations.length > 0 ? vacations.map((v) => (
                             <tr key={v.id} className="hover:bg-indigo-50/30 dark:hover:bg-indigo-900/10 transition-colors">
                                 <td className="p-5 text-slate-800 dark:text-slate-100 font-bold">
-                                    {v.type === 'ANNUAL' ? '연차' : v.type === 'HALF_AM' ? '오전반차' : '오후반차'}
+                                    {v.type === 'ANNUAL' ? '연차' : v.type === 'HALF_AM' ? '오전반차' : v.type === 'HALF_PM' ? '오후반차' : v.type === 'OFFICIAL' ? '공가' : v.type}
                                 </td>
                                 <td className="p-5 text-slate-600 dark:text-slate-300 font-medium">
                                     {v.startDate.split('T')[0]} ~ {v.endDate.split('T')[0]}
@@ -225,11 +225,12 @@ export default function AttendancePage() {
                                     <option value="ANNUAL">연차 (하루 종일)</option>
                                     <option value="HALF_AM">오전 반차 (0.5일)</option>
                                     <option value="HALF_PM">오후 반차 (0.5일)</option>
+                                    <option value="OFFICIAL">공가 (연차 차감 없음)</option>
                                 </select>
                             </div>
                             <div className="bg-stone-50 dark:bg-slate-700/50 border border-stone-100 dark:border-slate-700 rounded-2xl overflow-hidden p-2">
                                 <InlineCalendar
-                                    mode={formData.type === 'ANNUAL' ? 'ANNUAL' : 'HALF'}
+                                    mode={formData.type === 'ANNUAL' || formData.type === 'OFFICIAL' ? 'ANNUAL' : 'HALF'}
                                     startDate={formData.startDate}
                                     endDate={formData.endDate}
                                     onChange={(start, end) => setFormData({ ...formData, startDate: start, endDate: end })}
@@ -241,12 +242,12 @@ export default function AttendancePage() {
                                         <span className="text-[10px] font-bold text-indigo-400 uppercase tracking-wider">선택된 기간</span>
                                         <span className="text-sm font-bold text-indigo-700">
                                             {formData.startDate}
-                                            {formData.type === 'ANNUAL' && formData.endDate !== formData.startDate && ` ~ ${formData.endDate}`}
+                                            {(formData.type === 'ANNUAL' || formData.type === 'OFFICIAL') && formData.endDate !== formData.startDate && ` ~ ${formData.endDate}`}
                                         </span>
                                     </div>
                                     <div className="text-right">
                                         <span className="text-xl font-black text-indigo-600">
-                                            {formData.type === 'ANNUAL'
+                                            {(formData.type === 'ANNUAL' || formData.type === 'OFFICIAL')
                                                 ? Math.round((new Date(formData.endDate).getTime() - new Date(formData.startDate).getTime()) / (1000 * 60 * 60 * 24)) + 1
                                                 : 0.5
                                             }

@@ -234,21 +234,21 @@ export default function DeptApprovalPage() {
                                         </div>
                                     </td>
                                     <td className="p-6">
-                                        <span className={`px-2.5 py-1 rounded-lg text-[10px] font-black tracking-tighter ${v.type === 'ANNUAL' ? 'bg-indigo-50 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400' : 'bg-amber-50 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400'
+                                        <span className={`px-2.5 py-1 rounded-lg text-[10px] font-black tracking-tighter ${v.type === 'ANNUAL' ? 'bg-indigo-50 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400' : v.type === 'OFFICIAL' ? 'bg-sky-50 dark:bg-sky-900/30 text-sky-600 dark:text-sky-400' : 'bg-amber-50 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400'
                                             }`}>
-                                            {v.type === 'ANNUAL' ? '연차' : v.type === 'HALF_AM' ? '오전반차' : '오후반차'}
+                                            {v.type === 'ANNUAL' ? '연차' : v.type === 'HALF_AM' ? '오전반차' : v.type === 'HALF_PM' ? '오후반차' : v.type === 'OFFICIAL' ? '공가' : v.type}
                                         </span>
                                     </td>
                                     <td className="p-6">
                                         <div className="flex items-center space-x-4">
                                             <div className="flex flex-col">
                                                 <span className="text-slate-700 dark:text-slate-200 font-bold">{v.startDate.split('T')[0]}</span>
-                                                {v.type === 'ANNUAL' && v.endDate !== v.startDate && (
+                                                {(v.type === 'ANNUAL' || v.type === 'OFFICIAL') && v.endDate !== v.startDate && (
                                                     <span className="text-[11px] text-slate-500 dark:text-slate-400 font-bold">~ {v.endDate.split('T')[0]}</span>
                                                 )}
                                             </div>
                                             <div className="bg-stone-50 dark:bg-slate-700/50 border border-stone-100 dark:border-slate-700 px-2 py-1 rounded-lg text-indigo-600 dark:text-indigo-400 font-black text-xs min-w-[32px] text-center shadow-sm">
-                                                {v.type === 'ANNUAL' ? (
+                                                {(v.type === 'ANNUAL' || v.type === 'OFFICIAL') ? (
                                                     (() => {
                                                         const start = new Date(v.startDate.split('T')[0]);
                                                         const end = new Date(v.endDate.split('T')[0]);
