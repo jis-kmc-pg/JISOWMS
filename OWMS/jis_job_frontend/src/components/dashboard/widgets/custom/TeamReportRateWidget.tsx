@@ -183,9 +183,48 @@ export default function TeamReportRateWidget({ data, size }: TeamReportRateWidge
         );
     }
 
-    // ── Medium: 기존 레이아웃 (기본) ──
+    // ── Medium: 이번주 / 다음주 좌우 분할 + 미작성자 ──
+    const cw = myTeam?.currentWeek ?? {};
+    const nw = myTeam?.nextWeek ?? {};
+    const cwTotal = Number(cw.total ?? total) || 0;
+    const cwCompleted = Number(cw.completed ?? completed) || 0;
+    const cwRate = cwTotal > 0 ? Math.round((cwCompleted / cwTotal) * 100) : 0;
+    const nwTotal = Number(nw.total ?? cwTotal) || 0;
+    const nwCompleted = Number(nw.completed ?? 0) || 0;
+    const nwRate = nwTotal > 0 ? Math.round((nwCompleted / nwTotal) * 100) : 0;
+
     const displayMembers = incompleteMembers.slice(0, 4);
     const moreCount = incompleteMembers.length - displayMembers.length;
+
+    const weekCard = (label: string, c: number, t: number, rate: number) => {
+        const done = t > 0 && c === t;
+        const miss = Math.max(0, t - c);
+        const color = done ? 'text-emerald-500' : miss >= 3 ? 'text-rose-500' : 'text-amber-500';
+        const barClass = done
+            ? 'bg-gradient-to-r from-emerald-400 to-emerald-500'
+            : miss >= 3
+                ? 'bg-gradient-to-r from-rose-400 to-rose-500'
+                : 'bg-gradient-to-r from-amber-400 to-amber-500';
+        return (
+            <div className="flex-1 flex flex-col items-center px-1.5">
+                <span className="text-[10px] font-bold text-slate-400 dark:text-slate-400 uppercase tracking-wider">{label}</span>
+                <div className="flex items-baseline gap-0.5 mt-0.5">
+                    <span className={`text-2xl font-black tabular-nums ${color}`}>{c}</span>
+                    <span className="text-base font-bold text-slate-300">/</span>
+                    <span className="text-sm font-bold text-slate-500 dark:text-slate-400 tabular-nums">{t}</span>
+                    <span className="text-[10px] text-slate-400 dark:text-slate-400 font-bold ml-0.5">명</span>
+                </div>
+                <div className="w-full mt-1.5 h-1.5 bg-stone-100 dark:bg-slate-700 rounded-full overflow-hidden">
+                    <div
+                        className={`h-full rounded-full transition-all duration-700 ${barClass}`}
+                        style={{ width: t > 0 ? `${(c / t) * 100}%` : '0%' }}
+                    />
+                </div>
+                <p className="text-[10px] text-slate-400 dark:text-slate-400 font-bold mt-1 tabular-nums">{rate}%</p>
+            </div>
+        );
+    };
+
     return (
         <div className="bg-white dark:bg-slate-800 p-4 rounded-2xl border border-stone-200 dark:border-slate-600 shadow-sm hover:shadow-md transition-all h-full flex flex-col overflow-hidden">
             {/* 헤더 */}
@@ -198,43 +237,21 @@ export default function TeamReportRateWidget({ data, size }: TeamReportRateWidge
                 </div>
             </div>
 
-            {/* 메인 숫자 */}
             {total > 0 ? (
-                <div className="flex-1 min-h-0 flex flex-col items-center justify-center">
-                    <div className="flex items-baseline gap-1">
-                        <span className={`text-3xl font-black tabular-nums ${statusColor}`}>
-                            {completed}
-                        </span>
-                        <span className="text-xl font-bold text-slate-300">/</span>
-                        <span className="text-xl font-bold text-slate-500 dark:text-slate-400 tabular-nums">{total}</span>
-                        <span className="text-base text-slate-400 dark:text-slate-400 font-bold ml-0.5">명</span>
+                <div className="flex-1 min-h-0 flex flex-col">
+                    {/* 이번주 / 다음주 좌우 분할 */}
+                    <div className="flex items-stretch divide-x divide-stone-100 dark:divide-slate-700">
+                        {weekCard('이번주', cwCompleted, cwTotal, cwRate)}
+                        {weekCard('다음주', nwCompleted, nwTotal, nwRate)}
                     </div>
 
-                    {/* 프로그래스 바 */}
-                    <div className="w-full mt-2 h-1.5 bg-stone-100 dark:bg-slate-700 rounded-full overflow-hidden">
-                        <div
-                            className={`h-full rounded-full transition-all duration-700 ${
-                                isComplete
-                                    ? 'bg-gradient-to-r from-emerald-400 to-emerald-500'
-                                    : missing >= 3
-                                        ? 'bg-gradient-to-r from-rose-400 to-rose-500'
-                                        : 'bg-gradient-to-r from-amber-400 to-amber-500'
-                            }`}
-                            style={{ width: total > 0 ? `${(completed / total) * 100}%` : '0%' }}
-                        />
-                    </div>
-
-                    <p className="text-xs text-slate-400 dark:text-slate-400 font-bold mt-1 tabular-nums">
-                        작성률 {entryRate.toFixed(0)}%
-                    </p>
-
-                    {/* 미작성자 명단 */}
-                    {incompleteMembers.length > 0 && (
+                    {/* 이번주 미작성자 명단 */}
+                    {incompleteMembers.length > 0 ? (
                         <div className="w-full mt-2 pt-2 border-t border-stone-100 dark:border-slate-700">
                             <div className="flex items-center gap-1.5 mb-1">
                                 <UserX size={12} className="text-rose-400" />
                                 <span className="text-[10px] font-bold text-rose-500 uppercase tracking-wider">
-                                    미작성자
+                                    이번주 미작성자
                                 </span>
                             </div>
                             <div className="flex flex-wrap gap-1">
@@ -253,15 +270,13 @@ export default function TeamReportRateWidget({ data, size }: TeamReportRateWidge
                                 )}
                             </div>
                         </div>
-                    )}
-
-                    {incompleteMembers.length === 0 && missing > 0 && (
+                    ) : missing > 0 ? (
                         <div className="w-full mt-2 pt-2 border-t border-stone-100 dark:border-slate-700">
                             <p className="text-xs text-amber-500 font-bold text-center">
-                                {missing}명 미작성
+                                이번주 {missing}명 미작성
                             </p>
                         </div>
-                    )}
+                    ) : null}
                 </div>
             ) : (
                 <div className="flex-1 min-h-0 flex items-center justify-center">
