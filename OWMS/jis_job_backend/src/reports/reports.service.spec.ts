@@ -200,7 +200,7 @@ describe('ReportsService', () => {
         new Error('DB Error'),
       );
 
-      const result = await service.getSystemMemos('2026-03-02');
+      const result = await service.getSystemMemos(1, '2026-03-02');
 
       expect(result).toEqual([]);
     });
@@ -215,7 +215,7 @@ describe('ReportsService', () => {
         },
       ]);
 
-      const result = await service.getSystemMemos('2026-03-02');
+      const result = await service.getSystemMemos(1, '2026-03-02');
 
       expect(result[0].user.name).toBe('User1');
       expect(result[0].user.position).toBe('Manager');

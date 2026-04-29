@@ -100,8 +100,8 @@ export class ReportsController {
   }
 
   @Get('system-memos')
-  async getSystemMemos(@Query('date') date: string) {
-    return this.reportsService.getSystemMemos(date);
+  async getSystemMemos(@Request() req: any, @Query('date') date: string) {
+    return this.reportsService.getSystemMemos(req.user.id, date);
   }
 
   @Post('system-memos')

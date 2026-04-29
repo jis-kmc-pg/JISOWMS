@@ -290,7 +290,7 @@ export class ReportsService {
     return result;
   }
 
-  async getSystemMemos(date: string) {
+  async getSystemMemos(userId: number, date: string) {
     const d = new Date(date);
     // Expand window slightly to be safe with TZ shifts, or just use the whole target day in UTC
     const startOfDay = new Date(d);
@@ -308,7 +308,8 @@ export class ReportsService {
         SELECT sm.*, u.name as "userName", u.position as "userPosition"
         FROM "SystemMemo" sm
         LEFT JOIN "User" u ON sm."userId" = u.id
-        WHERE (sm.date AT TIME ZONE 'UTC' AT TIME ZONE 'Asia/Seoul')::date = ${date}::date
+        WHERE sm."userId" = ${userId}
+          AND (sm.date AT TIME ZONE 'UTC' AT TIME ZONE 'Asia/Seoul')::date = ${date}::date
         ORDER BY sm."createdAt" DESC
       `;
 
