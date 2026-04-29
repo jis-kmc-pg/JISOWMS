@@ -1,3 +1,7 @@
+// .env를 가장 먼저 로드 (PM2가 .env를 자동 로드하지 않으므로 필수)
+// bootstrap()의 setupDB()가 NestFactory.create() 이전에 process.env를 읽으므로 최상단 import.
+import 'dotenv/config';
+
 import { NestFactory } from '@nestjs/core';
 import { Logger, ValidationPipe } from '@nestjs/common';
 import helmet from 'helmet';
