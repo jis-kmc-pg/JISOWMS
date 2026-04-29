@@ -273,15 +273,20 @@ export class ReportsService {
     );
     const todayKey = DateUtil.toKSTString(new Date());
 
+    // 연차/공가/공휴일은 작성 의무가 면제되므로 hasJob=true로 간주
+    const EXEMPT_WORK_TYPES = ['연차', '공가', '공휴일'];
+
     const result = dates.map((d) => {
       const dateKey = DateUtil.toKSTString(d);
       const status = statusByDate.get(dateKey);
+      const workType = status?.workType || '내근';
+      const isExempt = EXEMPT_WORK_TYPES.includes(workType);
 
       return {
         date: dateKey,
         dayName: ['일', '월', '화', '수', '목', '금', '토'][d.getDay()],
-        hasJob: jobDateSet.has(dateKey),
-        workType: status?.workType || '내근',
+        hasJob: jobDateSet.has(dateKey) || isExempt,
+        workType,
         holidayName: status?.holidayName,
         isToday: todayKey === dateKey,
       };
