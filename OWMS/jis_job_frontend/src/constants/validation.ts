@@ -13,7 +13,7 @@
  * - 일일업무 보고의 업무명, 업무내용
  * - 업무 목록 관리의 업무명, 거래처명
  */
-export const MAX_CHARS_PER_LINE = 20;
+export const MAX_CHARS_PER_LINE = 25;
 
 /**
  * 주간 정보 최대 줄 수
@@ -23,7 +23,7 @@ export const MAX_WEEKLY_NOTE_LINES = 4;
 /**
  * 주간 정보 1줄당 최대 글자수
  */
-export const MAX_WEEKLY_NOTE_CHARS_PER_LINE = 40;
+export const MAX_WEEKLY_NOTE_CHARS_PER_LINE = 25;
 
 // ============================================================
 // 업무 목록 관리 관련 제한
