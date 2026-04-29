@@ -114,6 +114,7 @@ async function bootstrap() {
       'http://localhost:1420',
       'http://192.168.123.75:3000',
       'http://192.168.123.46:3000',
+      'http://jis4f.iptime.org:2140',
       'tauri://localhost',
     ], // 프론트엔드 및 Tauri 앱 허용
     credentials: true,
