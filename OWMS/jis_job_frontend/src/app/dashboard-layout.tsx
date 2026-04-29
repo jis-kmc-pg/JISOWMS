@@ -301,6 +301,14 @@ export default function DashboardLayout({
                                                 </div>
                                             </div>
                                             <div className="h-px bg-stone-100 my-3 mx-2"></div>
+                                            <Link
+                                                href="/profile"
+                                                onClick={() => setIsProfileOpen(false)}
+                                                className="w-full flex items-center justify-center space-x-2 px-4 py-3 rounded-2xl text-indigo-500 hover:bg-indigo-50 transition-all text-xs font-black uppercase tracking-widest mb-1"
+                                            >
+                                                <Settings size={14} />
+                                                <span>프로필 설정</span>
+                                            </Link>
                                             <button
                                                 onClick={handleLogout}
                                                 className="w-full flex items-center justify-center space-x-2 px-4 py-3 rounded-2xl text-rose-500 hover:bg-rose-50 transition-all text-xs font-black uppercase tracking-widest"
