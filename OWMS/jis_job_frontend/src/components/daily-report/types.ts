@@ -78,6 +78,17 @@ export const getWeekStart = (date: Date) => {
     return start;
 };
 
+// 저번주 월요일 (월~일 한 주 기준). 일요일이면 13일 전, 그 외엔 (요일-1)+7일 전.
+export const getLastWeekMonday = (date: Date = new Date()) => {
+    const d = new Date(date);
+    const day = d.getDay();
+    const daysToLastMonday = day === 0 ? 13 : day + 6;
+    const target = new Date(d);
+    target.setDate(d.getDate() - daysToLastMonday);
+    target.setHours(0, 0, 0, 0);
+    return target;
+};
+
 import {
     MAX_CHARS_PER_LINE,
     MAX_WEEKLY_NOTE_LINES,

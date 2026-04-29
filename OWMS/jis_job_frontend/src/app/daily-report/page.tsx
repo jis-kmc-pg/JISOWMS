@@ -9,7 +9,7 @@ import WeeklyStatusNav from '../../components/WeeklyStatusNav';
 
 import {
     JobItem, ProjectItem, WeeklyNavStatus, SystemMemo, PastJobResult,
-    formatDate, getWeekStart, isLineExceeded, isWeeklyNoteExceeded
+    formatDate, getWeekStart, getLastWeekMonday, isLineExceeded, isWeeklyNoteExceeded
 } from '../../components/daily-report/types';
 import { MAX_COMBINED_JOB_TITLE_LENGTH } from '../../constants/validation';
 import DateNavigation from '../../components/daily-report/DateNavigation';
@@ -35,7 +35,8 @@ export default function DailyReportPage() {
     const [weeklyStatus, setWeeklyStatus] = useState<WeeklyNavStatus[]>([]);
     const [projectSearchTerm, setProjectSearchTerm] = useState('');
     const [systemMemos, setSystemMemos] = useState<SystemMemo[]>([]);
-    const [searchStartDate, setSearchStartDate] = useState(formatDate(new Date(new Date().setDate(new Date().getDate() - 7))));
+    // 저번주 월요일 ~ 오늘 자동 기간 (마운트 시 자동 검색됨)
+    const [searchStartDate, setSearchStartDate] = useState(formatDate(getLastWeekMonday()));
     const [searchEndDate, setSearchEndDate] = useState(formatDate(new Date()));
     const [pastJobSearchResults, setPastJobSearchResults] = useState<PastJobResult[]>([]);
     const [isSearchingPastJobs, setIsSearchingPastJobs] = useState(false);
@@ -377,6 +378,19 @@ export default function DailyReportPage() {
             setIsSearchingPastJobs(false);
         }
     };
+
+    // 마운트 시 저번주~오늘 자동 검색 (토스트 없이 silent)
+    useEffect(() => {
+        (async () => {
+            try {
+                const res = await api.get(`/reports/search-jobs?startDate=${searchStartDate}&endDate=${searchEndDate}`);
+                setPastJobSearchResults(res.data || []);
+            } catch {
+                /* silent: 사용자가 수동 검색 시 에러 표시 */
+            }
+        })();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     const copyPastJob = (pastJob: PastJobResult) => {
         setJobs([...jobs, {
