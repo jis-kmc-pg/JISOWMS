@@ -410,8 +410,13 @@ export class ExcelService {
       } else if (dayJobs.length > 0) {
         // 2. 일반 업무 처리 (제목과 내용을 줄바꿈 단위로 개별 행 생성)
         dayJobs.forEach((job, idx) => {
-          // 2-1. 업무 제목 (줄바꿈 처리)
-          const titleText = job.project?.projectName || job.title || '기타';
+          // 2-1. 업무 제목 (거래처/관련 부서가 있으면 "거래처 : 업무명" 형식으로 결합)
+          const projectTitle = job.project
+            ? job.project.clientName
+              ? `${job.project.clientName} : ${job.project.projectName}`
+              : job.project.projectName
+            : null;
+          const titleText = projectTitle || job.title || '기타';
           const titleLines = titleText
             .split('\n')
             .map((l: string) => l.trim())
