@@ -11,6 +11,11 @@ import {
     JobItem, ProjectItem, WeeklyNavStatus, SystemMemo, PastJobResult,
     formatDate, getWeekStart, isLineExceeded, isWeeklyNoteExceeded
 } from '../../components/daily-report/types';
+import {
+    MAX_PROJECT_NAME_LENGTH,
+    MAX_CLIENT_NAME_LENGTH,
+    MAX_COMBINED_JOB_TITLE_LENGTH
+} from '../../constants/validation';
 import DateNavigation from '../../components/daily-report/DateNavigation';
 import JobCard from '../../components/daily-report/JobCard';
 import Sidebar from '../../components/daily-report/Sidebar';
@@ -328,9 +333,30 @@ export default function DailyReportPage() {
     };
 
     const handleCreateProject = async () => {
-        if (!newProjectData.projectName.trim()) { showToastMsg('업무명을 입력해주세요.'); return; }
+        const projectName = newProjectData.projectName.trim();
+        const clientName = newProjectData.clientName.trim();
+
+        if (!projectName) { showToastMsg('업무명을 입력해주세요.'); return; }
+
+        // 1줄당 글자수 제한 검증
+        if (projectName.length > MAX_PROJECT_NAME_LENGTH) {
+            showToastMsg(`업무명은 최대 ${MAX_PROJECT_NAME_LENGTH}자까지 입력 가능합니다.`);
+            return;
+        }
+        if (clientName.length > MAX_CLIENT_NAME_LENGTH) {
+            showToastMsg(`거래처명은 최대 ${MAX_CLIENT_NAME_LENGTH}자까지 입력 가능합니다.`);
+            return;
+        }
+        if (clientName) {
+            const combinedLength = clientName.length + 3 + projectName.length; // " : " = 3자
+            if (combinedLength > MAX_COMBINED_JOB_TITLE_LENGTH) {
+                showToastMsg(`거래처명과 업무명을 합쳐 최대 ${MAX_COMBINED_JOB_TITLE_LENGTH}자까지 입력 가능합니다. (현재 ${combinedLength}자)`);
+                return;
+            }
+        }
+
         try {
-            const res = await api.post('/reports/projects', newProjectData);
+            const res = await api.post('/reports/projects', { projectName, clientName });
             await fetchProjects();
             if (openDropdownIndex !== null) updateJob(openDropdownIndex, 'projectId', res.data.id);
             showToastMsg('새 업무가 등록되었습니다');
