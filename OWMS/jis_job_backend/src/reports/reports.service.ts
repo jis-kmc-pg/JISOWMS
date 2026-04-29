@@ -249,8 +249,8 @@ export class ReportsService {
       }
     }
 
-    // 해당 날짜들의 업무(Job) 및 상태(DailyStatus) 조회
-    const [jobs, statuses] = await Promise.all([
+    // 해당 날짜들의 업무(Job), 상태(DailyStatus), 승인된 휴가(Vacation) 조회
+    const [jobs, statuses, vacations] = await Promise.all([
       this.prisma.job.findMany({
         where: {
           userId,
@@ -264,6 +264,15 @@ export class ReportsService {
           date: { gte: dates[0], lte: dates[dates.length - 1] },
         },
       }),
+      this.prisma.vacation.findMany({
+        where: {
+          userId,
+          status: 'APPROVED',
+          startDate: { lte: dates[dates.length - 1] },
+          endDate: { gte: dates[0] },
+        },
+        select: { startDate: true, endDate: true },
+      }),
     ]);
 
     // Pre-index jobs and statuses by KST date string for O(1) lookups
@@ -273,6 +282,17 @@ export class ReportsService {
     );
     const todayKey = DateUtil.toKSTString(new Date());
 
+    // 승인된 휴가일 KST 날짜 Set
+    const vacationDateSet = new Set<string>();
+    for (const v of vacations) {
+      const cur = new Date(v.startDate);
+      const end = new Date(v.endDate);
+      while (cur <= end) {
+        vacationDateSet.add(DateUtil.toKSTString(new Date(cur)));
+        cur.setDate(cur.getDate() + 1);
+      }
+    }
+
     // 연차/공가/공휴일은 작성 의무가 면제되므로 hasJob=true로 간주
     const EXEMPT_WORK_TYPES = ['연차', '공가', '공휴일'];
 
@@ -280,12 +300,13 @@ export class ReportsService {
       const dateKey = DateUtil.toKSTString(d);
       const status = statusByDate.get(dateKey);
       const workType = status?.workType || '내근';
-      const isExempt = EXEMPT_WORK_TYPES.includes(workType);
+      const isExemptWorkType = EXEMPT_WORK_TYPES.includes(workType);
+      const hasApprovedVacation = vacationDateSet.has(dateKey);
 
       return {
         date: dateKey,
         dayName: ['일', '월', '화', '수', '목', '금', '토'][d.getDay()],
-        hasJob: jobDateSet.has(dateKey) || isExempt,
+        hasJob: jobDateSet.has(dateKey) || isExemptWorkType || hasApprovedVacation,
         workType,
         holidayName: status?.holidayName,
         isToday: todayKey === dateKey,

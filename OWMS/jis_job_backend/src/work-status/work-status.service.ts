@@ -87,6 +87,31 @@ export class WorkStatusService {
       },
     });
 
+    // 2.6 Get APPROVED Vacation overlapping this period (연차/공가는 작성 면제)
+    const userIdsList = users.map((u) => u.id);
+    const vacations = userIdsList.length > 0
+      ? await this.prisma.vacation.findMany({
+          where: {
+            userId: { in: userIdsList },
+            status: 'APPROVED',
+            startDate: { lte: endOfWeek },
+            endDate: { gte: startOfWeek },
+          },
+          select: { userId: true, startDate: true, endDate: true },
+        })
+      : [];
+
+    const vacationDateSet = new Set<string>();
+    for (const v of vacations) {
+      const cur = new Date(v.startDate);
+      const end = new Date(v.endDate);
+      while (cur <= end) {
+        const dStr = cur.toISOString().split('T')[0];
+        vacationDateSet.add(`${v.userId}:${dStr}`);
+        cur.setDate(cur.getDate() + 1);
+      }
+    }
+
     // 3. Build index maps for O(1) lookups (avoid O(n*m) .some/.find)
     // Key: "userId:YYYY-MM-DD" → boolean/workType
     const jobIndex = new Set<string>();
@@ -112,13 +137,18 @@ export class WorkStatusService {
         const key = `${user.id}:${dateString}`;
         const hasJob = jobIndex.has(key);
         const workType = statusIndex.get(key);
-        const isExempt = workType && ['연차', '공가', '공휴일'].includes(workType);
+        const isExemptWorkType =
+          workType && ['연차', '공가', '공휴일'].includes(workType);
+        const hasApprovedVacation = vacationDateSet.has(key);
 
         return {
           id: user.id,
           name: user.name,
           department: user.department?.name || '미배정',
-          status: hasJob || isExempt ? 'DONE' : 'MISSING',
+          status:
+            hasJob || isExemptWorkType || hasApprovedVacation
+              ? 'DONE'
+              : 'MISSING',
         };
       });
 
@@ -218,26 +248,50 @@ export class WorkStatusService {
       end.setDate(end.getDate() + 1);
       end.setHours(23, 59, 59, 999);
 
-      const jobs = await this.prisma.job.findMany({
-        where: { userId: { in: userIds }, jobDate: { gte: start, lte: end } },
-        select: { userId: true, jobDate: true },
-      });
+      const [jobs, dailyStatuses, vacations] = await Promise.all([
+        this.prisma.job.findMany({
+          where: { userId: { in: userIds }, jobDate: { gte: start, lte: end } },
+          select: { userId: true, jobDate: true },
+        }),
+        this.prisma.dailyStatus.findMany({
+          where: { userId: { in: userIds }, date: { gte: start, lte: end } },
+          select: { userId: true, date: true, workType: true },
+        }),
+        this.prisma.vacation.findMany({
+          where: {
+            userId: { in: userIds },
+            status: 'APPROVED',
+            startDate: { lte: end },
+            endDate: { gte: start },
+          },
+          select: { userId: true, startDate: true, endDate: true },
+        }),
+      ]);
 
-      const dailyStatuses = await this.prisma.dailyStatus.findMany({
-        where: { userId: { in: userIds }, date: { gte: start, lte: end } },
-        select: { userId: true, date: true, workType: true },
-      });
+      // 사용자별 승인된 휴가일 (KST 날짜 문자열) 인덱스
+      const userVacDates = new Map<number, Set<string>>();
+      for (const v of vacations) {
+        if (!userVacDates.has(v.userId)) userVacDates.set(v.userId, new Set());
+        const cur = new Date(v.startDate);
+        const ed = new Date(v.endDate);
+        while (cur <= ed) {
+          userVacDates.get(v.userId)!.add(toKSTString(cur));
+          cur.setDate(cur.getDate() + 1);
+        }
+      }
 
       let completedCount = 0;
       userIds.forEach((uid) => {
         const userJobs = jobs.filter((j) => j.userId === uid);
         const userStatuses = dailyStatuses.filter((ds) => ds.userId === uid);
+        const vacDays = userVacDates.get(uid) ?? new Set<string>();
 
         // 중요: DB 날짜를 KST 문자열로 변환하여 Set 생성
         const jobDates = new Set(userJobs.map((j) => toKSTString(j.jobDate)));
 
         const isFull = dates.every((d) => {
           if (jobDates.has(d)) return true;
+          if (vacDays.has(d)) return true; // 승인된 휴가일은 작성 면제
           // 부재 사유(연차 등) 확인 시에도 KST 문자열 비교
           const status = userStatuses.find(
             (s) => s.date && toKSTString(s.date) === d,
