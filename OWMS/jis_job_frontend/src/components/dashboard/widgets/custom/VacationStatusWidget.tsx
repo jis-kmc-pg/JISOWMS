@@ -96,12 +96,12 @@ export default function VacationStatusWidget({ data, size }: VacationStatusWidge
         </div>
     );
 
-    // 사용률 바 렌더링 헬퍼
-    const renderUsageBar = () => (
+    // 사용률 바 렌더링 헬퍼 (showRemaining=true 시 % 대신 남은 일수 표시)
+    const renderUsageBar = (showRemaining = false) => (
         <div className="w-full mt-2 pt-2 border-t border-stone-100 dark:border-slate-700">
             <div className="flex justify-between text-[10px] font-bold text-slate-300 dark:text-slate-500 uppercase tracking-wider mb-1">
-                <span>사용률</span>
-                <span className="tabular-nums">{usedPercent}%</span>
+                <span>{showRemaining ? '남은 연차' : '사용률'}</span>
+                <span className="tabular-nums">{showRemaining ? `${remainingDays}일` : `${usedPercent}%`}</span>
             </div>
             <div className="h-1.5 bg-stone-100 dark:bg-slate-700 rounded-full overflow-hidden relative">
                 <div
@@ -146,10 +146,10 @@ export default function VacationStatusWidget({ data, size }: VacationStatusWidge
                     <p className="text-xs text-slate-400 dark:text-slate-400 font-medium">연차 정보가 없습니다</p>
                 </div>
             ) : isSmall ? (
-                /* Small: stat boxes + usage bar */
+                /* Small: stat boxes + 남은 일수 바 */
                 <div className="flex-1 min-h-0 overflow-auto flex flex-col">
                     {renderStatBoxes()}
-                    {renderUsageBar()}
+                    {renderUsageBar(true)}
                 </div>
             ) : isLarge ? (
                 /* Large: 도넛 왼쪽 + stat boxes 오른쪽, 가로 배치 */
