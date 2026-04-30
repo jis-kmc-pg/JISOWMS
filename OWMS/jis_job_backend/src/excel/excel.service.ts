@@ -167,21 +167,22 @@ export class ExcelService {
       }
     });
 
-    // 데이터 영역 초기화 및 기존 병합 해제 (데이터 영역 Col 1-14 한정)
+    // 데이터 영역 초기화 및 기존 병합 해제 (새 양식: A:B, C:F, G:H, I:O, P:Q)
     allAvailableRows.forEach((r) => {
       const row = worksheet.getRow(r);
-      // 수평 병합 해제 (기존 데이터 영역만)
+      // 수평 병합 해제
       try {
         worksheet.unMergeCells(`A${r}:B${r}`);
-        worksheet.unMergeCells(`C${r}:E${r}`);
-        worksheet.unMergeCells(`F${r}:G${r}`);
-        worksheet.unMergeCells(`H${r}:N${r}`);
+        worksheet.unMergeCells(`C${r}:F${r}`);
+        worksheet.unMergeCells(`G${r}:H${r}`);
+        worksheet.unMergeCells(`I${r}:O${r}`);
+        worksheet.unMergeCells(`P${r}:Q${r}`);
       } catch (e) {
         /* ignore */
       }
 
-      // 데이터 컬럼(1~14)만 값 초기화
-      for (let c = 1; c <= 14; c++) {
+      // 데이터 컬럼(1~17, P/Q 비고 포함) 값 초기화
+      for (let c = 1; c <= 17; c++) {
         const cell = row.getCell(c);
         if (cell.address === cell.master.address) {
           cell.value = null;
@@ -218,10 +219,10 @@ export class ExcelService {
           row.getCell(3).value = rowInfo.text;
         }
 
-        // 병합 적용
+        // 병합 적용 (새 양식: A:B, C:F)
         try {
           worksheet.mergeCells(`A${rNum}:B${rNum}`);
-          worksheet.mergeCells(`C${rNum}:E${rNum}`);
+          worksheet.mergeCells(`C${rNum}:F${rNum}`);
         } catch (e) {
           /* ignore */
         }
@@ -251,10 +252,10 @@ export class ExcelService {
           row.getCell(9).value = rowInfo.text; // I열 (새 양식 I:O 병합)
         }
 
-        // 병합 적용
+        // 병합 적용 (새 양식: G:H, I:O)
         try {
-          worksheet.mergeCells(`F${rNum}:G${rNum}`);
-          worksheet.mergeCells(`H${rNum}:N${rNum}`);
+          worksheet.mergeCells(`G${rNum}:H${rNum}`);
+          worksheet.mergeCells(`I${rNum}:O${rNum}`);
         } catch (e) {
           /* ignore */
         }
@@ -263,18 +264,19 @@ export class ExcelService {
       });
     }
 
-    // 데이터가 없는 행들도 병합 구조는 유지 (템플릿 디자인 보존)
-    const maxPtr = Math.max(leftPtr, rightPtr);
+    // 데이터가 없는 행들도 병합 구조는 유지 (템플릿 디자인 보존, 새 양식 패턴)
     allAvailableRows.forEach((rNum, idx) => {
       try {
         if (idx >= leftPtr) {
           worksheet.mergeCells(`A${rNum}:B${rNum}`);
-          worksheet.mergeCells(`C${rNum}:E${rNum}`);
+          worksheet.mergeCells(`C${rNum}:F${rNum}`);
         }
         if (idx >= rightPtr) {
-          worksheet.mergeCells(`F${rNum}:G${rNum}`);
-          worksheet.mergeCells(`H${rNum}:N${rNum}`);
+          worksheet.mergeCells(`G${rNum}:H${rNum}`);
+          worksheet.mergeCells(`I${rNum}:O${rNum}`);
         }
+        // P:Q (비고)는 항상 유지
+        worksheet.mergeCells(`P${rNum}:Q${rNum}`);
       } catch (e) {
         /* ignore */
       }
