@@ -1,12 +1,18 @@
 import { Controller, Get, Query, Res, UseGuards, Req, ForbiddenException, Logger } from '@nestjs/common';
 import * as express from 'express';
 import { ExcelService } from './excel.service';
+import { PrismaService } from '../prisma.service';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+
+const MANAGER_ROLES = ['TEAM_LEADER', 'DEPT_HEAD', 'EXECUTIVE', 'CEO'];
 
 @Controller('excel')
 export class ExcelController {
   private readonly logger = new Logger(ExcelController.name);
-  constructor(private readonly excelService: ExcelService) {}
+  constructor(
+    private readonly excelService: ExcelService,
+    private readonly prisma: PrismaService,
+  ) {}
 
   @Get('weekly-report')
   @UseGuards(JwtAuthGuard)
@@ -22,17 +28,39 @@ export class ExcelController {
     try {
       let targetUserId = req.user.id; // Default to self
 
-      // If user is TEAM_LEADER or ADMIN and requests a specific userId, allow it
-      if (
-        (['TEAM_LEADER', 'DEPT_HEAD', 'EXECUTIVE', 'CEO'].includes(req.user.role)) &&
-        queryUserId
-      ) {
-        targetUserId = parseInt(queryUserId, 10);
-        this.logger.log(
-          `Authorized access to other user's report. TargetUserId: ${targetUserId}`,
-        );
-      } else if (queryUserId && parseInt(queryUserId, 10) !== req.user.id) {
-        throw new ForbiddenException('본인의 보고서만 다운로드할 수 있습니다.');
+      if (queryUserId) {
+        const requestedId = parseInt(queryUserId, 10);
+
+        if (requestedId === req.user.id) {
+          // 본인은 항상 허용
+          targetUserId = requestedId;
+        } else if (MANAGER_ROLES.includes(req.user.role)) {
+          // 매니저급은 누구의 보고서든 허용
+          targetUserId = requestedId;
+          this.logger.log(
+            `Authorized access (manager) to other user's report. TargetUserId: ${targetUserId}`,
+          );
+        } else if (req.user.teamId) {
+          // 일반 팀원: 같은 팀 소속 여부 확인
+          const target = await this.prisma.user.findUnique({
+            where: { id: requestedId },
+            select: { teamId: true },
+          });
+          if (target && target.teamId === req.user.teamId) {
+            targetUserId = requestedId;
+            this.logger.log(
+              `Authorized access (same team) to teammate's report. TargetUserId: ${targetUserId}`,
+            );
+          } else {
+            throw new ForbiddenException(
+              '같은 팀 인원의 보고서만 다운로드할 수 있습니다.',
+            );
+          }
+        } else {
+          throw new ForbiddenException(
+            '본인의 보고서만 다운로드할 수 있습니다.',
+          );
+        }
       }
 
       const buffer = await this.excelService.generateWeeklyReport(
