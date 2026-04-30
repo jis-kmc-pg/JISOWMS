@@ -76,7 +76,7 @@ export class ExcelService {
     this.logger.debug(`Reading template from: ${this.templatePath}`);
     const workbook = new ExcelJS.Workbook();
     await workbook.xlsx.readFile(this.templatePath);
-    const worksheet = workbook.worksheets[1]; // '양식 (2)'
+    const worksheet = workbook.worksheets[0]; // 새 양식 'Sheet1'
 
     // 보고자/작성일 및 주간 날짜 범위 기입 (Row 4, 6)
     this.updateMetadata(
@@ -237,7 +237,7 @@ export class ExcelService {
 
         // 요일 라벨 기입 (isDayStart일 때만, 맞춤 서식 없이 값만)
         if (rowInfo.isDayStart) {
-          const dayCell = row.getCell(6);
+          const dayCell = row.getCell(7); // G열 (새 양식 G:H 병합)
           dayCell.value = this.getDayHeader(
             dayIdx,
             new Date(startOfNextWeek.getTime() + dayIdx * 86400000),
@@ -248,7 +248,7 @@ export class ExcelService {
         // spacer는 빈 행으로 유지
         if (rowInfo.type !== 'spacer') {
           // 텍스트만 기입 (서식은 템플릿 원본 유지)
-          row.getCell(8).value = rowInfo.text;
+          row.getCell(9).value = rowInfo.text; // I열 (새 양식 I:O 병합)
         }
 
         // 병합 적용
@@ -293,22 +293,21 @@ export class ExcelService {
     nStart: Date,
     nEnd: Date,
   ) {
-    // 보고자 및 작성일
+    // 보고자 부서/이름은 양식의 라벨(A4 "보고자 :")이 이미 있으므로 값만 분리 기입
     const row4 = worksheet.getRow(4);
-    row4.getCell(1).value =
-      `보고자 : ${user?.department?.name || '솔루션 사업부'} ${user?.name || ''}`;
-    row4.getCell(8).value = `작 성 일 : ${this.formatDate(targetDate)}`;
+    row4.getCell(3).value = user?.department?.name || '솔루션 사업부'; // C4 부서
+    row4.getCell(4).value = user?.name || ''; // D4 이름
+    row4.getCell(15).value = this.formatDate(targetDate); // O4 작성일 (라벨 "작 성 일 :"은 I4에 양식 내장)
 
-    // 주간 날짜 범위 (Row 6)
-    // 템플릿 수식이 있더라도 서식 일치와 정확성을 위해 모든 날짜 셀에 값을 명시적으로 기입
+    // 주간 날짜 범위 (Row 6) - 새 양식: C6 시작(좌), F6 끝(좌), I6 시작(우), L6 끝(우)
     const row6 = worksheet.getRow(6);
-    const dateCells = [3, 5, 8, 10]; // C6, E6, H6, J6
+    const dateCells = [3, 6, 9, 12]; // C6, F6, I6, L6
     const dateFormat = 'yyyy"년" mm"월" dd"일"';
 
     row6.getCell(3).value = this.dateToExcelSerial(start);
-    row6.getCell(5).value = this.dateToExcelSerial(end);
-    row6.getCell(8).value = this.dateToExcelSerial(nStart);
-    row6.getCell(10).value = this.dateToExcelSerial(nEnd);
+    row6.getCell(6).value = this.dateToExcelSerial(end);
+    row6.getCell(9).value = this.dateToExcelSerial(nStart);
+    row6.getCell(12).value = this.dateToExcelSerial(nEnd);
 
     dateCells.forEach((col) => {
       row6.getCell(col).numFmt = dateFormat;
