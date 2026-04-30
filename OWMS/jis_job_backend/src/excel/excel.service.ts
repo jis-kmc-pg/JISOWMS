@@ -282,6 +282,28 @@ export class ExcelService {
       }
     });
 
+    // 데이터 영역 master cell의 우측 실선 제거 (사용자 요청)
+    // - A:B master(A) right → B/C 경계 (row 7만)
+    // - G:H master(G) right → H/I 경계 (모든 데이터 행)
+    // - I:O master(I) right → O/P 경계 (모든 데이터 행)
+    const stripRightBorder = (cell: ExcelJS.Cell) => {
+      const cur = cell.border || {};
+      cell.border = {
+        top: cur.top,
+        left: cur.left,
+        bottom: cur.bottom,
+        right: { style: undefined } as any,
+      };
+    };
+    allAvailableRows.forEach((r) => {
+      stripRightBorder(worksheet.getRow(r).getCell(7)); // G col
+      stripRightBorder(worksheet.getRow(r).getCell(9)); // I col
+    });
+    // row 7 좌측 요일 우측 (B/C 경계)도 제거
+    if (allAvailableRows.length > 0) {
+      stripRightBorder(worksheet.getRow(allAvailableRows[0]).getCell(1));
+    }
+
     const buffer = await workbook.xlsx.writeBuffer();
     return buffer as unknown as Buffer;
   }
