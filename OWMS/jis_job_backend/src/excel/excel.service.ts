@@ -167,21 +167,10 @@ export class ExcelService {
       }
     });
 
-    // 데이터 영역 초기화 및 기존 병합 해제 (새 양식: A:B, C:F, G:H, I:O, P:Q)
+    // 데이터 영역 master cell value만 초기화 (병합은 양식 원본 유지)
+    // unmerge/merge를 반복하면 일부 row의 병합이 깨져 점선/실선이 어긋나는 문제 회피
     allAvailableRows.forEach((r) => {
       const row = worksheet.getRow(r);
-      // 수평 병합 해제
-      try {
-        worksheet.unMergeCells(`A${r}:B${r}`);
-        worksheet.unMergeCells(`C${r}:F${r}`);
-        worksheet.unMergeCells(`G${r}:H${r}`);
-        worksheet.unMergeCells(`I${r}:O${r}`);
-        worksheet.unMergeCells(`P${r}:Q${r}`);
-      } catch (e) {
-        /* ignore */
-      }
-
-      // 데이터 컬럼(1~17, P/Q 비고 포함) 값 초기화
       for (let c = 1; c <= 17; c++) {
         const cell = row.getCell(c);
         if (cell.address === cell.master.address) {
@@ -219,14 +208,6 @@ export class ExcelService {
           row.getCell(3).value = rowInfo.text;
         }
 
-        // 병합 적용 (새 양식: A:B, C:F)
-        try {
-          worksheet.mergeCells(`A${rNum}:B${rNum}`);
-          worksheet.mergeCells(`C${rNum}:F${rNum}`);
-        } catch (e) {
-          /* ignore */
-        }
-
         leftPtr++;
       });
 
@@ -252,35 +233,9 @@ export class ExcelService {
           row.getCell(9).value = rowInfo.text; // I열 (새 양식 I:O 병합)
         }
 
-        // 병합 적용 (새 양식: G:H, I:O)
-        try {
-          worksheet.mergeCells(`G${rNum}:H${rNum}`);
-          worksheet.mergeCells(`I${rNum}:O${rNum}`);
-        } catch (e) {
-          /* ignore */
-        }
-
         rightPtr++;
       });
     }
-
-    // 데이터가 없는 행들도 병합 구조는 유지 (템플릿 디자인 보존, 새 양식 패턴)
-    allAvailableRows.forEach((rNum, idx) => {
-      try {
-        if (idx >= leftPtr) {
-          worksheet.mergeCells(`A${rNum}:B${rNum}`);
-          worksheet.mergeCells(`C${rNum}:F${rNum}`);
-        }
-        if (idx >= rightPtr) {
-          worksheet.mergeCells(`G${rNum}:H${rNum}`);
-          worksheet.mergeCells(`I${rNum}:O${rNum}`);
-        }
-        // P:Q (비고)는 항상 유지
-        worksheet.mergeCells(`P${rNum}:Q${rNum}`);
-      } catch (e) {
-        /* ignore */
-      }
-    });
 
     // 데이터 영역 master cell의 우측 실선 제거 (사용자 요청)
     // - A:B master(A) right → B/C 경계 (row 7만)
