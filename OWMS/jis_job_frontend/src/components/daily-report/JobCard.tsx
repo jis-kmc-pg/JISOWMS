@@ -6,6 +6,7 @@ import {
     Search, AlertTriangle
 } from 'lucide-react';
 import { JobItem, ProjectItem, isLineExceeded } from './types';
+import { MAX_CHARS_PER_LINE } from '../../constants/validation';
 
 interface JobCardProps {
     job: JobItem;
@@ -237,7 +238,7 @@ export default function JobCard({
                 {isLineExceeded(job.title) && (
                     <p className="text-[11px] text-rose-500 dark:text-rose-400 font-bold ml-2 animate-pulse flex items-center space-x-1">
                         <AlertTriangle size={12} />
-                        <span>1줄에 20자 이상 입력은 불가합니다. 다음줄에 입력하세요</span>
+                        <span>1줄에 {MAX_CHARS_PER_LINE}자 이상 입력은 불가합니다. 다음줄에 입력하세요</span>
                     </p>
                 )}
             </div>
@@ -253,7 +254,7 @@ export default function JobCard({
                 {isLineExceeded(job.content) && (
                     <p className="text-[11px] text-rose-500 dark:text-rose-400 font-bold ml-2 animate-pulse flex items-center space-x-1">
                         <AlertTriangle size={12} />
-                        <span>1줄에 20자 이상 입력은 불가합니다. 다음줄에 입력하세요</span>
+                        <span>1줄에 {MAX_CHARS_PER_LINE}자 이상 입력은 불가합니다. 다음줄에 입력하세요</span>
                     </p>
                 )}
             </div>

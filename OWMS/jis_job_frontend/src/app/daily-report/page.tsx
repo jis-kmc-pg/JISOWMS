@@ -11,7 +11,12 @@ import {
     JobItem, ProjectItem, WeeklyNavStatus, SystemMemo, PastJobResult,
     formatDate, getWeekStart, getLastWeekMonday, isLineExceeded, isWeeklyNoteExceeded
 } from '../../components/daily-report/types';
-import { MAX_COMBINED_JOB_TITLE_LENGTH } from '../../constants/validation';
+import {
+    MAX_COMBINED_JOB_TITLE_LENGTH,
+    MAX_CHARS_PER_LINE,
+    MAX_WEEKLY_NOTE_LINES,
+    MAX_WEEKLY_NOTE_CHARS_PER_LINE,
+} from '../../constants/validation';
 import DateNavigation from '../../components/daily-report/DateNavigation';
 import JobCard from '../../components/daily-report/JobCard';
 import Sidebar from '../../components/daily-report/Sidebar';
@@ -231,8 +236,8 @@ export default function DailyReportPage() {
         const hasWeeklyError = isWeeklyNoteExceeded(weeklyNote);
         if (hasJobError || hasWeeklyError) {
             const errorMsg = hasJobError
-                ? '업무 항목 중 1줄에 20자를 초과한 항목이 있습니다.'
-                : '주간 정보 사항이 제한(4줄, 줄당 40자)을 초과했습니다.';
+                ? `업무 항목 중 1줄에 ${MAX_CHARS_PER_LINE}자를 초과한 항목이 있습니다.`
+                : `주간 정보 사항이 제한(${MAX_WEEKLY_NOTE_LINES}줄, 줄당 ${MAX_WEEKLY_NOTE_CHARS_PER_LINE}자)을 초과했습니다.`;
             showToastMsg(`${errorMsg} 수정 후 저장해 주세요.`);
             return;
         }

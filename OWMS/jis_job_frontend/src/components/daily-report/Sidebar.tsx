@@ -3,6 +3,10 @@
 import React from 'react';
 import { Search, Copy, MessageSquare, Pin, AlertTriangle } from 'lucide-react';
 import { SystemMemo, PastJobResult, isWeeklyNoteExceeded } from './types';
+import {
+    MAX_WEEKLY_NOTE_LINES,
+    MAX_WEEKLY_NOTE_CHARS_PER_LINE,
+} from '../../constants/validation';
 
 interface SidebarProps {
     systemMemos: SystemMemo[];
@@ -191,7 +195,7 @@ export default function Sidebar({
                 {isWeeklyNoteExceeded(weeklyNote) && (
                     <p className="text-[11px] text-rose-500 dark:text-rose-400 font-bold mt-2 animate-pulse flex items-center space-x-1 ml-1">
                         <AlertTriangle size={12} />
-                        <span>주간 정보는 최대 4줄, 한 줄당 40자까지만 입력 가능합니다.</span>
+                        <span>주간 정보는 최대 {MAX_WEEKLY_NOTE_LINES}줄, 한 줄당 {MAX_WEEKLY_NOTE_CHARS_PER_LINE}자까지만 입력 가능합니다.</span>
                     </p>
                 )}
                 <p className="text-[11px] text-slate-400 dark:text-slate-400 mt-2 leading-relaxed ml-1">
