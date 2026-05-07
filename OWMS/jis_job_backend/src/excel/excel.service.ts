@@ -382,7 +382,7 @@ export class ExcelService {
       if (workType === '공휴일' || workType === '연차' || workType === '공가') {
         const title =
           workType === '공휴일' && status.holidayName
-            ? `<공휴일: ${status.holidayName}>`
+            ? `<${status.holidayName}>`
             : `<${workType}>`;
         dayRows.push({ type: 'holiday', text: title, isDayStart: true });
       } else if (dayJobs.length > 0) {
