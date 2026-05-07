@@ -264,20 +264,30 @@ export class ExcelService {
     const usedCount = Math.max(leftPtr, rightPtr);
     if (usedCount > 0) {
       const lastUsedRow = allAvailableRows[usedCount - 1];
+      // 명시적 페이지 끝 리스트 (worksheet.rowCount에 의존 안 함)
       const PAGE_END_ROWS: number[] = [44];
-      for (let end = 86; end <= worksheet.rowCount + 42; end += 42) {
+      for (let end = 86; end <= 1000; end += 42) {
         PAGE_END_ROWS.push(end);
       }
-      let cutoff = PAGE_END_ROWS[PAGE_END_ROWS.length - 1];
+      let cutoff = PAGE_END_ROWS[0];
       for (const end of PAGE_END_ROWS) {
         if (end >= lastUsedRow) {
           cutoff = end;
           break;
         }
       }
-      const totalRows = worksheet.rowCount;
-      if (totalRows > cutoff) {
-        worksheet.spliceRows(cutoff + 1, totalRows - cutoff);
+      this.logger.log(
+        `Page cutoff: lastUsedRow=${lastUsedRow}, cutoff=${cutoff}, worksheet.rowCount=${worksheet.rowCount}`,
+      );
+      // 양식의 row 422를 기준으로 잘라내기 (ExcelJS rowCount가 부정확할 수 있음)
+      const REAL_MAX_ROW = 422;
+      if (REAL_MAX_ROW > cutoff) {
+        worksheet.spliceRows(cutoff + 1, REAL_MAX_ROW - cutoff);
+      }
+      // 추가로 hidden 처리 (혹시 spliceRows가 부분 실패할 경우 대비)
+      for (let r = cutoff + 1; r <= REAL_MAX_ROW; r++) {
+        const row = worksheet.getRow(r);
+        if (row && row.number) row.hidden = true;
       }
     }
 
