@@ -438,7 +438,7 @@ export class ExcelService {
           titleLines.forEach((line: string, lineIdx: number) => {
             dayRows.push({
               type: 'title',
-              text: lineIdx === 0 ? `${idx + 1}. ${line}` : `   ${line}`,
+              text: lineIdx === 0 ? ` ${idx + 1}. ${line}` : ` ${line}`,
               isDayStart: idx === 0 && lineIdx === 0,
             });
           });
@@ -450,7 +450,7 @@ export class ExcelService {
               .map((l: string) => l.trim())
               .filter(Boolean);
             contentLines.forEach((line: string) => {
-              dayRows.push({ type: 'content', text: `   ${line}` });
+              dayRows.push({ type: 'content', text: ` ${line}` });
             });
           }
         });
