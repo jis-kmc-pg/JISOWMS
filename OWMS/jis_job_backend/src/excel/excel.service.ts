@@ -259,6 +259,28 @@ export class ExcelService {
       stripRightBorder(worksheet.getRow(allAvailableRows[0]).getCell(1));
     }
 
+    // 페이지 단위로 사용 안 한 영역 잘라내기
+    // 1페이지: row 1~44, 2페이지: 45~86 (42행), 3페이지+: +42행씩
+    const usedCount = Math.max(leftPtr, rightPtr);
+    if (usedCount > 0) {
+      const lastUsedRow = allAvailableRows[usedCount - 1];
+      const PAGE_END_ROWS: number[] = [44];
+      for (let end = 86; end <= worksheet.rowCount + 42; end += 42) {
+        PAGE_END_ROWS.push(end);
+      }
+      let cutoff = PAGE_END_ROWS[PAGE_END_ROWS.length - 1];
+      for (const end of PAGE_END_ROWS) {
+        if (end >= lastUsedRow) {
+          cutoff = end;
+          break;
+        }
+      }
+      const totalRows = worksheet.rowCount;
+      if (totalRows > cutoff) {
+        worksheet.spliceRows(cutoff + 1, totalRows - cutoff);
+      }
+    }
+
     const buffer = await workbook.xlsx.writeBuffer();
     return buffer as unknown as Buffer;
   }
