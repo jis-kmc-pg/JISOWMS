@@ -199,7 +199,7 @@ export class ExcelService {
             dayIdx,
             new Date(startOfWeek.getTime() + dayIdx * 86400000),
           );
-          dayCell.alignment = { vertical: 'middle' };
+          dayCell.alignment = { vertical: 'middle', horizontal: 'center' };
         }
 
         // spacer는 빈 행으로 유지 (값만 null, 병합은 유지)
@@ -224,7 +224,7 @@ export class ExcelService {
             dayIdx,
             new Date(startOfNextWeek.getTime() + dayIdx * 86400000),
           );
-          dayCell.alignment = { vertical: 'middle' };
+          dayCell.alignment = { vertical: 'middle', horizontal: 'center' };
         }
 
         // spacer는 빈 행으로 유지
