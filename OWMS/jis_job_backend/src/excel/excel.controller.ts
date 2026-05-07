@@ -2,6 +2,7 @@ import { Controller, Get, Query, Res, UseGuards, Req, ForbiddenException, Logger
 import * as express from 'express';
 import { ExcelService } from './excel.service';
 import { PrismaService } from '../prisma.service';
+import { DateUtil } from '../common/utils/date.util';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 
 const MANAGER_ROLES = ['TEAM_LEADER', 'DEPT_HEAD', 'EXECUTIVE', 'CEO'];
@@ -71,7 +72,18 @@ export class ExcelController {
         `Report generated for User ${targetUserId}. Buffer size: ${buffer.length}`,
       );
 
-      const filename = `WeeklyReport_${targetUserId}_${date}.xlsx`;
+      // 파일명: "{이름}_일일주간업무보고서(MM월DD일_MM월DD일).xlsx"
+      const targetUser = await this.prisma.user.findUnique({
+        where: { id: targetUserId },
+        select: { name: true },
+      });
+      const userName = targetUser?.name || `User${targetUserId}`;
+      const targetDate = new Date(date);
+      const startOfWeek = DateUtil.getMonday(targetDate);
+      const endOfWeek = new Date(startOfWeek.getTime() + 4 * 86400000); // 월~금
+      const formatKor = (d: Date) =>
+        `${String(d.getMonth() + 1).padStart(2, '0')}월${String(d.getDate()).padStart(2, '0')}일`;
+      const filename = `${userName}_일일주간업무보고서(${formatKor(startOfWeek)}_${formatKor(endOfWeek)}).xlsx`;
 
       const encodedFilename = encodeURIComponent(filename);
       res.set({
