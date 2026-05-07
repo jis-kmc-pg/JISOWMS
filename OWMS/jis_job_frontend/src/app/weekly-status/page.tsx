@@ -149,8 +149,15 @@ export default function WeeklyStatusPage() {
                 return;
             }
 
-            // Force filename here
-            const filename = `${userName}_주간보고서_${dateStr}.xlsx`;
+            // 파일명: 백엔드 Content-Disposition에서 추출, 실패 시 fallback
+            let filename = `${userName}_일일주간업무보고서_${dateStr}.xlsx`;
+            const cd = res.headers['content-disposition'] as string | undefined;
+            if (cd) {
+                const utf8 = cd.match(/filename\*=UTF-8''([^;]+)/i);
+                const ascii = cd.match(/filename="?([^";]+)"?/i);
+                if (utf8) { try { filename = decodeURIComponent(utf8[1]); } catch {} }
+                else if (ascii) { try { filename = decodeURIComponent(ascii[1]); } catch { filename = ascii[1]; } }
+            }
             downloadFile(new Blob([res.data]), filename);
         } catch (error) {
             console.error('Excel download error:', error);
