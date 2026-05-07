@@ -211,9 +211,10 @@ export default function WeeklyStatusPage() {
 
     const getWeekDateRange = (date: Date) => {
         const day = date.getDay(); // 0(Sun) ~ 6(Sat)
-        // Assume Sunday start for now matching backend logic
+        // backend(DateUtil.getMonday) 기준: 월요일 시작 ~ 일요일 끝
+        const diff = day === 0 ? -6 : 1 - day;
         const start = new Date(date);
-        start.setDate(date.getDate() - day);
+        start.setDate(date.getDate() + diff);
         const end = new Date(start);
         end.setDate(start.getDate() + 6);
         return `${start.getMonth() + 1}월 ${start.getDate()}일 ~ ${end.getMonth() + 1}월 ${end.getDate()}일`;
