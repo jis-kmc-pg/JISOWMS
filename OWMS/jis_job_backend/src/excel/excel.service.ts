@@ -279,12 +279,15 @@ export class ExcelService {
       this.logger.log(
         `Page cutoff: lastUsedRow=${lastUsedRow}, cutoff=${cutoff}, worksheet.rowCount=${worksheet.rowCount}`,
       );
-      // 양식의 row 422를 기준으로 잘라내기 (ExcelJS rowCount가 부정확할 수 있음)
+      // 1) printArea를 cutoff 기준으로 재설정 (양식 원본은 1~86 고정)
+      worksheet.pageSetup.printArea = `A1:Q${cutoff}`;
+
+      // 2) cutoff 이후 row 자체 삭제 (화면에서도 안 보이게)
       const REAL_MAX_ROW = 422;
       if (REAL_MAX_ROW > cutoff) {
         worksheet.spliceRows(cutoff + 1, REAL_MAX_ROW - cutoff);
       }
-      // 추가로 hidden 처리 (혹시 spliceRows가 부분 실패할 경우 대비)
+      // 3) 안전망: 남아있는 row hidden 처리
       for (let r = cutoff + 1; r <= REAL_MAX_ROW; r++) {
         const row = worksheet.getRow(r);
         if (row && row.number) row.hidden = true;
