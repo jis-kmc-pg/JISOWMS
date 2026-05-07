@@ -122,6 +122,7 @@ async function bootstrap() {
       'tauri://localhost',
     ], // 프론트엔드 및 Tauri 앱 허용
     credentials: true,
+    exposedHeaders: ['Content-Disposition'], // 다운로드 파일명 추출용
   });
 
   // 유효성 검사
