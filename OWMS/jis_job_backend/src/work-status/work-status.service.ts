@@ -106,7 +106,7 @@ export class WorkStatusService {
       const cur = new Date(v.startDate);
       const end = new Date(v.endDate);
       while (cur <= end) {
-        const dStr = cur.toISOString().split('T')[0];
+        const dStr = DateUtil.toKSTString(cur);
         vacationDateSet.add(`${v.userId}:${dStr}`);
         cur.setDate(cur.getDate() + 1);
       }
@@ -116,13 +116,13 @@ export class WorkStatusService {
     // Key: "userId:YYYY-MM-DD" → boolean/workType
     const jobIndex = new Set<string>();
     for (const job of jobs) {
-      const key = `${job.userId}:${job.jobDate.toISOString().split('T')[0]}`;
+      const key = `${job.userId}:${DateUtil.toKSTString(job.jobDate)}`;
       jobIndex.add(key);
     }
 
     const statusIndex = new Map<string, string>();
     for (const ds of dailyStatuses) {
-      const key = `${ds.userId}:${ds.date.toISOString().split('T')[0]}`;
+      const key = `${ds.userId}:${DateUtil.toKSTString(ds.date)}`;
       statusIndex.set(key, ds.workType);
     }
 
@@ -131,7 +131,8 @@ export class WorkStatusService {
     for (let i = 0; i < totalDays; i++) {
       const currentDate = new Date(startOfWeek);
       currentDate.setDate(startOfWeek.getDate() + i);
-      const dateString = currentDate.toISOString().split('T')[0];
+      // KST 기준 날짜 문자열 (UTC로 변환하면 전날이 되는 버그 회피)
+      const dateString = DateUtil.toKSTString(currentDate);
 
       const usersStatus = users.map((user) => {
         const key = `${user.id}:${dateString}`;
