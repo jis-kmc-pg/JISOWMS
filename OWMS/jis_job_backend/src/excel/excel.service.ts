@@ -417,8 +417,8 @@ export class ExcelService {
       if (workType === '공휴일' || workType === '연차' || workType === '공가') {
         const title =
           workType === '공휴일' && status.holidayName
-            ? `<${status.holidayName}>`
-            : `<${workType}>`;
+            ? ` <${status.holidayName}>`
+            : ` <${workType}>`;
         dayRows.push({ type: 'holiday', text: title, isDayStart: true });
       } else if (dayJobs.length > 0) {
         // 2. 일반 업무 처리 (제목과 내용을 줄바꿈 단위로 개별 행 생성)
@@ -457,7 +457,7 @@ export class ExcelService {
 
         // 3. 근무형태 표시 (모든 업무 후 마지막에 추가)
         if (workType && !['연차', '공휴일', '공가'].includes(workType)) {
-          dayRows.push({ type: 'workType', text: `<${workType}>` });
+          dayRows.push({ type: 'workType', text: ` <${workType}>` });
         }
       } else {
         // 데이터 없는 경우에도 근무형태 표시
