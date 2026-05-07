@@ -136,7 +136,9 @@ export default function WeeklyStatusPage() {
 
     const downloadExcel = async (userId: number, userName: string) => {
         try {
-            const dateStr = selectedDate.toISOString().split('T')[0];
+            // KST 보정: 로컬 자정을 UTC로 변환 시 전날이 되는 버그 회피
+            const offset = selectedDate.getTimezoneOffset() * 60000;
+            const dateStr = new Date(selectedDate.getTime() - offset).toISOString().split('T')[0];
             const res = await api.get(`/excel/weekly-report?userId=${userId}&date=${dateStr}`, {
                 responseType: 'blob'
             });
@@ -167,7 +169,9 @@ export default function WeeklyStatusPage() {
 
     const downloadTeamBulkExcel = async (teamId: number, teamName: string) => {
         try {
-            const dateStr = selectedDate.toISOString().split('T')[0];
+            // KST 보정: 로컬 자정을 UTC로 변환 시 전날이 되는 버그 회피
+            const offset = selectedDate.getTimezoneOffset() * 60000;
+            const dateStr = new Date(selectedDate.getTime() - offset).toISOString().split('T')[0];
             const res = await api.get(`/excel/team-weekly-report?teamId=${teamId}&date=${dateStr}`, {
                 responseType: 'blob'
             });
