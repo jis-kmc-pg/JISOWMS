@@ -1,7 +1,10 @@
 'use client';
 
 import { Plus, XCircle, AlertCircle } from 'lucide-react';
-import { MAX_COMBINED_JOB_TITLE_LENGTH } from '../../constants/validation';
+import {
+    MAX_COMBINED_JOB_TITLE_WIDTH,
+    getDisplayWidth,
+} from '../../constants/validation';
 
 interface CreateProjectModalProps {
     show: boolean;
@@ -13,24 +16,25 @@ interface CreateProjectModalProps {
 
 interface LineInfo {
     text: string;       // 표시될 줄 텍스트 (1줄은 "거래처 : 업무명")
-    length: number;     // 표시 텍스트 길이
+    width: number;      // 디스플레이 너비 (한글 2 / 영문 1)
     exceeded: boolean;
 }
 
-function buildLineInfos(projectName: string, clientName: string, maxLen: number): LineInfo[] {
+function buildLineInfos(projectName: string, clientName: string, maxWidth: number): LineInfo[] {
     const lines = projectName.split('\n');
     return lines.map((rawLine, idx) => {
         const text = idx === 0 && clientName
             ? `${clientName} : ${rawLine}`
             : rawLine;
-        return { text, length: text.length, exceeded: text.length > maxLen };
+        const width = getDisplayWidth(text);
+        return { text, width, exceeded: width > maxWidth };
     });
 }
 
 export default function CreateProjectModal({ show, data, onDataChange, onCreate, onClose }: CreateProjectModalProps) {
     if (!show) return null;
 
-    const lineInfos = buildLineInfos(data.projectName, data.clientName, MAX_COMBINED_JOB_TITLE_LENGTH);
+    const lineInfos = buildLineInfos(data.projectName, data.clientName, MAX_COMBINED_JOB_TITLE_WIDTH);
     const hasAnyExceeded = lineInfos.some(l => l.exceeded);
     const isDisabled = !data.projectName.trim() || hasAnyExceeded;
 
@@ -80,7 +84,7 @@ export default function CreateProjectModal({ show, data, onDataChange, onCreate,
                                 <AlertCircle size={16} className={`mt-0.5 shrink-0 ${hasAnyExceeded ? 'text-rose-500' : 'text-indigo-500'}`} />
                                 <div className="text-xs flex-1">
                                     <div className={`font-bold mb-2 ${hasAnyExceeded ? 'text-rose-700 dark:text-rose-400' : 'text-indigo-700 dark:text-indigo-400'}`}>
-                                        주간업무 작성 시 표시될 줄별 길이 (1줄당 {MAX_COMBINED_JOB_TITLE_LENGTH}자)
+                                        주간업무 작성 시 표시될 줄별 너비 (1줄당 {MAX_COMBINED_JOB_TITLE_WIDTH}, 한글 2/영문 1)
                                     </div>
                                     <div className="space-y-1">
                                         {lineInfos.map((line, idx) => (
@@ -92,7 +96,7 @@ export default function CreateProjectModal({ show, data, onDataChange, onCreate,
                                                     &quot;{line.text}&quot;
                                                 </span>
                                                 <span className={`shrink-0 font-bold tabular-nums ${line.exceeded ? 'text-rose-500' : 'text-indigo-500'}`}>
-                                                    {line.length}/{MAX_COMBINED_JOB_TITLE_LENGTH}
+                                                    {line.width}/{MAX_COMBINED_JOB_TITLE_WIDTH}
                                                     {line.exceeded && '↑'}
                                                 </span>
                                             </div>

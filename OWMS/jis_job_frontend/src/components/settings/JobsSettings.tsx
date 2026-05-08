@@ -13,7 +13,7 @@ import {
     RotateCcw,
     AlertCircle
 } from 'lucide-react';
-import { MAX_COMBINED_JOB_TITLE_LENGTH } from '../../constants/validation';
+import { MAX_COMBINED_JOB_TITLE_WIDTH, getDisplayWidth } from '../../constants/validation';
 
 interface Job {
     id: number;
@@ -79,8 +79,9 @@ export default function JobsSettings() {
             const text = i === 0 && clientName
                 ? `${clientName} : ${lines[i]}`
                 : lines[i];
-            if (text.length > MAX_COMBINED_JOB_TITLE_LENGTH) {
-                alert(`${i + 1}번째 줄이 ${MAX_COMBINED_JOB_TITLE_LENGTH}자를 초과합니다.\n(현재 ${text.length}자: "${text}")`);
+            const w = getDisplayWidth(text);
+            if (w > MAX_COMBINED_JOB_TITLE_WIDTH) {
+                alert(`${i + 1}번째 줄이 1줄 너비 ${MAX_COMBINED_JOB_TITLE_WIDTH}을 초과합니다.\n(현재 너비 ${w}: "${text}", 한글 2/영문 1)`);
                 return;
             }
         }
@@ -124,7 +125,8 @@ export default function JobsSettings() {
         const text = idx === 0 && formData.clientName
             ? `${formData.clientName} : ${rawLine}`
             : rawLine;
-        return { text, length: text.length, exceeded: text.length > MAX_COMBINED_JOB_TITLE_LENGTH };
+        const width = getDisplayWidth(text);
+        return { text, width, exceeded: width > MAX_COMBINED_JOB_TITLE_WIDTH };
     });
     const hasAnyExceeded = lineInfos.some(l => l.exceeded);
 
@@ -280,7 +282,7 @@ export default function JobsSettings() {
                                         <AlertCircle size={16} className={`mt-0.5 shrink-0 ${hasAnyExceeded ? 'text-rose-500' : 'text-indigo-500'}`} />
                                         <div className="text-xs flex-1">
                                             <div className={`font-bold mb-2 ${hasAnyExceeded ? 'text-rose-700 dark:text-rose-400' : 'text-indigo-700 dark:text-indigo-400'}`}>
-                                                주간업무 작성 시 표시될 줄별 길이 (1줄당 {MAX_COMBINED_JOB_TITLE_LENGTH}자)
+                                                주간업무 작성 시 표시될 줄별 너비 (1줄당 {MAX_COMBINED_JOB_TITLE_WIDTH}, 한글 2/영문 1)
                                             </div>
                                             <div className="space-y-1">
                                                 {lineInfos.map((line, idx) => (
@@ -292,7 +294,7 @@ export default function JobsSettings() {
                                                             &quot;{line.text}&quot;
                                                         </span>
                                                         <span className={`shrink-0 font-bold tabular-nums ${line.exceeded ? 'text-rose-500' : 'text-indigo-500'}`}>
-                                                            {line.length}/{MAX_COMBINED_JOB_TITLE_LENGTH}
+                                                            {line.width}/{MAX_COMBINED_JOB_TITLE_WIDTH}
                                                             {line.exceeded && '↑'}
                                                         </span>
                                                     </div>

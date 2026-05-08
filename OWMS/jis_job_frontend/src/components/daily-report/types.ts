@@ -90,22 +90,23 @@ export const getLastWeekMonday = (date: Date = new Date()) => {
 };
 
 import {
-    MAX_CHARS_PER_LINE,
+    MAX_LINE_WIDTH,
     MAX_WEEKLY_NOTE_LINES,
-    MAX_WEEKLY_NOTE_CHARS_PER_LINE
+    MAX_WEEKLY_NOTE_LINE_WIDTH,
+    getDisplayWidth,
 } from '../../constants/validation';
 
-// 1줄당 최대 글자수 초과 여부 체크
+// 1줄당 최대 너비 초과 여부 체크 (한글 2 / 영문 1)
 export const isLineExceeded = (text: string) => {
     if (!text) return false;
     const lines = text.split('\n');
-    return lines.some(line => line.length > MAX_CHARS_PER_LINE);
+    return lines.some(line => getDisplayWidth(line) > MAX_LINE_WIDTH);
 };
 
-// 주간 정보 유효성 체크 (최대 줄 수 또는 줄당 최대 글자수 초과)
+// 주간 정보 유효성 체크 (최대 줄 수 또는 줄당 최대 너비 초과)
 export const isWeeklyNoteExceeded = (text: string) => {
     if (!text) return false;
     const lines = text.split('\n');
     if (lines.length > MAX_WEEKLY_NOTE_LINES) return true;
-    return lines.some(line => line.length > MAX_WEEKLY_NOTE_CHARS_PER_LINE);
+    return lines.some(line => getDisplayWidth(line) > MAX_WEEKLY_NOTE_LINE_WIDTH);
 };

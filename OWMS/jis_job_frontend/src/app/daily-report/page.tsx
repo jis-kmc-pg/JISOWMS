@@ -12,10 +12,11 @@ import {
     formatDate, getWeekStart, getLastWeekMonday, isLineExceeded, isWeeklyNoteExceeded
 } from '../../components/daily-report/types';
 import {
-    MAX_COMBINED_JOB_TITLE_LENGTH,
-    MAX_CHARS_PER_LINE,
+    MAX_COMBINED_JOB_TITLE_WIDTH,
+    MAX_LINE_WIDTH,
     MAX_WEEKLY_NOTE_LINES,
-    MAX_WEEKLY_NOTE_CHARS_PER_LINE,
+    MAX_WEEKLY_NOTE_LINE_WIDTH,
+    getDisplayWidth,
 } from '../../constants/validation';
 import DateNavigation from '../../components/daily-report/DateNavigation';
 import JobCard from '../../components/daily-report/JobCard';
@@ -236,8 +237,8 @@ export default function DailyReportPage() {
         const hasWeeklyError = isWeeklyNoteExceeded(weeklyNote);
         if (hasJobError || hasWeeklyError) {
             const errorMsg = hasJobError
-                ? `업무 항목 중 1줄에 ${MAX_CHARS_PER_LINE}자를 초과한 항목이 있습니다.`
-                : `주간 정보 사항이 제한(${MAX_WEEKLY_NOTE_LINES}줄, 줄당 ${MAX_WEEKLY_NOTE_CHARS_PER_LINE}자)을 초과했습니다.`;
+                ? `업무 항목 중 1줄 너비 ${MAX_LINE_WIDTH}을 초과한 항목이 있습니다. (한글 2/영문 1)`
+                : `주간 정보 사항이 제한(${MAX_WEEKLY_NOTE_LINES}줄, 줄당 너비 ${MAX_WEEKLY_NOTE_LINE_WIDTH})을 초과했습니다.`;
             showToastMsg(`${errorMsg} 수정 후 저장해 주세요.`);
             return;
         }
@@ -347,8 +348,9 @@ export default function DailyReportPage() {
             const text = i === 0 && clientName
                 ? `${clientName} : ${lines[i]}`
                 : lines[i];
-            if (text.length > MAX_COMBINED_JOB_TITLE_LENGTH) {
-                showToastMsg(`${i + 1}번째 줄이 ${MAX_COMBINED_JOB_TITLE_LENGTH}자를 초과합니다. (현재 ${text.length}자: "${text}")`);
+            const w = getDisplayWidth(text);
+            if (w > MAX_COMBINED_JOB_TITLE_WIDTH) {
+                showToastMsg(`${i + 1}번째 줄 너비 ${MAX_COMBINED_JOB_TITLE_WIDTH} 초과. (현재 ${w}: "${text}", 한글 2/영문 1)`);
                 return;
             }
         }
