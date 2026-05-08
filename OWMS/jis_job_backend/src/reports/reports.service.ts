@@ -168,10 +168,36 @@ export class ReportsService {
 
     const where = status === 'ALL' ? {} : { status: status || 'ACTIVE' };
 
-    return this.prisma.project.findMany({
+    const projects = await this.prisma.project.findMany({
       where,
       orderBy: { createdAt: 'desc' },
     });
+
+    if (projects.length === 0) return projects;
+
+    // 각 프로젝트의 작성자(Job 등록한 사용자) 집계
+    const jobs = await this.prisma.job.findMany({
+      where: { projectId: { in: projects.map((p) => p.id) } },
+      select: {
+        projectId: true,
+        user: { select: { id: true, name: true } },
+      },
+    });
+
+    const writersByProject = new Map<number, { id: number; name: string }[]>();
+    for (const j of jobs) {
+      if (!j.projectId || !j.user) continue;
+      if (!writersByProject.has(j.projectId)) writersByProject.set(j.projectId, []);
+      const list = writersByProject.get(j.projectId)!;
+      if (!list.some((w) => w.id === j.user.id)) {
+        list.push({ id: j.user.id, name: j.user.name });
+      }
+    }
+
+    return projects.map((p) => ({
+      ...p,
+      writers: writersByProject.get(p.id) ?? [],
+    }));
   }
 
   async createProject(data: { projectName: string; clientName?: string }) {

@@ -14,6 +14,14 @@ interface Project {
     members?: unknown[];
     description?: string;
     progress?: number;
+    writers?: { id: number; name: string }[];
+}
+
+function formatWriters(writers?: { id: number; name: string }[]): string | null {
+    if (!writers || writers.length === 0) return null;
+    if (writers.length === 1) return writers[0].name;
+    if (writers.length === 2) return `${writers[0].name}, ${writers[1].name}`;
+    return `${writers[0].name} 외 ${writers.length - 1}명`;
 }
 
 interface TeamProjectsWidgetProps {
@@ -152,6 +160,11 @@ export default function TeamProjectsWidget({ data, size }: TeamProjectsWidgetPro
                                             <p className="text-xs font-bold text-slate-700 dark:text-slate-200 truncate" title={name}>
                                                 {name}
                                             </p>
+                                            {formatWriters(project.writers) && (
+                                                <span className="text-[10px] font-medium text-indigo-500 dark:text-indigo-400 flex-shrink-0 truncate" title={project.writers?.map(w => w.name).join(', ')}>
+                                                    · {formatWriters(project.writers)}
+                                                </span>
+                                            )}
                                         </div>
                                         <span className={`text-[10px] font-black px-1.5 py-0.5 rounded-md border flex-shrink-0 ${badge.color}`}>
                                             {badge.label}
@@ -248,6 +261,11 @@ export default function TeamProjectsWidget({ data, size }: TeamProjectsWidgetPro
                                         <p className="text-xs font-bold text-slate-700 dark:text-slate-200 truncate" title={name}>
                                             {name}
                                         </p>
+                                        {formatWriters(project.writers) && (
+                                            <span className="text-[10px] font-medium text-indigo-500 dark:text-indigo-400 flex-shrink-0 truncate" title={project.writers?.map(w => w.name).join(', ')}>
+                                                · {formatWriters(project.writers)}
+                                            </span>
+                                        )}
                                     </div>
                                     <span className={`text-[10px] font-black px-1.5 py-0.5 rounded-md border flex-shrink-0 ${badge.color}`}>
                                         {badge.label}
