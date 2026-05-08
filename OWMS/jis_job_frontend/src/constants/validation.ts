@@ -37,9 +37,9 @@ export function getDisplayWidth(text: string): number {
 
 /**
  * 업무 제목/내용 1줄당 최대 너비
- * 한글 25자 ≈ 영문 50자 수준
+ * 한글 24자 ≈ 영문 48자 수준
  */
-export const MAX_LINE_WIDTH = 50;
+export const MAX_LINE_WIDTH = 48;
 
 /**
  * 주간 정보 최대 줄 수
@@ -49,7 +49,7 @@ export const MAX_WEEKLY_NOTE_LINES = 4;
 /**
  * 주간 정보 1줄당 최대 너비
  */
-export const MAX_WEEKLY_NOTE_LINE_WIDTH = 50;
+export const MAX_WEEKLY_NOTE_LINE_WIDTH = 48;
 
 // ============================================================
 // 업무 목록 관리 관련 제한 (너비 단위)
