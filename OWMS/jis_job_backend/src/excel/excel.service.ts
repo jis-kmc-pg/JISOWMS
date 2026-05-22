@@ -310,7 +310,9 @@ export class ExcelService {
     // 보고자 부서/이름은 양식의 라벨(A4 "보고자 :")이 이미 있으므로 값만 분리 기입
     const row4 = worksheet.getRow(4);
     row4.getCell(3).value = user?.department?.name || '솔루션 사업부'; // C4 부서
-    row4.getCell(4).value = user?.name || ''; // D4 이름
+    // D4 이름 - 글자 사이에 공백 추가 ("양주희" → "양 주 희")
+    const nameSpaced = (user?.name || '').split('').join(' ');
+    row4.getCell(4).value = nameSpaced;
     row4.getCell(15).value = this.formatDate(targetDate); // O4 작성일 (라벨 "작 성 일 :"은 I4에 양식 내장)
 
     // 주간 날짜 범위 (Row 6) - 새 양식: C6 시작(좌), F6 끝(좌), I6 시작(우), L6 끝(우)
@@ -526,7 +528,8 @@ export class ExcelService {
   }
 
   private formatDate(date: Date) {
-    return `${date.getFullYear()}.${String(date.getMonth() + 1).padStart(2, '0')}.${String(date.getDate()).padStart(2, '0')}.`;
+    // "2026. 05. 15." 형식 (점 뒤 공백)
+    return `${date.getFullYear()}. ${String(date.getMonth() + 1).padStart(2, '0')}. ${String(date.getDate()).padStart(2, '0')}.`;
   }
 
   private groupJobsByDay(jobs: any[]) {
