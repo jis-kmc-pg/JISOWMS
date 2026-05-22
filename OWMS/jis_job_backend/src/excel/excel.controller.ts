@@ -83,7 +83,7 @@ export class ExcelController {
       const endOfWeek = new Date(startOfWeek.getTime() + 4 * 86400000); // 월~금
       const formatKor = (d: Date) =>
         `${String(d.getMonth() + 1).padStart(2, '0')}월${String(d.getDate()).padStart(2, '0')}일`;
-      const filename = `${userName}_일일주간업무보고서(${formatKor(startOfWeek)}_${formatKor(endOfWeek)}).xlsx`;
+      const filename = `${userName}_일일및주간업무보고서(${formatKor(startOfWeek)}_${formatKor(endOfWeek)}).xlsx`;
 
       const encodedFilename = encodeURIComponent(filename);
       res.set({

@@ -460,7 +460,7 @@ export default function DailyReportPage() {
                 return;
             }
             // 파일명: 백엔드 Content-Disposition에서 추출, 실패 시 fallback
-            let filename = `${userInfo.name}_일일주간업무보고서_${dateStr}.xlsx`;
+            let filename = `${userInfo.name}_일일및주간업무보고서_${dateStr}.xlsx`;
             const cd = res.headers['content-disposition'] as string | undefined;
             if (cd) {
                 const utf8 = cd.match(/filename\*=UTF-8''([^;]+)/i);
